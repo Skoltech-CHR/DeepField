@@ -1,0 +1,4 @@
+{
+  "test.py::test_file1_method1": true,
+  "test_units.py::test_file1_method1": true
+}

@@ -1,0 +1,612 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Grids &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Grids</a><ul>
+<li><a class="reference internal" href="#grid">Grid</a></li>
+<li><a class="reference internal" href="#orthogonal-uniform-grid">Orthogonal uniform grid</a></li>
+<li><a class="reference internal" href="#corner-point-grid">Corner-point grid</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Grids</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/grids.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="grids">
+<h1>Grids<a class="headerlink" href="#grids" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="grid">
+<h2>Grid<a class="headerlink" href="#grid" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.field.Grid">
+<em class="property">class </em><code class="sig-name descname">Grid</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#Grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent"><code class="xref py py-class docutils literal notranslate"><span class="pre">deepfield.field.base_spatial.SpatialComponent</span></code></a></p>
+<p>Basic grid class.</p>
+<dl class="attribute">
+<dt id="deepfield.field.Grid.bounding_box">
+<code class="sig-name descname">bounding_box</code><a class="headerlink" href="#deepfield.field.Grid.bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pair of diagonal corner points for grid’s bounding box.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Grid.calculate_neighbours_distances">
+<code class="sig-name descname">calculate_neighbours_distances</code><span class="sig-paren">(</span><em class="sig-param">connectivity=1</em>, <em class="sig-param">fill_value=-1</em>, <em class="sig-param">neighbours_matrix=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#Grid.calculate_neighbours_distances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Grid.calculate_neighbours_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate distances between neighbors for all active cells.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connectivity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – Maximum number of orthogonal hops to consider a cell is
+as a neighbor., by default 1.</p></li>
+<li><p><strong>fill_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – Value to fill indices of inactive or absent neighbors, by default -1.</p></li>
+<li><p><strong>neighbours_matrix</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><em>numpy.ndarray</em></a><em>, </em><em>optional</em>) – Matrix with indices of neighbors in unraveled form.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Matrix of distances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.Grid.cell_centroids">
+<code class="sig-name descname">cell_centroids</code><a class="headerlink" href="#deepfield.field.Grid.cell_centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Centroids of cells.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.Grid.cell_volumes">
+<code class="sig-name descname">cell_volumes</code><a class="headerlink" href="#deepfield.field.Grid.cell_volumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Volumes of cells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Grid.crop_minimal_cube">
+<code class="sig-name descname">crop_minimal_cube</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#Grid.crop_minimal_cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Grid.crop_minimal_cube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop to minimal cube containing active cells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Grid.ex">
+<em class="property">property </em><code class="sig-name descname">ex</code><a class="headerlink" href="#deepfield.field.Grid.ex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unit vector along grid X axis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Grid.ey">
+<em class="property">property </em><code class="sig-name descname">ey</code><a class="headerlink" href="#deepfield.field.Grid.ey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unit vector along grid Y axis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Grid.get_neighbors_matrix">
+<code class="sig-name descname">get_neighbors_matrix</code><span class="sig-paren">(</span><em class="sig-param">connectivity=1</em>, <em class="sig-param">fill_value=-1</em>, <em class="sig-param">ravel_index=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#Grid.get_neighbors_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Grid.get_neighbors_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get indices of neighbors for all active cells.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connectivity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – Maximum number of orthogonal hops to consider a cell is
+as a neighbor, by default 1.</p></li>
+<li><p><strong>fill_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – Value to fill indices of inactive or absent neighbors, by default -1.</p></li>
+<li><p><strong>ravel_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Indices in raveled form, by default False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>res</strong> – Matrix of active neighbors and matrix of distances if ‘calculate_distances’.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>misc</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Grid.minimal_active_slices">
+<code class="sig-name descname">minimal_active_slices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#Grid.minimal_active_slices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Grid.minimal_active_slices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get minimal cube slice that contains all active cells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Grid.origin">
+<em class="property">property </em><code class="sig-name descname">origin</code><a class="headerlink" href="#deepfield.field.Grid.origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grid axes origin relative to the map coordinates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.Grid.xyz">
+<code class="sig-name descname">xyz</code><a class="headerlink" href="#deepfield.field.Grid.xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cell coordinates.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="orthogonal-uniform-grid">
+<h2>Orthogonal uniform grid<a class="headerlink" href="#orthogonal-uniform-grid" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.field.OrthogonalUniformGrid">
+<em class="property">class </em><code class="sig-name descname">OrthogonalUniformGrid</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#OrthogonalUniformGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">deepfield.field.grids.Grid</span></code></p>
+<p>Orthogonal uniform grid.</p>
+<dl class="attribute">
+<dt id="deepfield.field.OrthogonalUniformGrid.as_corner_point">
+<code class="sig-name descname">as_corner_point</code><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid.as_corner_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates CornerPoint representation of the current grid.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.OrthogonalUniformGrid.bounding_box">
+<code class="sig-name descname">bounding_box</code><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid.bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pair of diagonal corner points for grid’s bounding box.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.OrthogonalUniformGrid.cell_centroids">
+<code class="sig-name descname">cell_centroids</code><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid.cell_centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Centroids of cells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.OrthogonalUniformGrid.cell_size">
+<em class="property">property </em><code class="sig-name descname">cell_size</code><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid.cell_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cell size.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.OrthogonalUniformGrid.cell_volumes">
+<code class="sig-name descname">cell_volumes</code><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid.cell_volumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Volumes of cells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.OrthogonalUniformGrid.crop_minimal_cube">
+<code class="sig-name descname">crop_minimal_cube</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#OrthogonalUniformGrid.crop_minimal_cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid.crop_minimal_cube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop to minimal cube containing active cells.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>(grid, min_slices)</strong> – New grid and slices for active cube.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.OrthogonalUniformGrid.downscale">
+<code class="sig-name descname">downscale</code><span class="sig-paren">(</span><em class="sig-param">factors=(2</em>, <em class="sig-param">2</em>, <em class="sig-param">2)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#OrthogonalUniformGrid.downscale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid.downscale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downscale grid according to factors given.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Scale factors along each axis. If int, factors are the same for each axis.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>grid</strong> – Downscaled grid.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.OrthogonalUniformGrid" title="deepfield.field.OrthogonalUniformGrid">OrthogonalUniformGrid</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.OrthogonalUniformGrid.to_corner_point">
+<code class="sig-name descname">to_corner_point</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#OrthogonalUniformGrid.to_corner_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid.to_corner_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to corner point grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>grid</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#deepfield.field.CornerPointGrid" title="deepfield.field.CornerPointGrid">CornerPointGrid</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.OrthogonalUniformGrid.upscale">
+<code class="sig-name descname">upscale</code><span class="sig-paren">(</span><em class="sig-param">factors=(2</em>, <em class="sig-param">2</em>, <em class="sig-param">2)</em>, <em class="sig-param">actnum_upscale='vote'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#OrthogonalUniformGrid.upscale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid.upscale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upscale grid according to factors given.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>factors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Scale factors along each axis. If int, factors are the same for each axis.</p></li>
+<li><p><strong>actnum_upscale</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Method to actnum upscaling. If ‘vote’, upscaled cell is active if majority
+of finer cells are active. If ‘any’, upscaled cell is active if any
+of finer cells is active. Default to ‘vote’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>grid</strong> – Upscaled grid.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.OrthogonalUniformGrid" title="deepfield.field.OrthogonalUniformGrid">OrthogonalUniformGrid</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.OrthogonalUniformGrid.xyz">
+<em class="property">property </em><code class="sig-name descname">xyz</code><a class="headerlink" href="#deepfield.field.OrthogonalUniformGrid.xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cells’ vertices coordinates.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="corner-point-grid">
+<h2>Corner-point grid<a class="headerlink" href="#corner-point-grid" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.field.CornerPointGrid">
+<em class="property">class </em><code class="sig-name descname">CornerPointGrid</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#CornerPointGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.CornerPointGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">deepfield.field.grids.Grid</span></code></p>
+<p>Corner point grid.</p>
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.as_corner_point">
+<em class="property">property </em><code class="sig-name descname">as_corner_point</code><a class="headerlink" href="#deepfield.field.CornerPointGrid.as_corner_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns itself.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.CornerPointGrid.bounding_box">
+<code class="sig-name descname">bounding_box</code><a class="headerlink" href="#deepfield.field.CornerPointGrid.bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pair of diagonal corner points for grid’s bounding box.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.cell_bases">
+<code class="sig-name descname">cell_bases</code><span class="sig-paren">(</span><em class="sig-param">cell_indices</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#CornerPointGrid.cell_bases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.CornerPointGrid.cell_bases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate basis vectors of coordinate systems connected to cells.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cells_indices</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – Indices of the cells.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Basis vectors of coordinate systems connected to cells.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.CornerPointGrid.cell_centroids">
+<code class="sig-name descname">cell_centroids</code><a class="headerlink" href="#deepfield.field.CornerPointGrid.cell_centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Centroids of cells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.cell_sizes">
+<code class="sig-name descname">cell_sizes</code><span class="sig-paren">(</span><em class="sig-param">cell_indices</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#CornerPointGrid.cell_sizes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.CornerPointGrid.cell_sizes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate approximate sizes of cells.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cells_indices</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – Indices of the cells.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Sizes of cells.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.CornerPointGrid.cell_volumes">
+<code class="sig-name descname">cell_volumes</code><a class="headerlink" href="#deepfield.field.CornerPointGrid.cell_volumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Volumes of cells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.crop_minimal_cube">
+<code class="sig-name descname">crop_minimal_cube</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#CornerPointGrid.crop_minimal_cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.CornerPointGrid.crop_minimal_cube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop to minimal cube containing active cells.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>(grid, min_slices)</strong> – New grid and slices for active cube.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.crop_minimal_grid">
+<code class="sig-name descname">crop_minimal_grid</code><span class="sig-paren">(</span><em class="sig-param">nz</em>, <em class="sig-param">fillna=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#CornerPointGrid.crop_minimal_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.CornerPointGrid.crop_minimal_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new grid in a region between upper and bottom surfaces enclosing active cells.
+Actnum tranfer should be made separately.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nz</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Third dimension of the cunstructed grid.</p></li>
+<li><p><strong>fillna</strong> (<em>scalar</em>) – Filling value for nan coordinates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>(grid, grid_mask, z_top, z_bottom)</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.faces_centers">
+<code class="sig-name descname">faces_centers</code><span class="sig-paren">(</span><em class="sig-param">cells_indices</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#CornerPointGrid.faces_centers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.CornerPointGrid.faces_centers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate coordinates of cell faces centers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cells_indices</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – Indices of the cells.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>coordinates of cell faces centers.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.map_grid">
+<code class="sig-name descname">map_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#CornerPointGrid.map_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.CornerPointGrid.map_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map pillars (<cite>COORD</cite>) to axis defined by <a href="#id1"><span class="problematic" id="id2">`</span></a>MAPAXES’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Grid with updated <cite>COORD</cite> and <cite>MAPAXES</cite> fields.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#deepfield.field.CornerPointGrid" title="deepfield.field.CornerPointGrid">CornerPointGrid</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.minimal_active_bounds">
+<code class="sig-name descname">minimal_active_bounds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#CornerPointGrid.minimal_active_bounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.CornerPointGrid.minimal_active_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get z coordinates of top and bottom bounds of active cells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.origin">
+<em class="property">property </em><code class="sig-name descname">origin</code><a class="headerlink" href="#deepfield.field.CornerPointGrid.origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grid axes origin relative to the map coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.orthogonalize">
+<code class="sig-name descname">orthogonalize</code><span class="sig-paren">(</span><em class="sig-param">dimens</em>, <em class="sig-param">only_active=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#CornerPointGrid.orthogonalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.CornerPointGrid.orthogonalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct orthogonal uniform grid. Actnum tranfer should be made separately.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.CornerPointGrid.upscale">
+<code class="sig-name descname">upscale</code><span class="sig-paren">(</span><em class="sig-param">factors=(2</em>, <em class="sig-param">2</em>, <em class="sig-param">2)</em>, <em class="sig-param">actnum_upscale='vote'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/grids.html#CornerPointGrid.upscale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.CornerPointGrid.upscale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upscale grid according to factors given.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>factors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Scale factors along each axis. If int, factors are the same for each axis.</p></li>
+<li><p><strong>actnum_upscale</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Method to actnum upscaling. If ‘vote’, upscaled cell is active if majority
+of finer cells are active. If ‘any’, upscaled cell is active if any
+of finer cells is active. Default to ‘vote’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>grid</strong> – Upscaled grid.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.CornerPointGrid" title="deepfield.field.CornerPointGrid">CornerPointGrid</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.CornerPointGrid.xyz">
+<code class="sig-name descname">xyz</code><a class="headerlink" href="#deepfield.field.CornerPointGrid.xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>x, y, z coordinates of cells vertices.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.CornerPointGrid.xyz_max">
+<code class="sig-name descname">xyz_max</code><a class="headerlink" href="#deepfield.field.CornerPointGrid.xyz_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximums of x, y, z coordinates of cells vertices.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.CornerPointGrid.xyz_min">
+<code class="sig-name descname">xyz_min</code><a class="headerlink" href="#deepfield.field.CornerPointGrid.xyz_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimums of x, y, z coordinates of cells vertices.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

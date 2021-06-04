@@ -1,0 +1,568 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepfield.datasets.randomize &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/deepfield.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepfield.datasets.randomize</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepfield.datasets.randomize</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Tools for generating randomized datasets.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="k">import</span> <span class="n">gaussian_filter</span>
+
+<span class="kn">from</span> <span class="nn">..field</span> <span class="k">import</span> <span class="n">Field</span><span class="p">,</span> <span class="n">Rock</span><span class="p">,</span> <span class="n">States</span><span class="p">,</span> <span class="n">Wells</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">get_config</span><span class="p">,</span> <span class="n">STATES_KEYWORD</span>
+
+
+<span class="k">def</span> <span class="nf">_apply_uncorrelated_noise</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">*</span> <span class="n">std</span>
+    <span class="k">return</span> <span class="n">arr</span> <span class="o">+</span> <span class="n">noise</span>
+
+
+<span class="k">def</span> <span class="nf">_apply_correlated_noise</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
+    <span class="n">seeds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+        <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">freq</span><span class="p">,</span> <span class="n">freq</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">std</span> <span class="o">/</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">seeds</span>
+
+    <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">*</span> <span class="n">std</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="n">gaussian_filter</span><span class="p">(</span><span class="n">noise</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">freq</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">arr</span> <span class="o">+</span> <span class="n">noise</span>
+
+
+<span class="k">def</span> <span class="nf">_get_uniform_samples</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_noise_component</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span> <span class="nf">_const_component</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">_get_uniform_samples</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span> <span class="nf">_exp_component</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">_get_uniform_samples</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">t</span> <span class="o">*</span> <span class="n">l</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span> <span class="nf">_sin_component</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">minima</span><span class="p">):</span>
+    <span class="n">scale</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">minima</span> <span class="o">=</span> <span class="n">_get_uniform_samples</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">minima</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">phi</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">out</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">minima</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">minima</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">class</span> <span class="nc">AttrRandomizer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Baseclass for attribute randomization.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">associated_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">associated_class</span> <span class="o">=</span> <span class="n">associated_class</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get randomized version of attr.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">associated_class</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Can randomize instances of </span><span class="si">%s</span><span class="s1"> class. Found: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">associated_class</span><span class="p">,</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__class__</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_randomize_attr</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_randomize_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Abstract method.&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ControlRandomizer"><a class="viewcode-back" href="../../../api/randomizers.html#deepfield.datasets.ControlRandomizer">[docs]</a><span class="k">class</span> <span class="nc">ControlRandomizer</span><span class="p">(</span><span class="n">AttrRandomizer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Randomizer for control attributes (works inplace!).&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_to_vary</span><span class="o">=</span><span class="s1">&#39;BHPT&#39;</span><span class="p">,</span> <span class="n">equality_condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exp_amp</span><span class="o">=</span><span class="p">(</span><span class="mi">70</span><span class="p">,</span> <span class="mi">250</span><span class="p">),</span> <span class="n">exp_log_curv</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">),</span>
+                 <span class="n">const</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">sin_scale</span><span class="o">=</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">),</span> <span class="n">sin_phi</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span> <span class="n">sin_minima</span><span class="o">=</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span>
+                 <span class="n">noise_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr_to_vary: str</span>
+<span class="sd">            Attribute name to vary (should be represented in well&#39;s events)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">attr_to_vary</span><span class="o">=</span><span class="n">attr_to_vary</span><span class="p">,</span> <span class="n">equality_condition</span><span class="o">=</span><span class="n">equality_condition</span><span class="p">,</span> <span class="n">exp_amp</span><span class="o">=</span><span class="n">exp_amp</span><span class="p">,</span>
+                      <span class="n">exp_log_curv</span><span class="o">=</span><span class="n">exp_log_curv</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="n">const</span><span class="p">,</span> <span class="n">sin_scale</span><span class="o">=</span><span class="n">sin_scale</span><span class="p">,</span> <span class="n">sin_phi</span><span class="o">=</span><span class="n">sin_phi</span><span class="p">,</span>
+                      <span class="n">sin_minima</span><span class="o">=</span><span class="n">sin_minima</span><span class="p">,</span> <span class="n">noise_range</span><span class="o">=</span><span class="n">noise_range</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">associated_class</span><span class="o">=</span><span class="n">Wells</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_randomize_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wells</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        wells: geology.Wells</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out: geology.Wells</span>
+<span class="sd">            Wells with randomized events.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="n">attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr_to_vary</span>
+        <span class="n">exp_amp</span><span class="p">,</span> <span class="n">exp_curv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_amp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_log_curv</span>
+        <span class="n">const</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">const</span>
+        <span class="n">sin_scale</span><span class="p">,</span> <span class="n">sin_phi</span><span class="p">,</span> <span class="n">sin_minima</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin_scale</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin_phi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin_minima</span>
+        <span class="n">noise_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_range</span>
+
+        <span class="k">def</span> <span class="nf">sampler</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">_exp_component</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">exp_amp</span><span class="p">,</span> <span class="n">exp_curv</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">_const_component</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">_sin_component</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">sin_scale</span><span class="p">,</span> <span class="n">sin_phi</span><span class="p">,</span> <span class="n">sin_minima</span><span class="p">)</span>
+            <span class="n">eps</span> <span class="o">=</span> <span class="n">_noise_component</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">noise_range</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">e</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">c</span> <span class="o">+</span> <span class="n">eps</span>
+            <span class="k">return</span> <span class="n">out</span>
+
+        <span class="n">clip_min</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">clip_max</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;clip&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">clip_min</span><span class="p">,</span> <span class="n">clip_max</span><span class="p">),</span>
+                  <span class="s1">&#39;equality_condition&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">equality_condition</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="n">sampler</span><span class="p">}</span>
+        <span class="n">wells</span><span class="o">.</span><span class="n">randomize_events</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">wells</span></div>
+
+
+<div class="viewcode-block" id="StatesRandomizer"><a class="viewcode-back" href="../../../api/randomizers.html#deepfield.datasets.StatesRandomizer">[docs]</a><span class="k">class</span> <span class="nc">StatesRandomizer</span><span class="p">(</span><span class="n">AttrRandomizer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Randomizer for states attributes&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">std_reference_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">std_amplitude</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">uncorrelated_noise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">correlated_noise_freq</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        std_reference_func: callable</span>
+<span class="sd">            Reference function used to calculate standard deviation of randomization</span>
+<span class="sd">            Output of this function will be multiplied by std_amplitude and this value will be used as std.</span>
+<span class="sd">        std_amplitude: float</span>
+<span class="sd">            Multiplier for output of std_reference_func.</span>
+<span class="sd">            The result of multiplication will be used as std of randomization.</span>
+<span class="sd">        uncorrelated_noise: bool</span>
+<span class="sd">            If False, correlated noise will be applied.</span>
+<span class="sd">        inplace: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">std_reference_func</span><span class="o">=</span><span class="n">std_reference_func</span><span class="p">,</span> <span class="n">std_amplitude</span><span class="o">=</span><span class="n">std_amplitude</span><span class="p">,</span>
+                      <span class="n">uncorrelated_noise</span><span class="o">=</span><span class="n">uncorrelated_noise</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">,</span>
+                      <span class="n">correlated_noise_freq</span><span class="o">=</span><span class="n">correlated_noise_freq</span><span class="p">,</span> <span class="n">sat_attrs</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SOIL&#39;</span><span class="p">,</span> <span class="s1">&#39;SWAT&#39;</span><span class="p">,</span> <span class="s1">&#39;SGAS&#39;</span><span class="p">))</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">associated_class</span><span class="o">=</span><span class="n">States</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_randomize_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        states: geology.States</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out: geology.States</span>
+<span class="sd">            Randomized states.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">actnum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;actnum&#39;</span><span class="p">]</span>
+        <span class="n">noisy_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_noise</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">actnum</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inplace</span><span class="p">:</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="n">States</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">arr</span> <span class="ow">in</span> <span class="n">noisy_states</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">states</span>
+
+    <span class="k">def</span> <span class="nf">_apply_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">actnum</span><span class="p">):</span>
+        <span class="n">noisy_states</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">states</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_reference_func</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_amplitude</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uncorrelated_noise</span><span class="p">:</span>
+                <span class="n">arr</span> <span class="o">=</span> <span class="n">_apply_uncorrelated_noise</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">arr</span> <span class="o">=</span> <span class="n">_apply_correlated_noise</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correlated_noise_freq</span><span class="p">)</span>
+
+            <span class="n">clip_min</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;PRESSURE&#39;</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">clip_max</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat_attrs</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">clip_min</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="n">clip_max</span><span class="p">)</span>
+            <span class="n">arr</span> <span class="o">*=</span> <span class="n">actnum</span>
+            <span class="n">noisy_states</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">arr</span>
+        <span class="n">noisy_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_saturations</span><span class="p">(</span><span class="n">noisy_states</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">noisy_states</span>
+
+    <span class="k">def</span> <span class="nf">_normalize_saturations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="n">sat_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat_attrs</span> <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">states</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sat_attrs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">sat_denominator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">states</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">sat_attrs</span><span class="p">],</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">sat_attrs</span><span class="p">:</span>
+                <span class="n">states</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="n">attr</span><span class="p">],</span> <span class="n">sat_denominator</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="n">attr</span><span class="p">]),</span>
+                                         <span class="n">where</span><span class="o">=</span><span class="n">sat_denominator</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">states</span></div>
+
+
+<div class="viewcode-block" id="RockRandomizer"><a class="viewcode-back" href="../../../api/randomizers.html#deepfield.datasets.RockRandomizer">[docs]</a><span class="k">class</span> <span class="nc">RockRandomizer</span><span class="p">(</span><span class="n">AttrRandomizer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Randomizer for rock attributes.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">std_reference_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">std_amplitude</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">uncorrelated_noise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">correlated_noise_freq</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        std_reference_func: callable</span>
+<span class="sd">            Reference function used to calculate standard deviation of randomization</span>
+<span class="sd">            Output of this function will be multiplied by std_amplitude and this value will be used as std.</span>
+<span class="sd">        std_amplitude: float</span>
+<span class="sd">            Multiplier for output of std_reference_func.</span>
+<span class="sd">            The result of multiplication will be used as std of randomization.</span>
+<span class="sd">        uncorrelated_noise: bool</span>
+<span class="sd">            If False, correlated noise will be applied.</span>
+<span class="sd">        inplace: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">std_reference_func</span><span class="o">=</span><span class="n">std_reference_func</span><span class="p">,</span> <span class="n">std_amplitude</span><span class="o">=</span><span class="n">std_amplitude</span><span class="p">,</span>
+                      <span class="n">uncorrelated_noise</span><span class="o">=</span><span class="n">uncorrelated_noise</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">,</span>
+                      <span class="n">correlated_noise_freq</span><span class="o">=</span><span class="n">correlated_noise_freq</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">associated_class</span><span class="o">=</span><span class="n">Rock</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_randomize_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rock</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rock: geology.Rock</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out: geology.Rock</span>
+<span class="sd">            Randomized rock.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">actnum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;actnum&#39;</span><span class="p">]</span>
+        <span class="n">noisy_rock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_noise</span><span class="p">(</span><span class="n">rock</span><span class="p">,</span> <span class="n">actnum</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inplace</span><span class="p">:</span>
+            <span class="n">rock</span> <span class="o">=</span> <span class="n">Rock</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">arr</span> <span class="ow">in</span> <span class="n">noisy_rock</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">rock</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rock</span>
+
+    <span class="k">def</span> <span class="nf">_apply_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rock</span><span class="p">,</span> <span class="n">actnum</span><span class="p">):</span>
+        <span class="n">perm_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;PERMX&#39;</span><span class="p">,</span> <span class="s1">&#39;PERMY&#39;</span><span class="p">,</span> <span class="s1">&#39;PERMZ&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rock</span><span class="p">,</span> <span class="n">attr</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">perm_attrs</span><span class="p">:</span>
+            <span class="n">perm</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">rock</span><span class="p">,</span> <span class="n">perm_attrs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">perm</span><span class="p">[</span><span class="n">perm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">relative_perm</span> <span class="o">=</span> <span class="p">{</span><span class="n">attr</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">rock</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="o">/</span> <span class="n">perm</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">perm_attrs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">perm</span><span class="p">,</span> <span class="n">relative_perm</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{}</span>
+
+        <span class="n">noisy_rock</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">rock</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">relative_perm</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">rock</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_reference_func</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_amplitude</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uncorrelated_noise</span><span class="p">:</span>
+                <span class="n">arr</span> <span class="o">=</span> <span class="n">_apply_uncorrelated_noise</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">arr</span> <span class="o">=</span> <span class="n">_apply_correlated_noise</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correlated_noise_freq</span><span class="p">)</span>
+
+            <span class="n">clip_min</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">clip_max</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;PORO&#39;</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">clip_min</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="n">clip_max</span><span class="p">)</span>
+            <span class="n">arr</span> <span class="o">*=</span> <span class="n">actnum</span>
+            <span class="n">noisy_rock</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">arr</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">arr</span> <span class="ow">in</span> <span class="n">relative_perm</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">noisy_rock</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">arr</span> <span class="o">*</span> <span class="n">noisy_rock</span><span class="p">[</span><span class="n">perm_attrs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">noisy_rock</span></div>
+
+
+<div class="viewcode-block" id="FieldRandomizer"><a class="viewcode-back" href="../../../api/randomizers.html#deepfield.datasets.FieldRandomizer">[docs]</a><span class="k">class</span> <span class="nc">FieldRandomizer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Randomization of Fields, based on some base model.&quot;&quot;&quot;</span>
+    <span class="n">default_states_rand</span> <span class="o">=</span> <span class="n">StatesRandomizer</span><span class="p">(</span><span class="n">std_reference_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">std_amplitude</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                                           <span class="n">uncorrelated_noise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">default_rock_rand</span> <span class="o">=</span> <span class="n">RockRandomizer</span><span class="p">(</span><span class="n">std_reference_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">std_amplitude</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                                       <span class="n">uncorrelated_noise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">default_control_rand</span> <span class="o">=</span> <span class="n">ControlRandomizer</span><span class="p">()</span>
+
+    <span class="n">default_randomizer</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;states&#39;</span><span class="p">:</span> <span class="n">default_states_rand</span><span class="p">,</span>
+        <span class="s1">&#39;rock&#39;</span><span class="p">:</span> <span class="n">default_rock_rand</span><span class="p">,</span>
+        <span class="s1">&#39;control&#39;</span><span class="p">:</span> <span class="n">default_control_rand</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_to_base_field</span><span class="p">,</span> <span class="n">randomizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_to_base_field: std</span>
+<span class="sd">            Path to the base-field used to randomize around.</span>
+<span class="sd">        randomizer: dict</span>
+<span class="sd">            Dict with instances of randomizers for states, rock and control (wells)</span>
+<span class="sd">            Should have keys the following form:</span>
+<span class="sd">                randomizer = {</span>
+<span class="sd">                    &#39;states&#39;: states_rand,</span>
+<span class="sd">                    &#39;rock&#39;: rock_rand,</span>
+<span class="sd">                    &#39;wells&#39;: control_rand,</span>
+<span class="sd">                }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">get_config</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">STATES_KEYWORD</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">STATES_KEYWORD</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="s1">&#39;subset&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">]}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_path</span> <span class="o">=</span> <span class="n">path_to_base_field</span>
+
+        <span class="k">if</span> <span class="n">randomizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">def_r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_randomizer</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">randomizer</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="n">randomizer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">def_r</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">randomizer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_randomizer</span>
+
+    <span class="k">def</span> <span class="nf">_load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load and unravel field model.&quot;&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;auto:10000&#39;</span><span class="p">,</span> <span class="n">loglevel</span><span class="o">=</span><span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">raise_errors</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">to_spatial</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;wells&#39;</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">drop_incomplete</span><span class="p">()</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">get_wellblocks</span><span class="p">(</span><span class="n">grid</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">apply_perforations</span><span class="p">()</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">add_null_results_column</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;WWIR&#39;</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">results_to_events</span><span class="p">(</span><span class="n">grid</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span>
+
+<div class="viewcode-block" id="FieldRandomizer.get_randomized_field"><a class="viewcode-back" href="../../../api/randomizers.html#deepfield.datasets.FieldRandomizer.get_randomized_field">[docs]</a>    <span class="k">def</span> <span class="nf">get_randomized_field</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get randomized field.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out: geology.Field</span>
+<span class="sd">            Field with randomized initial state, rock and control.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_path</span><span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;actnum&#39;</span><span class="p">:</span> <span class="n">field</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">actnum</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="p">:</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="n">key</span> <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s1">&#39;control&#39;</span> <span class="k">else</span> <span class="s1">&#39;wells&#39;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="n">randomizers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">randomizers</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="p">)</span>
+                <span class="k">for</span> <span class="n">randomizer</span> <span class="ow">in</span> <span class="n">randomizers</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">randomizer</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">field</span></div>
+
+<div class="viewcode-block" id="FieldRandomizer.generate_randomized_dataset"><a class="viewcode-back" href="../../../api/randomizers.html#deepfield.datasets.FieldRandomizer.generate_randomized_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">generate_randomized_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate dataset consisting of randomized fields.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        root_dir: str</span>
+<span class="sd">            Path to the directory to create the dataset</span>
+<span class="sd">        n_samples: int</span>
+<span class="sd">            An amount of fields to generate</span>
+<span class="sd">        fmt: str, optional</span>
+<span class="sd">            Format in which fields will be dumped (with field.dump(fmt=fmt))</span>
+<span class="sd">            If None, fields will be dumped in tNavigator format.</span>
+<span class="sd">        title: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">root_dir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">fmt</span><span class="p">)</span> <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">(</span><span class="n">title</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_randomized_field</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">title</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">fmt</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tables &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Tables</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Tables</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/tables.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tables">
+<h1>Tables<a class="headerlink" href="#tables" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<dl class="class">
+<dt id="deepfield.field.Tables">
+<em class="property">class </em><code class="sig-name descname">Tables</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/tables/tables.html#Tables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tables component of geological model.</p>
+<dl class="method">
+<dt id="deepfield.field.Tables.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/tables/tables.html#Tables.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Tables.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply function to attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>callable</em>) – A function to apply. Must accept data as its first argument.</p></li>
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array-like</em>) – Attributes to get data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.attributes">
+<em class="property">property </em><code class="sig-name descname">attributes</code><a class="headerlink" href="#deepfield.field.Tables.attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.class_name">
+<em class="property">property </em><code class="sig-name descname">class_name</code><a class="headerlink" href="#deepfield.field.Tables.class_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a deepcopy of attributes. Cached properties are not copied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.del_state">
+<code class="sig-name descname">del_state</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.del_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State remover.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.drop">
+<code class="sig-name descname">drop</code><span class="sig-paren">(</span><em class="sig-param">attr</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.drop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop an attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump attributes into file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to output file.</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – Any kwargs for dump method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – BaseComponent unchanged.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.dump_array_ascii">
+<em class="property">static </em><code class="sig-name descname">dump_array_ascii</code><span class="sig-paren">(</span><em class="sig-param">buffer</em>, <em class="sig-param">array</em>, <em class="sig-param">header=None</em>, <em class="sig-param">fmt='%f'</em>, <em class="sig-param">compressed=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.dump_array_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes array-like data into an ASCII buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<em>buffer-like</em>) – </p></li>
+<li><p><strong>array</strong> (<em>1d</em><em>, </em><em>array-like</em>) – Array to be saved</p></li>
+<li><p><strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – String to be written line before the array</p></li>
+<li><p><strong>fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><em>sequence of strs</em><em>, </em><em>optional</em>) – Format to be passed into <code class="docutils literal notranslate"><span class="pre">numpy.savetxt</span></code> function. Default to ‘%f’.</p></li>
+<li><p><strong>compressed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, uses compressed typing style</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.empty_like">
+<code class="sig-name descname">empty_like</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.empty_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an empty component with the same state and the structure of embedded BaseComponents (if any).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.init_state">
+<code class="sig-name descname">init_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.init_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init state attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.items">
+<code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns pairs of attribute’s names and data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.keys">
+<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">path_or_buffer</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load data from a file or buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_or_buffer</strong> (<em>str of string buffer</em>) – Source to read data from.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – Any kwargs to be passed to load method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – BaseComponent with loaded attributes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.pvtg_to_pvdg">
+<code class="sig-name descname">pvtg_to_pvdg</code><span class="sig-paren">(</span><em class="sig-param">as_saturated=False</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/tables/tables.html#Tables.pvtg_to_pvdg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Tables.pvtg_to_pvdg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms PVTG (wet gas) table into PVDG (dry gas) form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>as_saturated</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, properties of the resulting dry gas will be similar to the properties of given saturated gas.
+Else, properties will be similar to the properties of given dry gas.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, replaces PVTG table with a PVDG one. Else, returns PVDG as output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>pvdg</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_Table or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.ravel">
+<code class="sig-name descname">ravel</code><span class="sig-paren">(</span><em class="sig-param">attr=None</em>, <em class="sig-param">order='F'</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.ravel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ravel attributes where applicable assuming by default Fortran order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to ravel.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Numpy reshape order. Default to ‘F’.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <cite>True</cite>, ravel is made inplace, return BaseComponent.
+Else, return raveled attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BaseComponent if inplace else raveled attribute itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.reshape">
+<code class="sig-name descname">reshape</code><span class="sig-paren">(</span><em class="sig-param">attr</em>, <em class="sig-param">newshape</em>, <em class="sig-param">order='C'</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.reshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reshape <cite>numpy.ndarray</cite> attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to be reshaped.</p></li>
+<li><p><strong>newshape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – New shape.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Numpy reshape order. Default to ‘C’.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <cite>True</cite>, reshape is made inplace, return BaseComponent.
+Else, return reshaped attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BaseComponent if inplace else reshaped attribute itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.set_state">
+<code class="sig-name descname">set_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.set_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State setter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.state">
+<em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#deepfield.field.Tables.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Tables.values">
+<code class="sig-name descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.Tables.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator of attribute’s data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>anytree.node.nodemixin &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/deepfield.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>anytree.node.nodemixin</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for anytree.node.nodemixin</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">anytree.iterators</span> <span class="k">import</span> <span class="n">PreOrderIter</span>
+
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">LoopError</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">TreeError</span>
+
+
+<span class="k">class</span> <span class="nc">NodeMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">separator</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
+
+    <span class="sa">u</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The :any:`NodeMixin` class extends any Python class to a tree node.</span>
+
+<span class="sd">    The only tree relevant information is the `parent` attribute.</span>
+<span class="sd">    If `None` the :any:`NodeMixin` is root node.</span>
+<span class="sd">    If set to another node, the :any:`NodeMixin` becomes the child of it.</span>
+
+<span class="sd">    The `children` attribute can be used likewise.</span>
+<span class="sd">    If `None` the :any:`NodeMixin` has no children.</span>
+<span class="sd">    The `children` attribute can be set to any iterable of :any:`NodeMixin` instances.</span>
+<span class="sd">    These instances become children of the node.</span>
+
+<span class="sd">    &gt;&gt;&gt; from anytree import NodeMixin, RenderTree</span>
+<span class="sd">    &gt;&gt;&gt; class MyBaseClass(object):  # Just an example of a base class</span>
+<span class="sd">    ...     foo = 4</span>
+<span class="sd">    &gt;&gt;&gt; class MyClass(MyBaseClass, NodeMixin):  # Add Node feature</span>
+<span class="sd">    ...     def __init__(self, name, length, width, parent=None, children=None):</span>
+<span class="sd">    ...         super(MyClass, self).__init__()</span>
+<span class="sd">    ...         self.name = name</span>
+<span class="sd">    ...         self.length = length</span>
+<span class="sd">    ...         self.width = width</span>
+<span class="sd">    ...         self.parent = parent</span>
+<span class="sd">    ...         if children:</span>
+<span class="sd">    ...             self.children = children</span>
+
+<span class="sd">    Construction via `parent`:</span>
+
+<span class="sd">    &gt;&gt;&gt; my0 = MyClass(&#39;my0&#39;, 0, 0)</span>
+<span class="sd">    &gt;&gt;&gt; my1 = MyClass(&#39;my1&#39;, 1, 0, parent=my0)</span>
+<span class="sd">    &gt;&gt;&gt; my2 = MyClass(&#39;my2&#39;, 0, 2, parent=my0)</span>
+
+<span class="sd">    &gt;&gt;&gt; for pre, _, node in RenderTree(my0):</span>
+<span class="sd">    ...     treestr = u&quot;%s%s&quot; % (pre, node.name)</span>
+<span class="sd">    ...     print(treestr.ljust(8), node.length, node.width)</span>
+<span class="sd">    my0      0 0</span>
+<span class="sd">    ├── my1  1 0</span>
+<span class="sd">    └── my2  0 2</span>
+
+<span class="sd">    Construction via `children`:</span>
+
+<span class="sd">    &gt;&gt;&gt; my0 = MyClass(&#39;my0&#39;, 0, 0, children=[</span>
+<span class="sd">    ...     MyClass(&#39;my1&#39;, 1, 0),</span>
+<span class="sd">    ...     MyClass(&#39;my2&#39;, 0, 2),</span>
+<span class="sd">    ... ]</span>
+
+<span class="sd">    &gt;&gt;&gt; for pre, _, node in RenderTree(my0):</span>
+<span class="sd">    ...     treestr = u&quot;%s%s&quot; % (pre, node.name)</span>
+<span class="sd">    ...     print(treestr.ljust(8), node.length, node.width)</span>
+<span class="sd">    my0      0 0</span>
+<span class="sd">    ├── my1  1 0</span>
+<span class="sd">    └── my2  0 2</span>
+
+<span class="sd">    Both approaches can be mixed:</span>
+
+<span class="sd">    &gt;&gt;&gt; my0 = MyClass(&#39;my0&#39;, 0, 0, children=[</span>
+<span class="sd">    ...     MyClass(&#39;my1&#39;, 1, 0),</span>
+<span class="sd">    ... ]</span>
+<span class="sd">    &gt;&gt;&gt; my2 = MyClass(&#39;my2&#39;, 0, 2, parent=my0)</span>
+
+<span class="sd">    &gt;&gt;&gt; for pre, _, node in RenderTree(my0):</span>
+<span class="sd">    ...     treestr = u&quot;%s%s&quot; % (pre, node.name)</span>
+<span class="sd">    ...     print(treestr.ljust(8), node.length, node.width)</span>
+<span class="sd">    my0      0 0</span>
+<span class="sd">    ├── my1  1 0</span>
+<span class="sd">    └── my2  0 2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">u</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parent Node.</span>
+
+<span class="sd">        On set, the node is detached from any previous parent node and attached</span>
+<span class="sd">        to the new node.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node, RenderTree</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; print(RenderTree(udo))</span>
+<span class="sd">        Node(&#39;/Udo&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; print(RenderTree(marc))</span>
+<span class="sd">        Node(&#39;/Marc&#39;)</span>
+<span class="sd">        └── Node(&#39;/Marc/Lian&#39;)</span>
+
+<span class="sd">        **Attach**</span>
+
+<span class="sd">        &gt;&gt;&gt; marc.parent = udo</span>
+<span class="sd">        &gt;&gt;&gt; print(RenderTree(udo))</span>
+<span class="sd">        Node(&#39;/Udo&#39;)</span>
+<span class="sd">        └── Node(&#39;/Udo/Marc&#39;)</span>
+<span class="sd">            └── Node(&#39;/Udo/Marc/Lian&#39;)</span>
+
+<span class="sd">        **Detach**</span>
+
+<span class="sd">        To make a node to a root node, just set this attribute to `None`.</span>
+
+<span class="sd">        &gt;&gt;&gt; marc.is_root</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; marc.parent = None</span>
+<span class="sd">        &gt;&gt;&gt; marc.is_root</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parent</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@parent</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">NodeMixin</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Parent node </span><span class="si">%r</span><span class="s2"> is not of type &#39;NodeMixin&#39;.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">TreeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parent</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__check_loop</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__detach</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__attach</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__check_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Cannot set parent. </span><span class="si">%r</span><span class="s2"> cannot be parent of itself.&quot;</span>
+                <span class="k">raise</span> <span class="n">LoopError</span><span class="p">(</span><span class="n">msg</span> <span class="o">%</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">():</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Cannot set parent. </span><span class="si">%r</span><span class="s2"> is parent of </span><span class="si">%r</span><span class="s2">.&quot;</span>
+                <span class="k">raise</span> <span class="n">LoopError</span><span class="p">(</span><span class="n">msg</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__detach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pre_detach</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+            <span class="n">parentchildren</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">__children_</span>
+            <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">child</span> <span class="ow">is</span> <span class="bp">self</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">parentchildren</span><span class="p">),</span> <span class="s2">&quot;Tree internal data is corrupt.&quot;</span>  <span class="c1"># pragma: no cover</span>
+            <span class="c1"># ATOMIC START</span>
+            <span class="n">parentchildren</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__parent</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># ATOMIC END</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_post_detach</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__attach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pre_attach</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+            <span class="n">parentchildren</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">__children_</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">child</span> <span class="ow">is</span> <span class="bp">self</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">parentchildren</span><span class="p">),</span> <span class="s2">&quot;Tree internal data is corrupt.&quot;</span>  <span class="c1"># pragma: no cover</span>
+            <span class="c1"># ATOMIC START</span>
+            <span class="n">parentchildren</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__parent</span> <span class="o">=</span> <span class="n">parent</span>
+            <span class="c1"># ATOMIC END</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_post_attach</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__children_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__children</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__children</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__children</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        All child nodes.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; n = Node(&quot;n&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; a = Node(&quot;a&quot;, parent=n)</span>
+<span class="sd">        &gt;&gt;&gt; b = Node(&quot;b&quot;, parent=n)</span>
+<span class="sd">        &gt;&gt;&gt; c = Node(&quot;c&quot;, parent=n)</span>
+<span class="sd">        &gt;&gt;&gt; n.children</span>
+<span class="sd">        (Node(&#39;/n/a&#39;), Node(&#39;/n/b&#39;), Node(&#39;/n/c&#39;))</span>
+
+<span class="sd">        Modifying the children attribute modifies the tree.</span>
+
+<span class="sd">        **Detach**</span>
+
+<span class="sd">        The children attribute can be updated by setting to an iterable.</span>
+
+<span class="sd">        &gt;&gt;&gt; n.children = [a, b]</span>
+<span class="sd">        &gt;&gt;&gt; n.children</span>
+<span class="sd">        (Node(&#39;/n/a&#39;), Node(&#39;/n/b&#39;))</span>
+
+<span class="sd">        Node `c` is removed from the tree.</span>
+<span class="sd">        In case of an existing reference, the node `c` does not vanish and is the root of its own tree.</span>
+
+<span class="sd">        &gt;&gt;&gt; c</span>
+<span class="sd">        Node(&#39;/c&#39;)</span>
+
+<span class="sd">        **Attach**</span>
+
+<span class="sd">        &gt;&gt;&gt; d = Node(&quot;d&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; d</span>
+<span class="sd">        Node(&#39;/d&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; n.children = [a, b, d]</span>
+<span class="sd">        &gt;&gt;&gt; n.children</span>
+<span class="sd">        (Node(&#39;/n/a&#39;), Node(&#39;/n/b&#39;), Node(&#39;/n/d&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; d</span>
+<span class="sd">        Node(&#39;/n/d&#39;)</span>
+
+<span class="sd">        **Duplicate**</span>
+
+<span class="sd">        A node can just be the children once. Duplicates cause a :any:`TreeError`:</span>
+
+<span class="sd">        &gt;&gt;&gt; n.children = [a, b, d, a]</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">            ...</span>
+<span class="sd">        anytree.node.exceptions.TreeError: Cannot add node Node(&#39;/n/a&#39;) multiple times as child.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__children_</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__check_children</span><span class="p">(</span><span class="n">children</span><span class="p">):</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">NodeMixin</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Cannot add non-node object </span><span class="si">%r</span><span class="s2">. &quot;</span>
+                       <span class="s2">&quot;It is not a subclass of &#39;NodeMixin&#39;.&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">child</span>
+                <span class="k">raise</span> <span class="n">TreeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">child</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Cannot add node </span><span class="si">%r</span><span class="s2"> multiple times as child.&quot;</span> <span class="o">%</span> <span class="n">child</span>
+                <span class="k">raise</span> <span class="n">TreeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="nd">@children</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="c1"># convert iterable to tuple</span>
+        <span class="n">children</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+        <span class="n">NodeMixin</span><span class="o">.</span><span class="n">__check_children</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+        <span class="c1"># ATOMIC start</span>
+        <span class="n">old_children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pre_attach_children</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+                <span class="n">child</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_post_attach_children</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">old_children</span>
+            <span class="k">raise</span>
+        <span class="c1"># ATOMIC end</span>
+
+    <span class="nd">@children</span><span class="o">.</span><span class="n">deleter</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_detach_children</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">child</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_detach_children</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_pre_detach_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method call before detaching `children`.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_post_detach_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method call after detaching `children`.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_pre_attach_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method call before attaching `children`.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_post_attach_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method call after attaching `children`.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Path of this `Node`.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; udo.path</span>
+<span class="sd">        (Node(&#39;/Udo&#39;),)</span>
+<span class="sd">        &gt;&gt;&gt; marc.path</span>
+<span class="sd">        (Node(&#39;/Udo&#39;), Node(&#39;/Udo/Marc&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; lian.path</span>
+<span class="sd">        (Node(&#39;/Udo&#39;), Node(&#39;/Udo/Marc&#39;), Node(&#39;/Udo/Marc/Lian&#39;))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span>
+
+    <span class="k">def</span> <span class="nf">iter_path_reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterate up the tree from the current node.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; for node in udo.iter_path_reverse():</span>
+<span class="sd">        ...     print(node)</span>
+<span class="sd">        Node(&#39;/Udo&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; for node in marc.iter_path_reverse():</span>
+<span class="sd">        ...     print(node)</span>
+<span class="sd">        Node(&#39;/Udo/Marc&#39;)</span>
+<span class="sd">        Node(&#39;/Udo&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; for node in lian.iter_path_reverse():</span>
+<span class="sd">        ...     print(node)</span>
+<span class="sd">        Node(&#39;/Udo/Marc/Lian&#39;)</span>
+<span class="sd">        Node(&#39;/Udo/Marc&#39;)</span>
+<span class="sd">        Node(&#39;/Udo&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">while</span> <span class="n">node</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">node</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">())))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ancestors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        All parent nodes and their parent nodes.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; udo.ancestors</span>
+<span class="sd">        ()</span>
+<span class="sd">        &gt;&gt;&gt; marc.ancestors</span>
+<span class="sd">        (Node(&#39;/Udo&#39;),)</span>
+<span class="sd">        &gt;&gt;&gt; lian.ancestors</span>
+<span class="sd">        (Node(&#39;/Udo&#39;), Node(&#39;/Udo/Marc&#39;))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">path</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">anchestors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        All parent nodes and their parent nodes - see :any:`ancestors`.</span>
+
+<span class="sd">        The attribute `anchestors` is just a typo of `ancestors`. Please use `ancestors`.</span>
+<span class="sd">        This attribute will be removed in the 3.0.0 release.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;.anchestors was a typo and will be removed in version 3.0.0&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ancestors</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">descendants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        All child nodes and all their child nodes.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; loui = Node(&quot;Loui&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; soe = Node(&quot;Soe&quot;, parent=lian)</span>
+<span class="sd">        &gt;&gt;&gt; udo.descendants</span>
+<span class="sd">        (Node(&#39;/Udo/Marc&#39;), Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Lian/Soe&#39;), Node(&#39;/Udo/Marc/Loui&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; marc.descendants</span>
+<span class="sd">        (Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Lian/Soe&#39;), Node(&#39;/Udo/Marc/Loui&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; lian.descendants</span>
+<span class="sd">        (Node(&#39;/Udo/Marc/Lian/Soe&#39;),)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">PreOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="p">))[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tree Root Node.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; udo.root</span>
+<span class="sd">        Node(&#39;/Udo&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; marc.root</span>
+<span class="sd">        Node(&#39;/Udo&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; lian.root</span>
+<span class="sd">        Node(&#39;/Udo&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">while</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+        <span class="k">return</span> <span class="n">node</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">siblings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tuple of nodes with the same parent.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; loui = Node(&quot;Loui&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; lazy = Node(&quot;Lazy&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; udo.siblings</span>
+<span class="sd">        ()</span>
+<span class="sd">        &gt;&gt;&gt; marc.siblings</span>
+<span class="sd">        ()</span>
+<span class="sd">        &gt;&gt;&gt; lian.siblings</span>
+<span class="sd">        (Node(&#39;/Udo/Marc/Loui&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; loui.siblings</span>
+<span class="sd">        (Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">parent</span><span class="o">.</span><span class="n">children</span> <span class="k">if</span> <span class="n">node</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">leaves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tuple of all leaf nodes.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; loui = Node(&quot;Loui&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; lazy = Node(&quot;Lazy&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; udo.leaves</span>
+<span class="sd">        (Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Loui&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; marc.leaves</span>
+<span class="sd">        (Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Loui&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">PreOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_</span><span class="o">=</span><span class="k">lambda</span> <span class="n">node</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        `Node` has no children (External Node).</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; udo.is_leaf</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; marc.is_leaf</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; lian.is_leaf</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__children_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        `Node` is tree root.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; udo.is_root</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; marc.is_root</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; lian.is_root</span>
+<span class="sd">        False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Number of edges on the longest path to a leaf `Node`.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; udo.height</span>
+<span class="sd">        2</span>
+<span class="sd">        &gt;&gt;&gt; marc.height</span>
+<span class="sd">        1</span>
+<span class="sd">        &gt;&gt;&gt; lian.height</span>
+<span class="sd">        0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__children_</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">height</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__children_</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">depth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Number of edges to the root `Node`.</span>
+
+<span class="sd">        &gt;&gt;&gt; from anytree import Node</span>
+<span class="sd">        &gt;&gt;&gt; udo = Node(&quot;Udo&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; marc = Node(&quot;Marc&quot;, parent=udo)</span>
+<span class="sd">        &gt;&gt;&gt; lian = Node(&quot;Lian&quot;, parent=marc)</span>
+<span class="sd">        &gt;&gt;&gt; udo.depth</span>
+<span class="sd">        0</span>
+<span class="sd">        &gt;&gt;&gt; marc.depth</span>
+<span class="sd">        1</span>
+<span class="sd">        &gt;&gt;&gt; lian.depth</span>
+<span class="sd">        2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">()):</span>
+            <span class="k">continue</span>
+        <span class="k">return</span> <span class="n">i</span>
+
+    <span class="k">def</span> <span class="nf">_pre_detach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method call before detaching from `parent`.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_post_detach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method call after detaching from `parent`.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_pre_attach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method call before attaching to `parent`.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_post_attach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method call after attaching to `parent`.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

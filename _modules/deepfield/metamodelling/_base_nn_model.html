@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepfield.metamodelling._base_nn_model &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/deepfield.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepfield.metamodelling._base_nn_model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepfield.metamodelling._base_nn_model</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Base class for learnable models.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="k">import</span> <span class="n">nn</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">get_model_device</span>
+<span class="kn">from</span> <span class="nn">..field.utils</span> <span class="k">import</span> <span class="n">hasnested</span>
+
+
+<span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base-class for neural-network models.</span>
+<span class="sd">    Contains required API for model training, dump and load procedures.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Forward pass.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Abstract method is not implemented.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">make_training_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make one training iteration. Runs backward pass. Return loss of the prediction.</span>
+<span class="sd">        Loss should be detached.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Abstract method is not implemented.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">make_evaluation_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make evaluation iteration.</span>
+<span class="sd">        Wraps self.make_training_iter with torch.no_grad wrapper.&quot;&quot;&quot;</span>
+        <span class="n">is_training</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_training_iter</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">is_training</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load model parameters from the file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path: str</span>
+<span class="sd">            Path to the file with stored parameters.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loaded_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">get_model_device</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">loaded_dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dump model parameters into the file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path: str</span>
+<span class="sd">            Path to the file for dump.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_attrs_from_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="o">*</span><span class="n">attrs</span><span class="p">,</span> <span class="n">leave_attrs_device</span><span class="o">=</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;Get attributes from sample by name.</span>
+<span class="sd">        Move attributes to model&#39;s device unless they are in `leave_attrs_device`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sample</span>
+<span class="sd">        attrs</span>
+<span class="sd">        leave_attrs_device</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">get_model_device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
+            <span class="c1"># FIXME attr is not str - it is tuple! Values are always on the model&#39;s device!</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">sample</span><span class="p">[</span><span class="n">attr</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">attr</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leave_attrs_device</span> <span class="k">else</span> <span class="n">value</span><span class="p">,</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hasnested</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;masks&#39;</span><span class="p">,</span> <span class="s1">&#39;neighbours&#39;</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;masks&#39;</span><span class="p">][</span><span class="s1">&#39;neighbours&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;masks&#39;</span><span class="p">,</span> <span class="s1">&#39;neighbours&#39;</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leave_attrs_device</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">hasnested</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;grid&#39;</span><span class="p">,</span> <span class="s1">&#39;distances&#39;</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;grid&#39;</span><span class="p">][</span><span class="s1">&#39;distances&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+                <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;grid&#39;</span><span class="p">,</span> <span class="s1">&#39;distances&#39;</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leave_attrs_device</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                <span class="n">out</span> <span class="o">+=</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span> <span class="nf">_get_masks_from_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="o">*</span><span class="n">mask_keys</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get masks from sample by name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sample</span>
+<span class="sd">        mask_keys</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">get_model_device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">masks</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">mask_keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">masks</span> <span class="o">+=</span> <span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">hasnested</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;masks&#39;</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+                <span class="n">masks</span> <span class="o">+=</span> <span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s1">&#39;masks&#39;</span><span class="p">][</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Mask key </span><span class="si">%s</span><span class="s1"> was not found in the sample&#39;</span> <span class="o">%</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">masks</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_compute_loss</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="p">,</span> <span class="n">masks</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute loss between reference and prediction, given `loss_pattern`.</span>
+<span class="sd">        If `loss_pattern` contains masked losses, the masks should be also provided.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ref</span>
+<span class="sd">        pred</span>
+<span class="sd">        loss_pattern</span>
+<span class="sd">        masks</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        loss</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">mask</span><span class="p">,</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">masks</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="p">):</span>
+            <span class="n">mult</span><span class="p">,</span> <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;multiplier&#39;</span><span class="p">],</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;loss_fn&#39;</span><span class="p">]</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;kwargs&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;kwargs&#39;</span> <span class="ow">in</span> <span class="n">pattern</span> <span class="k">else</span> <span class="p">{}</span>
+            <span class="n">loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mult</span> <span class="o">*</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">ref</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="n">pred</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

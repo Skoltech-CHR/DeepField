@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Randomizers &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Randomizers</a><ul>
+<li><a class="reference internal" href="#fieldrandomizer">FieldRandomizer</a></li>
+<li><a class="reference internal" href="#rockrandomizer">RockRandomizer</a></li>
+<li><a class="reference internal" href="#statesrandomizer">StatesRandomizer</a></li>
+<li><a class="reference internal" href="#controlrandomizer">ControlRandomizer</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Randomizers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/randomizers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="randomizers">
+<h1>Randomizers<a class="headerlink" href="#randomizers" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="fieldrandomizer">
+<h2>FieldRandomizer<a class="headerlink" href="#fieldrandomizer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.datasets.FieldRandomizer">
+<em class="property">class </em><code class="sig-name descname">FieldRandomizer</code><span class="sig-paren">(</span><em class="sig-param">path_to_base_field</em>, <em class="sig-param">randomizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/randomize.html#FieldRandomizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldRandomizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomization of Fields, based on some base model.</p>
+<dl class="attribute">
+<dt id="deepfield.datasets.FieldRandomizer.default_control_rand">
+<code class="sig-name descname">default_control_rand</code><em class="property"> = &lt;deepfield.datasets.randomize.ControlRandomizer object&gt;</em><a class="headerlink" href="#deepfield.datasets.FieldRandomizer.default_control_rand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.datasets.FieldRandomizer.default_randomizer">
+<code class="sig-name descname">default_randomizer</code><em class="property"> = {'control': &lt;deepfield.datasets.randomize.ControlRandomizer object&gt;, 'rock': &lt;deepfield.datasets.randomize.RockRandomizer object&gt;, 'states': &lt;deepfield.datasets.randomize.StatesRandomizer object&gt;}</em><a class="headerlink" href="#deepfield.datasets.FieldRandomizer.default_randomizer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.datasets.FieldRandomizer.default_rock_rand">
+<code class="sig-name descname">default_rock_rand</code><em class="property"> = &lt;deepfield.datasets.randomize.RockRandomizer object&gt;</em><a class="headerlink" href="#deepfield.datasets.FieldRandomizer.default_rock_rand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.datasets.FieldRandomizer.default_states_rand">
+<code class="sig-name descname">default_states_rand</code><em class="property"> = &lt;deepfield.datasets.randomize.StatesRandomizer object&gt;</em><a class="headerlink" href="#deepfield.datasets.FieldRandomizer.default_states_rand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldRandomizer.generate_randomized_dataset">
+<code class="sig-name descname">generate_randomized_dataset</code><span class="sig-paren">(</span><em class="sig-param">root_dir</em>, <em class="sig-param">n_samples</em>, <em class="sig-param">fmt=None</em>, <em class="sig-param">title=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/randomize.html#FieldRandomizer.generate_randomized_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldRandomizer.generate_randomized_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate dataset consisting of randomized fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to the directory to create the dataset</p></li>
+<li><p><strong>n_samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – An amount of fields to generate</p></li>
+<li><p><strong>fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Format in which fields will be dumped (with field.dump(fmt=fmt))
+If None, fields will be dumped in tNavigator format.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldRandomizer.get_randomized_field">
+<code class="sig-name descname">get_randomized_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/randomize.html#FieldRandomizer.get_randomized_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldRandomizer.get_randomized_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get randomized field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>out</strong> – Field with randomized initial state, rock and control.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>geology.Field</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="rockrandomizer">
+<h2>RockRandomizer<a class="headerlink" href="#rockrandomizer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.datasets.RockRandomizer">
+<em class="property">class </em><code class="sig-name descname">RockRandomizer</code><span class="sig-paren">(</span><em class="sig-param">std_reference_func=&lt;function amax&gt;</em>, <em class="sig-param">std_amplitude=0.01</em>, <em class="sig-param">uncorrelated_noise=False</em>, <em class="sig-param">correlated_noise_freq=0.1</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/randomize.html#RockRandomizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.RockRandomizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomizer for rock attributes.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="statesrandomizer">
+<h2>StatesRandomizer<a class="headerlink" href="#statesrandomizer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.datasets.StatesRandomizer">
+<em class="property">class </em><code class="sig-name descname">StatesRandomizer</code><span class="sig-paren">(</span><em class="sig-param">std_reference_func=&lt;function amax&gt;</em>, <em class="sig-param">std_amplitude=0.01</em>, <em class="sig-param">uncorrelated_noise=False</em>, <em class="sig-param">correlated_noise_freq=0.1</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/randomize.html#StatesRandomizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.StatesRandomizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomizer for states attributes</p>
+</dd></dl>
+
+</div>
+<div class="section" id="controlrandomizer">
+<h2>ControlRandomizer<a class="headerlink" href="#controlrandomizer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.datasets.ControlRandomizer">
+<em class="property">class </em><code class="sig-name descname">ControlRandomizer</code><span class="sig-paren">(</span><em class="sig-param">attr_to_vary='BHPT'</em>, <em class="sig-param">equality_condition=None</em>, <em class="sig-param">exp_amp=(70</em>, <em class="sig-param">250)</em>, <em class="sig-param">exp_log_curv=(-6</em>, <em class="sig-param">-4)</em>, <em class="sig-param">const=(1</em>, <em class="sig-param">10)</em>, <em class="sig-param">sin_scale=(0.001</em>, <em class="sig-param">0.02)</em>, <em class="sig-param">sin_phi=(0</em>, <em class="sig-param">6.283185307179586)</em>, <em class="sig-param">sin_minima=(0.6</em>, <em class="sig-param">0.8)</em>, <em class="sig-param">noise_range=(0</em>, <em class="sig-param">0)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/randomize.html#ControlRandomizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.ControlRandomizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomizer for control attributes (works inplace!).</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

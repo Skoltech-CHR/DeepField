@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepfield.field.rock &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/deepfield.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepfield.field.rock</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepfield.field.rock</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Rock component.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">.base_spatial</span> <span class="k">import</span> <span class="n">SpatialComponent</span>
+<span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">apply_to_each_input</span><span class="p">,</span> <span class="n">state_check</span><span class="p">,</span> <span class="n">ndim_check</span>
+<span class="kn">from</span> <span class="nn">.plot_utils</span> <span class="k">import</span> <span class="n">show_cube_static</span><span class="p">,</span> <span class="n">show_cube_interactive</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">rolling_window</span><span class="p">,</span> <span class="n">get_single_path</span>
+<span class="kn">from</span> <span class="nn">.parse_utils</span> <span class="k">import</span> <span class="n">read_ecl_bin</span>
+
+
+<div class="viewcode-block" id="Rock"><a class="viewcode-back" href="../../../api/rock.html#deepfield.field.Rock">[docs]</a><span class="k">class</span> <span class="nc">Rock</span><span class="p">(</span><span class="n">SpatialComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Rock component of geological model.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_load_ecl_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_to_results</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">get_single_path</span><span class="p">(</span><span class="n">path_to_results</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;.INIT&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">sections</span> <span class="o">=</span> <span class="n">read_ecl_bin</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;PORO&#39;</span><span class="p">,</span> <span class="s1">&#39;PERMX&#39;</span><span class="p">,</span> <span class="s1">&#39;PERMY&#39;</span><span class="p">,</span> <span class="s1">&#39;PERMZ&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">k</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">sections</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+    <span class="nd">@apply_to_each_input</span>
+    <span class="k">def</span> <span class="nf">_to_spatial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">dimens</span><span class="p">,</span> <span class="n">inplace</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Spatial order &#39;F&#39; transformations.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="n">attr</span><span class="p">,</span> <span class="n">newshape</span><span class="o">=</span><span class="n">dimens</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_data_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">float_dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prepare data for dump.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fmt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;HDF5&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_make_data_dump</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="n">attr</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span> <span class="k">if</span> <span class="n">float_dtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">float_dtype</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Rock.pad_na"><a class="viewcode-back" href="../../../api/rock.html#deepfield.field.Rock.pad_na">[docs]</a>    <span class="nd">@apply_to_each_input</span>
+    <span class="k">def</span> <span class="nf">pad_na</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">actnum</span><span class="p">,</span> <span class="n">fill_na</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add dummy cells into the rock vector in the positions of non-active cells if necessary.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr: str, array-like</span>
+<span class="sd">            Attributes to be padded with non-active cells.</span>
+<span class="sd">        actnum: array-like of type bool</span>
+<span class="sd">            Vector representing a mask of active and non-active cells.</span>
+<span class="sd">        fill_na: float</span>
+<span class="sd">            Value to be used as filler.</span>
+<span class="sd">        inplace: bool</span>
+<span class="sd">            Modify сomponent inplace.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        output : component if inplace else padded attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="n">actnum</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">inplace</span> <span class="k">else</span> <span class="n">data</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Data should be raveled before padding.&#39;</span><span class="p">)</span>
+        <span class="n">padded_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">actnum</span><span class="o">.</span><span class="n">size</span><span class="p">,),</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_na</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">padded_data</span><span class="p">[</span><span class="n">actnum</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">padded_data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="n">padded_data</span></div>
+
+<div class="viewcode-block" id="Rock.strip_na"><a class="viewcode-back" href="../../../api/rock.html#deepfield.field.Rock.strip_na">[docs]</a>    <span class="nd">@apply_to_each_input</span>
+    <span class="k">def</span> <span class="nf">strip_na</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">actnum</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove non-active cells from the rock vector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr: str, array-like</span>
+<span class="sd">            Attributes to be stripped</span>
+<span class="sd">        actnum: array-like of type bool</span>
+<span class="sd">            Vector representing mask of active and non-active cells.</span>
+<span class="sd">        inplace: bool</span>
+<span class="sd">            Modify сomponent inplace.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        output : component if inplace else stripped attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">spatial</span> <span class="ow">and</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Inplace is not allowed in spatial state.&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">actnum</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">inplace</span> <span class="k">else</span> <span class="n">data</span>
+        <span class="n">stripped_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">actnum</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">stripped_data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="n">stripped_data</span></div>
+
+<div class="viewcode-block" id="Rock.show_histogram"><a class="viewcode-back" href="../../../api/rock.html#deepfield.field.Rock.show_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">show_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">actnum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Show properties distribution.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr : str</span>
+<span class="sd">            Attribute to compute the histogram.</span>
+<span class="sd">        actnum : array, optional</span>
+<span class="sd">            Actnum array. If None, all cell are active.</span>
+<span class="sd">        kwargs : misc</span>
+<span class="sd">            Any additional named arguments to ``plt.hist``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        plot : Histogram plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">actnum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">*</span> <span class="n">actnum</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Rock.show_cube"><a class="viewcode-back" href="../../../api/rock.html#deepfield.field.Rock.show_cube">[docs]</a>    <span class="nd">@state_check</span><span class="p">(</span><span class="k">lambda</span> <span class="n">state</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">spatial</span><span class="p">)</span>
+    <span class="nd">@ndim_check</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">show_cube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">actnum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Visualize slices of 3D array. If no slice is specified, all 3 slices</span>
+<span class="sd">        will be shown with interactive slider widgets.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr : str</span>
+<span class="sd">            Attribute to show.</span>
+<span class="sd">        x : int or None, optional</span>
+<span class="sd">            Slice along x-axis to show.</span>
+<span class="sd">        y : int or None, optional</span>
+<span class="sd">            Slice along y-axis to show.</span>
+<span class="sd">        z : int or None, optional</span>
+<span class="sd">            Slice along z-axis to show.</span>
+<span class="sd">        actnum : array, optional</span>
+<span class="sd">            Actnum array. If None, all cell are active.</span>
+<span class="sd">        figsize : array-like, optional</span>
+<span class="sd">            Output plot size.</span>
+<span class="sd">        kwargs : dict, optional</span>
+<span class="sd">            Additional keyword arguments for plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">actnum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">*</span> <span class="n">actnum</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]):</span>
+            <span class="n">show_cube_interactive</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">show_cube_static</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Rock.upscale"><a class="viewcode-back" href="../../../api/rock.html#deepfield.field.Rock.upscale">[docs]</a>    <span class="nd">@state_check</span><span class="p">(</span><span class="k">lambda</span> <span class="n">state</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">spatial</span><span class="p">)</span>
+    <span class="nd">@apply_to_each_input</span>
+    <span class="k">def</span> <span class="nf">upscale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">factors</span><span class="p">,</span> <span class="n">volumes</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Upscale properties.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr : str, list of str</span>
+<span class="sd">            Attributes to be upscaled.</span>
+<span class="sd">        factors : tuple, int</span>
+<span class="sd">            Scale factors along each axis. If int, factors are the same for each axis.</span>
+<span class="sd">        volumes : ndarray, same shape as `attr`</span>
+<span class="sd">            Cell volumes.</span>
+<span class="sd">        weights : ndarray, same shape as `attr`, optional</span>
+<span class="sd">            Cell weights.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : ndarray</span>
+<span class="sd">            Upscaled properties.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">factors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">factors</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">factors</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">factors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">factors</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="n">binned_weights</span> <span class="o">=</span> <span class="n">rolling_window</span><span class="p">(</span><span class="n">volumes</span><span class="p">,</span> <span class="n">factors</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">binned_weights</span> <span class="o">*=</span> <span class="n">rolling_window</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">factors</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">rolling_window</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">factors</span><span class="p">)</span> <span class="o">*</span> <span class="n">binned_weights</span>
+        <span class="n">binned_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">binned_weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">zero_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">binned_weights</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">binned_weights</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">zero_mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">out</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

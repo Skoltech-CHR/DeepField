@@ -1,0 +1,584 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepfield.field.aquifer &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/deepfield.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepfield.field.aquifer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepfield.field.aquifer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Classes and routines for handling aquifers.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+
+<span class="kn">from</span> <span class="nn">.base_component</span> <span class="k">import</span> <span class="n">BaseComponent</span>
+
+<div class="viewcode-block" id="Aquifers"><a class="viewcode-back" href="../../../api/aquifer.html#deepfield.field.aquifer.Aquifers">[docs]</a><span class="k">class</span> <span class="nc">Aquifers</span><span class="p">(</span><span class="n">BaseComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aquifers component class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Aquifers.items"><a class="viewcode-back" href="../../../api/aquifer.html#deepfield.field.aquifer.Aquifers.items">[docs]</a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns pairs of aquifer&#39;s names and data.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Aquifers.copy"><a class="viewcode-back" href="../../../api/aquifer.html#deepfield.field.aquifer.Aquifers.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a deepcopy of attributes. Cached properties are not copied.&quot;&quot;&quot;</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+            <span class="n">copy</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">copy</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns names of the aquifers.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+<div class="viewcode-block" id="Aquifers.randomize"><a class="viewcode-back" href="../../../api/aquifer.html#deepfield.field.aquifer.Aquifers.randomize">[docs]</a>    <span class="k">def</span> <span class="nf">randomize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">randomizers</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Randomize properties of the aquifers</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        randomizers : dict</span>
+<span class="sd">            Dict of the structure {parameter_name: Callable returning value, being added to the original value}.</span>
+<span class="sd">        inplace : bool, optional</span>
+<span class="sd">            Perform operations inplace or return copy, by default False</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Aquifers</span>
+<span class="sd">            Randomized aquifers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="n">aquifers</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">aquifers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">aq_name</span> <span class="ow">in</span> <span class="n">aquifers</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+            <span class="n">aquif</span> <span class="o">=</span> <span class="n">aquifers</span><span class="p">[</span><span class="n">aq_name</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">randomizers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">aquif</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">aquif</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">aquifers</span></div>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_read_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load aquifers data from an ASCII file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        buffer : StringIteratorIO</span>
+<span class="sd">            Buffer to get string from.</span>
+<span class="sd">        attr : str</span>
+<span class="sd">            Data format.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Aquifers</span>
+<span class="sd">            Aquifers component with loaded aquifers data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;AQCT&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_aqct</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;AQCO&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_aqco</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;AQUANCON&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_aquancon</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;AQUCT&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_aquct</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_load_aquancon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;load AQUANCON keyword&quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Aquifer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;slices&#39;</span> <span class="p">:</span> <span class="p">(</span>
+                    <span class="nb">slice</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span>
+                    <span class="nb">slice</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">4</span><span class="p">])),</span>
+                    <span class="nb">slice</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
+                    <span class="p">),</span>
+                <span class="s1">&#39;face&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">attributes</span> <span class="ow">and</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Aquifer </span><span class="si">{}</span><span class="s1"> has attribute </span><span class="si">{}</span><span class="s1">. Will be replaced.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span>
+                    <span class="p">))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_load_aquct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;load AQUCT keyword&quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Aquifer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;depth&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="s1">&#39;initial_pressure&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                <span class="s1">&#39;perm&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+                <span class="s1">&#39;poro&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span>
+                <span class="s1">&#39;compressibility&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span>
+                <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span>
+                <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">7</span><span class="p">]),</span>
+                <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">8</span><span class="p">]),</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">attributes</span> <span class="ow">and</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Aquifer </span><span class="si">{}</span><span class="s1"> has attribute </span><span class="si">{}</span><span class="s1">. Will be replaced.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span>
+                    <span class="p">))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_load_aqct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;load AQCT keyword.&quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Aquifer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;depth&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+            <span class="s1">&#39;perm&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+            <span class="s1">&#39;poro&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span>
+            <span class="s1">&#39;compressibility&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span>
+            <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span>
+            <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">7</span><span class="p">]),</span>
+            <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">8</span><span class="p">]),</span>
+            <span class="s1">&#39;initial_pressure&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">9</span><span class="p">]),</span>
+            <span class="s1">&#39;viscosity&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">10</span><span class="p">]),</span>
+            <span class="s1">&#39;equi&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">attributes</span> <span class="ow">and</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Aquifer </span><span class="si">{}</span><span class="s1"> has attribute </span><span class="si">{}</span><span class="s1">. Will be replaced.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span>
+                <span class="p">))</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Aquifers.crop_minimal_cube"><a class="viewcode-back" href="../../../api/aquifer.html#deepfield.field.aquifer.Aquifers.crop_minimal_cube">[docs]</a>    <span class="k">def</span> <span class="nf">crop_minimal_cube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slices</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify aquifers&#39; cell inndices with respect to</span>
+<span class="sd">        slices representing grid crop.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        slices : Iterable(slices)</span>
+<span class="sd">            slices</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Aquifers</span>
+<span class="sd">            Aquifers with changed well indices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">aquifer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">aquifer</span><span class="o">.</span><span class="n">crop_minimal_cube</span><span class="p">(</span><span class="n">slices</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_load_aqco</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;load AQCO keyword.&quot;&quot;&quot;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Aquifer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;slices&#39;</span> <span class="p">:</span> <span class="p">(</span>
+                <span class="nb">slice</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                <span class="nb">slice</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">5</span><span class="p">])),</span>
+                <span class="nb">slice</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">7</span><span class="p">]))</span>
+                <span class="p">),</span>
+            <span class="s1">&#39;face&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">attributes</span> <span class="ow">and</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Aquifer </span><span class="si">{}</span><span class="s1"> has attribute </span><span class="si">{}</span><span class="s1">. Will be replaced.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span>
+                <span class="p">))</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_dump_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1">#pylint: disable=too-many-branches</span>
+        <span class="sd">&quot;&quot;&quot;Save data into HDF5 file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path to output file.</span>
+<span class="sd">        mode : str</span>
+<span class="sd">            Mode to open file.</span>
+<span class="sd">            &#39;w&#39;: write, a new file is created (an existing file with</span>
+<span class="sd">            the same name would be deleted).</span>
+<span class="sd">            &#39;a&#39;: append, an existing file is opened for reading and writing,</span>
+<span class="sd">            and if the file does not exist it is created.</span>
+<span class="sd">            Default to &#39;a&#39;.</span>
+<span class="sd">        state : bool</span>
+<span class="sd">            Dump compoments&#39;s state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Aquifers</span>
+<span class="sd">            Aquifers unchanged.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">aquifers</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">class_name</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_name</span> <span class="ow">in</span> <span class="n">f</span> <span class="k">else</span> <span class="n">f</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">state</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">aquifers</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="k">for</span> <span class="n">aquif</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">aq_path</span> <span class="o">=</span> <span class="n">aquif</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">grp</span> <span class="o">=</span> <span class="n">aquifers</span><span class="p">[</span><span class="n">aq_path</span><span class="p">]</span> <span class="k">if</span> <span class="n">aq_path</span> <span class="ow">in</span> <span class="n">aquifers</span> <span class="k">else</span> <span class="n">aquifers</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">aq_path</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">:</span>
+                    <span class="n">grp_data</span> <span class="o">=</span> <span class="n">aquifers</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">aq_path</span> <span class="o">+</span> <span class="s1">&#39;/data&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">grp_data</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">aquif</span><span class="o">.</span><span class="n">data_dict</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">att</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">att</span> <span class="ow">in</span> <span class="n">grp_data</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">grp</span><span class="p">[</span><span class="n">att</span><span class="p">]</span>
+                    <span class="n">grp_data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">att</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_load_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load data from a HDF5 file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path to file to load data from.</span>
+<span class="sd">        attrs : str or array of str, optional</span>
+<span class="sd">            Array of dataset&#39;s names to get from file. If not given, loads all.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Aquifers</span>
+<span class="sd">            Aquifers with loaded attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">attrs</span><span class="p">]</span>
+
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+            <span class="n">aquifers</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">class_name</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">aquifers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Aquifer</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+                    <span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[()]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">group</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">})</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_dump_ascii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save data into text file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path to output file.</span>
+<span class="sd">        attr : str</span>
+<span class="sd">            Attribute to dump into file.</span>
+<span class="sd">        mode : str</span>
+<span class="sd">            Mode to open file.</span>
+<span class="sd">            &#39;w&#39;: write, a new file is created (an existing file with</span>
+<span class="sd">            the same name would be deleted).</span>
+<span class="sd">            &#39;a&#39;: append, an existing file is opened for reading and writing,</span>
+<span class="sd">            and if the file does not exist it is created.</span>
+<span class="sd">            Default to &#39;w&#39;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Aquifers</span>
+<span class="sd">            Aquifers unchanged.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># imort pdb; pdb.set_trace()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;AQUANCON</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">aquifer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="s1">&#39;</span><span class="si">{name}</span><span class="se">\t</span><span class="si">{i1}</span><span class="se">\t</span><span class="si">{i2}</span><span class="se">\t</span><span class="si">{j1}</span><span class="se">\t</span><span class="si">{j2}</span><span class="se">\t</span><span class="si">{k1}</span><span class="se">\t</span><span class="si">{k2}</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span>
+                        <span class="s1">&#39;</span><span class="si">{face}</span><span class="s1"> /</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">name</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+                            <span class="n">i1</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">slices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">i2</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">slices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span>
+                            <span class="n">j1</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">slices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">j2</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">slices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span>
+                            <span class="n">k1</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">slices</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">k2</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">slices</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span>
+                            <span class="n">face</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">face</span>
+                        <span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;/</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;AQUCT</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">aquifer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aquifers</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="s1">&#39;</span><span class="si">{name}</span><span class="se">\t</span><span class="si">{depth}</span><span class="se">\t</span><span class="si">{initial_pressure}</span><span class="se">\t</span><span class="si">{perm}</span><span class="se">\t</span><span class="si">{poro}</span><span class="se">\t</span><span class="si">{compressibility}</span><span class="se">\t</span><span class="si">{r}</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span>
+                        <span class="s1">&#39;</span><span class="si">{height}</span><span class="se">\t</span><span class="si">{angle}</span><span class="s1"> /</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">name</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+                            <span class="n">depth</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
+                            <span class="n">perm</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">perm</span><span class="p">,</span>
+                            <span class="n">poro</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">poro</span><span class="p">,</span>
+                            <span class="n">compressibility</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">compressibility</span><span class="p">,</span>
+                            <span class="n">r</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">r</span><span class="p">,</span>
+                            <span class="n">angle</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">angle</span><span class="p">,</span>
+                            <span class="n">height</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                            <span class="n">initial_pressure</span><span class="o">=</span><span class="n">aquifer</span><span class="o">.</span><span class="n">initial_pressure</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;/</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<span class="k">class</span> <span class="nc">Aquifer</span><span class="p">(</span><span class="n">BaseComponent</span><span class="p">):</span>
+    <span class="s2">&quot;Class representing specific aquifer object&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;SLICES&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;SLICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">a</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">slice</span><span class="p">)</span> <span class="k">else</span> <span class="nb">slice</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;SLICES&#39;</span><span class="p">])</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">data_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;create dictionary with aquifer representation</span>
+<span class="sd">        suitable for further serialization to hdf5</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            dict with aquifer data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">att</span> <span class="o">==</span> <span class="s1">&#39;SLICES&#39;</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+                    <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">stop</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">att</span><span class="p">)</span>
+                <span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">att</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">att</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">crop_minimal_cube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slices</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify aquifer cell inndices with respect to</span>
+<span class="sd">        slices representing grid crop.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        slices : Iterable(slices)</span>
+<span class="sd">            slices</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Aquifer</span>
+<span class="sd">            Aquifer with changed well indices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_slices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">slice1</span><span class="p">,</span> <span class="n">slice2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;slices&#39;</span><span class="p">),</span> <span class="n">slices</span><span class="p">):</span>
+            <span class="n">new_start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">slice1</span><span class="o">.</span><span class="n">start</span> <span class="o">-</span> <span class="n">slice2</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">new_stop</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">slice1</span><span class="o">.</span><span class="n">stop</span><span class="o">-</span><span class="n">slice1</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">slice2</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">slice2</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
+            <span class="n">new_stop</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">new_stop</span><span class="p">)</span>
+            <span class="n">new_slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="n">new_start</span><span class="p">,</span> <span class="n">new_stop</span><span class="p">))</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;slices&#39;</span><span class="p">,</span> <span class="n">new_slices</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

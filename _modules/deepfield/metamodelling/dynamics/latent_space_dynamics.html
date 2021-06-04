@@ -1,0 +1,515 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepfield.metamodelling.dynamics.latent_space_dynamics &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/deepfield.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepfield.metamodelling.dynamics.latent_space_dynamics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepfield.metamodelling.dynamics.latent_space_dynamics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Latent space dynamics.&quot;&quot;&quot;</span>
+<span class="c1">#pylint: disable=wrong-import-order,wrong-import-position</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...field.utils</span> <span class="k">import</span> <span class="n">get_control_interval_mask</span>
+
+<span class="kn">from</span> <span class="nn">.._base_nn_model</span> <span class="k">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">..losses</span> <span class="k">import</span> <span class="n">standardize_loss_pattern</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="k">import</span> <span class="n">get_model_device</span>
+
+
+<div class="viewcode-block" id="LatentSpaceDynamics"><a class="viewcode-back" href="../../../../api/dynamics.html#deepfield.metamodelling.dynamics.LatentSpaceDynamics">[docs]</a><span class="k">class</span> <span class="nc">LatentSpaceDynamics</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Module for modelling dynamics in a learnable latent space.&quot;&quot;&quot;</span>
+    <span class="n">_attrs</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;states&#39;</span><span class="p">,</span> <span class="s1">&#39;rock&#39;</span><span class="p">,</span> <span class="s1">&#39;control&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;masks&#39;</span><span class="p">,</span> <span class="s1">&#39;control_t&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;masks&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">))</span>
+    <span class="n">_ae_kwargs</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;use_checkpointing&#39;</span><span class="p">,</span> <span class="s1">&#39;max_in_batch&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_enc</span><span class="p">,</span> <span class="n">state_dec</span><span class="p">,</span> <span class="n">params_enc</span><span class="p">,</span> <span class="n">control_enc</span><span class="p">,</span> <span class="n">dynamics</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        state_enc: nn.Module</span>
+<span class="sd">            Encoder module for states.</span>
+<span class="sd">        state_dec: nn.Module</span>
+<span class="sd">            Decoder module for states.</span>
+<span class="sd">        params_enc: nn.Module</span>
+<span class="sd">            Encoder module for rock (other parameters will be added later).</span>
+<span class="sd">        control_enc: nn.Module</span>
+<span class="sd">            Encoder module for control (transformed to the spatial form).</span>
+<span class="sd">        dynamics: nn.Module</span>
+<span class="sd">            Module, which computes the derivative of states over time, given params and instantaneous control.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_enc</span> <span class="o">=</span> <span class="n">state_enc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_dec</span> <span class="o">=</span> <span class="n">state_dec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params_enc</span> <span class="o">=</span> <span class="n">params_enc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control_enc</span> <span class="o">=</span> <span class="n">control_enc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dynamics</span> <span class="o">=</span> <span class="n">dynamics</span>
+
+<div class="viewcode-block" id="LatentSpaceDynamics.forward"><a class="viewcode-back" href="../../../../api/dynamics.html#deepfield.metamodelling.dynamics.LatentSpaceDynamics.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">control_t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">get_latent_states</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        init_state: torch.Tensor</span>
+<span class="sd">            Initial state. Shape: (B, C_s, *dims)</span>
+<span class="sd">        params: torch.Tensor</span>
+<span class="sd">            Params tensor (rock mostly). Shape: (B, C_p, *dims)</span>
+<span class="sd">        control: torch.Tensor</span>
+<span class="sd">            Spatial control tensor. Shape: (B, T_c, C_c, *dims)</span>
+<span class="sd">        control_t: torch.Tensor</span>
+<span class="sd">            Tensor holding a sequence of time points for which control is given.</span>
+<span class="sd">            Each time must be strictly larger than the previous time. Shape: (B, T_c)</span>
+<span class="sd">        t: torch.Tensor</span>
+<span class="sd">            Tensor holding a sequence of time points for which to solve for states.</span>
+<span class="sd">            The initial time point (i.e. time point of the init_state) should be the first</span>
+<span class="sd">            element of this sequence, and each time must be strictly larger than the previous time.</span>
+<span class="sd">            Shape: (B, T)</span>
+<span class="sd">        args: tuple</span>
+<span class="sd">            Any additional args passed to the encoders, decoder and dynamics modules.</span>
+<span class="sd">        get_latent_states: bool</span>
+<span class="sd">            If True, return solutions in the latent space as a second argument.</span>
+<span class="sd">        kwargs: dict</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        solution: torch.Tensor</span>
+<span class="sd">            Shape: (B, T, C_s, *dims)</span>
+<span class="sd">        latent_solution: torch.Tensor</span>
+<span class="sd">            Returned only if `get_latent_states=True`.</span>
+<span class="sd">            Shape: (B, T, C_l, *latent_dims)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ae_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_ae_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">t</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Solution timesteps should be equal for batch items.&quot;</span>
+        <span class="n">control</span><span class="p">,</span> <span class="n">control_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_control_subset</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">control_t</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span><span class="o">.</span><span class="n">device</span>
+        <span class="n">control</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">encoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encode</span><span class="p">(</span><span class="n">init_state</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+        <span class="n">r_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_dynamics</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="n">control_t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode</span><span class="p">(</span><span class="n">r_states</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">decoded</span><span class="p">,</span> <span class="n">r_states</span><span class="p">)</span> <span class="k">if</span> <span class="n">get_latent_states</span> <span class="k">else</span> <span class="n">decoded</span></div>
+
+<div class="viewcode-block" id="LatentSpaceDynamics.get_control_subset"><a class="viewcode-back" href="../../../../api/dynamics.html#deepfield.metamodelling.dynamics.LatentSpaceDynamics.get_control_subset">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_control_subset</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">control_t</span><span class="p">,</span> <span class="n">time_interval</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a control subset that corresponds to the target result time interval.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">control_t</span> <span class="o">-</span> <span class="n">control_t</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Control timesteps should be equal for batch items.&quot;</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">get_control_interval_mask</span><span class="p">(</span><span class="n">control_t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time_interval</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No control found for time interval (</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">).&#39;</span>
+                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_interval</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">control</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">],</span> <span class="n">control_t</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Encode initial state, params and control.&quot;&quot;&quot;</span>
+        <span class="n">r_init_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_enc</span><span class="p">(</span><span class="n">init_state</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">r_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_enc</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">r_control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_enc</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r_init_state</span><span class="p">,</span> <span class="n">r_params</span><span class="p">,</span> <span class="n">r_control</span>
+
+    <span class="k">def</span> <span class="nf">_compute_dynamics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoded</span><span class="p">,</span> <span class="n">control_t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute latent space dynamics.&quot;&quot;&quot;</span>
+        <span class="n">r_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamics</span><span class="p">(</span><span class="o">*</span><span class="n">encoded</span><span class="p">,</span> <span class="n">control_t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r_states</span>
+
+    <span class="k">def</span> <span class="nf">_decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_states</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decode latent states.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_dec</span><span class="p">(</span><span class="n">r_states</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_ae_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Filter kwargs which are not suitable for autoencoding modules.&quot;&quot;&quot;</span>
+        <span class="n">ae_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ae_kwargs</span><span class="p">:</span>
+                <span class="n">ae_kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">ae_kwargs</span>
+
+<div class="viewcode-block" id="LatentSpaceDynamics.make_training_iter"><a class="viewcode-back" href="../../../../api/dynamics.html#deepfield.metamodelling.dynamics.LatentSpaceDynamics.make_training_iter">[docs]</a>    <span class="k">def</span> <span class="nf">make_training_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="p">,</span> <span class="n">latent_loss_pattern</span><span class="o">=</span><span class="p">(),</span> <span class="n">autoencoder_loss_pattern</span><span class="o">=</span><span class="p">(),</span>
+                           <span class="n">loss_between_differences</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tbptt_step</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tbptt_tail</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">tbptt_loss_between_steps</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">tbptt_step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">tbptt_tail</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">tbptt_step</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">tbptt_tail</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;If TBPTT is assumed to be used, both `k1` and `k2` should be specified.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tbptt_step</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">tbptt_tail</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_training_iter</span><span class="p">(</span>
+                <span class="n">sample</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="p">,</span> <span class="n">latent_loss_pattern</span><span class="p">,</span> <span class="n">autoencoder_loss_pattern</span><span class="p">,</span> <span class="n">loss_between_differences</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_tbptt_training_iter</span><span class="p">(</span>
+            <span class="n">sample</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="p">,</span> <span class="n">latent_loss_pattern</span><span class="p">,</span> <span class="n">autoencoder_loss_pattern</span><span class="p">,</span> <span class="n">loss_between_differences</span><span class="p">,</span>
+            <span class="n">tbptt_step</span><span class="p">,</span> <span class="n">tbptt_tail</span><span class="p">,</span> <span class="n">tbptt_loss_between_steps</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_make_training_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="p">,</span> <span class="n">latent_loss_pattern</span><span class="p">,</span> <span class="n">autoencoder_loss_pattern</span><span class="p">,</span>
+                            <span class="n">loss_between_differences</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make one training iteration. Runs backward pass. Return loss of the prediction.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sample: dict</span>
+<span class="sd">            Sample from a dataset. Should contain &#39;states&#39;, &#39;control&#39;, &#39;rock&#39;, &#39;time&#39; and all the required masks.</span>
+<span class="sd">        loss_pattern: tuple</span>
+<span class="sd">            Loss pattern between ground truth and predicted states.</span>
+<span class="sd">        latent_loss_pattern: tuple</span>
+<span class="sd">            Loss pattern between encoded ground truth states and predicted by dynamics latent space states.</span>
+<span class="sd">        autoencoder_loss_pattern: tuple</span>
+<span class="sd">            Loss pattern between ground truth states and encoded-decoded states.</span>
+<span class="sd">        loss_between_differences: bool</span>
+<span class="sd">            If True, losses are computed not between states, but rather between &quot;gradients&quot; (differences) of states.</span>
+<span class="sd">        kwargs: dict</span>
+<span class="sd">            Any additional named arguments passed to forward methods of composing modules.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        loss</span>
+<span class="sd">            Detached loss.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_attrs_from_sample</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_attrs</span><span class="p">)</span>
+
+        <span class="n">latent_loss_pattern</span> <span class="o">=</span> <span class="n">standardize_loss_pattern</span><span class="p">(</span><span class="n">latent_loss_pattern</span><span class="p">)</span>
+        <span class="n">autoencoder_loss_pattern</span> <span class="o">=</span> <span class="n">standardize_loss_pattern</span><span class="p">(</span><span class="n">autoencoder_loss_pattern</span><span class="p">)</span>
+
+        <span class="n">masks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_masks_from_sample</span><span class="p">(</span>
+            <span class="n">sample</span><span class="p">,</span>
+            <span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">loss_pattern</span> <span class="o">+</span> <span class="n">latent_loss_pattern</span> <span class="o">+</span> <span class="n">autoencoder_loss_pattern</span><span class="p">))</span>
+        <span class="p">)</span>
+
+        <span class="n">out</span><span class="p">,</span> <span class="n">r_states_dynamics</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">],</span> <span class="o">*</span><span class="n">inp</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">get_latent_states</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">ref</span><span class="p">,</span> <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_reference_and_prediction</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">out</span><span class="p">,</span> <span class="n">loss_between_differences</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_loss</span><span class="p">(</span><span class="n">ref</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="n">pred</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="o">=</span><span class="n">loss_pattern</span><span class="p">,</span> <span class="n">masks</span><span class="o">=</span><span class="n">masks</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">latent_loss_pattern</span> <span class="o">!=</span> <span class="p">()</span> <span class="ow">or</span> <span class="n">autoencoder_loss_pattern</span> <span class="o">!=</span> <span class="p">():</span>
+
+            <span class="n">ae_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_ae_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">r_states_enc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_enc</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">*</span><span class="n">inp</span><span class="p">[</span><span class="mi">4</span><span class="p">:],</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">latent_loss_pattern</span> <span class="o">!=</span> <span class="p">():</span>
+                <span class="n">ref</span><span class="p">,</span> <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_reference_and_prediction</span><span class="p">(</span>
+                    <span class="n">r_states_enc</span><span class="p">,</span> <span class="n">r_states_dynamics</span><span class="p">,</span> <span class="n">loss_between_differences</span>
+                <span class="p">)</span>
+                <span class="n">loss</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_loss</span><span class="p">(</span><span class="n">ref</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="n">pred</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="o">=</span><span class="n">latent_loss_pattern</span><span class="p">,</span> <span class="n">masks</span><span class="o">=</span><span class="n">masks</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">autoencoder_loss_pattern</span> <span class="o">!=</span> <span class="p">():</span>
+                <span class="n">states_dec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_dec</span><span class="p">(</span><span class="n">r_states_enc</span><span class="p">,</span> <span class="o">*</span><span class="n">inp</span><span class="p">[</span><span class="mi">4</span><span class="p">:],</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+                <span class="n">ref</span><span class="p">,</span> <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_reference_and_prediction</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">states_dec</span><span class="p">,</span> <span class="n">loss_between_differences</span><span class="p">)</span>
+                <span class="n">loss</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_loss</span><span class="p">(</span><span class="n">ref</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="n">pred</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="o">=</span><span class="n">autoencoder_loss_pattern</span><span class="p">,</span> <span class="n">masks</span><span class="o">=</span><span class="n">masks</span><span class="p">)</span>
+
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">loss</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_make_tbptt_training_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="p">,</span> <span class="n">latent_loss_pattern</span><span class="p">,</span> <span class="n">autoencoder_loss_pattern</span><span class="p">,</span>
+                                  <span class="n">loss_between_differences</span><span class="p">,</span> <span class="n">tbptt_step</span><span class="p">,</span> <span class="n">tbptt_tail</span><span class="p">,</span> <span class="n">tbptt_loss_between_steps</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">loss_between_differences</span><span class="p">:</span>
+            <span class="c1"># TODO</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Loss between differences is not implemented for TBPTT.&#39;</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_attrs_from_sample</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_attrs</span><span class="p">,</span> <span class="n">leave_attrs_device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_attrs</span><span class="p">)</span>
+        <span class="n">states</span><span class="p">,</span> <span class="n">rock</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">control_t</span><span class="p">,</span> <span class="n">time</span> <span class="o">=</span> <span class="n">args</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="c1">#pylint:disable=unbalanced-tuple-unpacking</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
+
+        <span class="n">latent_loss_pattern</span> <span class="o">=</span> <span class="n">standardize_loss_pattern</span><span class="p">(</span><span class="n">latent_loss_pattern</span><span class="p">)</span>
+        <span class="n">autoencoder_loss_pattern</span> <span class="o">=</span> <span class="n">standardize_loss_pattern</span><span class="p">(</span><span class="n">autoencoder_loss_pattern</span><span class="p">)</span>
+
+        <span class="n">masks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_masks_from_sample</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">loss_pattern</span><span class="p">])</span>
+        <span class="n">latent_masks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_masks_from_sample</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">latent_loss_pattern</span><span class="p">])</span>
+        <span class="n">autoencoder_masks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_masks_from_sample</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">autoencoder_loss_pattern</span><span class="p">])</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">get_model_device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="n">ae_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_ae_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">s_i</span> <span class="o">=</span> <span class="n">states</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">rs_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_enc</span><span class="p">(</span><span class="n">s_i</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,</span> <span class="n">rs_i</span><span class="p">)]</span>
+        <span class="n">rock</span> <span class="o">=</span> <span class="n">rock</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ae_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">latent_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">latent_targets</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">n_steps_total</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tbptt_loss_between_steps</span><span class="p">:</span>
+            <span class="n">n_steps_backward</span> <span class="o">=</span> <span class="n">n_steps_total</span> <span class="o">//</span> <span class="n">tbptt_step</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_steps_backward</span> <span class="o">=</span> <span class="n">n_steps_total</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps_total</span><span class="p">):</span>
+
+            <span class="n">rs_i</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+            <span class="n">rs_i</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">t_i</span> <span class="o">=</span> <span class="n">time</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+            <span class="n">c_i</span><span class="p">,</span> <span class="n">ct_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_control_subset</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">control_t</span><span class="p">,</span> <span class="p">(</span><span class="n">t_i</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">t_i</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">c_i</span><span class="p">,</span> <span class="n">ct_i</span> <span class="o">=</span> <span class="n">c_i</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">ct_i</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">rc_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">control_enc</span><span class="p">(</span><span class="n">c_i</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+
+            <span class="c1"># TODO it is possible to do graph savings in a better way</span>
+            <span class="c1"># https://stackoverflow.com/questions/50741344/pytorch-when-using-backward-how-can-i-retain-only-part-of-the-graph</span>
+            <span class="n">r_rock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_enc</span><span class="p">(</span><span class="n">rock</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+
+            <span class="n">next_rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_dynamics</span><span class="p">((</span><span class="n">rs_i</span><span class="p">,</span> <span class="n">r_rock</span><span class="p">,</span> <span class="n">rc_i</span><span class="p">),</span> <span class="n">ct_i</span><span class="p">,</span> <span class="n">t_i</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">next_rs</span> <span class="o">=</span> <span class="n">next_rs</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">loss_pattern</span> <span class="ow">or</span> <span class="n">autoencoder_loss_pattern</span><span class="p">:</span>
+                <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">states</span><span class="p">[:,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">loss_pattern</span><span class="p">:</span>
+                <span class="n">next_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode</span><span class="p">(</span><span class="n">next_rs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+                <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_s</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">autoencoder_loss_pattern</span> <span class="ow">or</span> <span class="n">latent_loss_pattern</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">targets</span><span class="p">:</span>
+                    <span class="n">next_rs_ae</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_enc</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">next_rs_ae</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_enc</span><span class="p">(</span><span class="n">states</span><span class="p">[:,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">latent_loss_pattern</span><span class="p">:</span>
+                    <span class="n">latent_targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_rs_ae</span><span class="p">)</span>
+                    <span class="n">latent_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_rs</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">autoencoder_loss_pattern</span><span class="p">:</span>
+                    <span class="n">next_s_ae</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode</span><span class="p">(</span><span class="n">next_rs_ae</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">ae_kwargs</span><span class="p">)</span>
+                    <span class="n">ae_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_s_ae</span><span class="p">)</span>
+
+            <span class="n">_adjust_args_length</span><span class="p">(</span>
+                <span class="n">targets</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">ae_outputs</span><span class="p">,</span> <span class="n">latent_targets</span><span class="p">,</span> <span class="n">latent_outputs</span><span class="p">,</span>
+                <span class="n">max_len</span><span class="o">=</span><span class="p">(</span><span class="n">tbptt_step</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">tbptt_loss_between_steps</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">buffer</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">rs_i</span><span class="p">,</span> <span class="n">next_rs</span><span class="p">))</span>
+            <span class="n">_adjust_args_length</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">max_len</span><span class="o">=</span><span class="n">tbptt_tail</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">tbptt_step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tbptt_step</span><span class="p">):</span>
+                    <span class="n">loss_i</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">scalar_tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">loss_pattern</span> <span class="o">!=</span> <span class="p">():</span>
+                        <span class="n">ref</span><span class="p">,</span> <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_reference_and_prediction</span><span class="p">(</span>
+                            <span class="n">targets</span><span class="p">[</span><span class="o">-</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">outputs</span><span class="p">[</span><span class="o">-</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">loss_between_differences</span>
+                        <span class="p">)</span>
+                        <span class="n">loss_i</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_loss</span><span class="p">(</span><span class="n">ref</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="n">pred</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="o">=</span><span class="n">loss_pattern</span><span class="p">,</span> <span class="n">masks</span><span class="o">=</span><span class="n">masks</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">autoencoder_loss_pattern</span><span class="p">:</span>
+                        <span class="n">ref</span><span class="p">,</span> <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_reference_and_prediction</span><span class="p">(</span>
+                            <span class="n">targets</span><span class="p">[</span><span class="o">-</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ae_outputs</span><span class="p">[</span><span class="o">-</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">loss_between_differences</span>
+                        <span class="p">)</span>
+                        <span class="n">loss_i</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_loss</span><span class="p">(</span>
+                            <span class="n">ref</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="n">pred</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="o">=</span><span class="n">autoencoder_loss_pattern</span><span class="p">,</span> <span class="n">masks</span><span class="o">=</span><span class="n">autoencoder_masks</span>
+                        <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">latent_loss_pattern</span><span class="p">:</span>
+                        <span class="n">ref</span><span class="p">,</span> <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_reference_and_prediction</span><span class="p">(</span>
+                            <span class="n">latent_targets</span><span class="p">[</span><span class="o">-</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">latent_outputs</span><span class="p">[</span><span class="o">-</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">loss_between_differences</span>
+                        <span class="p">)</span>
+                        <span class="n">loss_i</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_loss</span><span class="p">(</span>
+                            <span class="n">ref</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="n">pred</span><span class="p">,</span> <span class="n">loss_pattern</span><span class="o">=</span><span class="n">latent_loss_pattern</span><span class="p">,</span> <span class="n">masks</span><span class="o">=</span><span class="n">latent_masks</span>
+                        <span class="p">)</span>
+
+                    <span class="n">loss_i</span> <span class="o">/=</span> <span class="n">n_steps_backward</span>
+                    <span class="n">loss</span> <span class="o">+=</span> <span class="n">loss_i</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+                    <span class="n">retain_graph</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">tbptt_tail</span> <span class="o">&gt;</span> <span class="n">tbptt_step</span><span class="p">)</span>
+                    <span class="n">loss_i</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">retain_graph</span><span class="o">=</span><span class="n">retain_graph</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">tbptt_loss_between_steps</span><span class="p">:</span>
+                        <span class="k">break</span>
+
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tbptt_tail</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">curr_grad</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">[</span><span class="o">-</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grad</span>
+                    <span class="n">retain_graph</span> <span class="o">=</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">tbptt_tail</span> <span class="o">-</span> <span class="n">tbptt_step</span> <span class="o">-</span> <span class="mi">1</span>
+                    <span class="n">buffer</span><span class="p">[</span><span class="o">-</span><span class="n">j</span> <span class="o">-</span> <span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">curr_grad</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="n">retain_graph</span><span class="p">)</span>
+
+                    <span class="c1"># if we get all the way back to the initial state, stop</span>
+                    <span class="k">if</span> <span class="n">buffer</span><span class="p">[</span><span class="o">-</span><span class="n">j</span> <span class="o">-</span> <span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">break</span>
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_reference_and_prediction</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">loss_between_differences</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">loss_between_differences</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">inp</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">inp</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">out</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">out</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span></div>
+
+
+<span class="k">def</span> <span class="nf">_adjust_args_length</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">max_len</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_len</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

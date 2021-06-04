@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepfield.field.well_segment &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/deepfield.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepfield.field.well_segment</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepfield.field.well_segment</h1><div class="highlight"><pre>
+<span></span><span class="c1">#pylint: disable=too-many-lines</span>
+<span class="sd">&quot;&quot;&quot;Wells and WellSegment components.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">NodeMixin</span>
+
+<span class="kn">from</span> <span class="nn">.rates</span> <span class="k">import</span> <span class="n">apply_perforations</span><span class="p">,</span> <span class="n">calculate_cf</span>
+<span class="kn">from</span> <span class="nn">.base_component</span> <span class="k">import</span> <span class="n">BaseComponent</span>
+
+
+<div class="viewcode-block" id="WellSegment"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.well_segment.WellSegment">[docs]</a><span class="k">class</span> <span class="nc">WellSegment</span><span class="p">(</span><span class="n">BaseComponent</span><span class="p">,</span> <span class="n">NodeMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Well&#39;s node.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Node&#39;s name.</span>
+<span class="sd">    is_group : bool, optional</span>
+<span class="sd">        Should a node represet a group of wells. Default to False.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    is_group : bool</span>
+<span class="sd">        Indicator of a group.</span>
+<span class="sd">    is_main_branch : bool</span>
+<span class="sd">        Indicator of a main branch.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Node&#39;s name.</span>
+<span class="sd">    fullname : str</span>
+<span class="sd">        Node&#39;s full name from root.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_group</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="s1">&#39;parent&#39;</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_group</span> <span class="o">=</span> <span class="n">is_group</span>
+        <span class="k">if</span> <span class="n">children</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="s1">&#39;children&#39;</span><span class="p">,</span> <span class="n">children</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WellSegment.copy"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.well_segment.WellSegment.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a deepcopy. Cached properties are not copied.&quot;&quot;&quot;</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">copy</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="c1">#pylint: disable=protected-access</span>
+        <span class="n">copy</span><span class="o">.</span><span class="n">_is_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_group</span> <span class="c1">#pylint: disable=protected-access</span>
+        <span class="k">return</span> <span class="n">copy</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check that node is a group of wells.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_group</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_main_branch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check that node in a main well&#39;s branch.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_group</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;:&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Node&#39;s name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fullname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Full name from root.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">total_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Total rates for the current node and all its branches.&quot;&quot;&quot;</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">,</span> <span class="s1">&#39;WOPR&#39;</span><span class="p">,</span> <span class="s1">&#39;WWPR&#39;</span><span class="p">,</span> <span class="s1">&#39;WGPR&#39;</span><span class="p">,</span> <span class="s1">&#39;WFGPR&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;RESULTS&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;DATE&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">]]</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;DATE&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">total_rates</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;DATE&#39;</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cum_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cumulative rates for the current node and all its branches.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_rates</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;DATE&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<div class="viewcode-block" id="WellSegment.perforated_indices"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.well_segment.WellSegment.perforated_indices">[docs]</a>    <span class="k">def</span> <span class="nf">perforated_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Mask indicating perforated blocks.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Time parameter is not yet implemented.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;BLOCKS_INFO&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks_info</span><span class="p">[</span><span class="s1">&#39;PERF_RATIO&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WellSegment.perforated_blocks"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.well_segment.WellSegment.perforated_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">perforated_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of perforated blocks for current node.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;BLOCKS&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">perforated_indices</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span></div>
+
+<div class="viewcode-block" id="WellSegment.all_perforated_blocks"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.well_segment.WellSegment.all_perforated_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">all_perforated_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of perforated blocks for current node and all its descendants.&quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">perforated_blocks</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">descendants</span><span class="p">]</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">perforated_blocks</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">res</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">res</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span></div>
+
+<div class="viewcode-block" id="WellSegment.apply_perforations"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.well_segment.WellSegment.apply_perforations">[docs]</a>    <span class="k">def</span> <span class="nf">apply_perforations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Open or close perforation intervals for given time interval.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        segment : WellSegment</span>
+<span class="sd">            Well&#39;s node.</span>
+<span class="sd">        current_date : pandas.Timestamp</span>
+<span class="sd">            Final date to open new perforations.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        segment : WellSegment</span>
+<span class="sd">            Segment with a blocks_info attribute that contains:</span>
+<span class="sd">            - projections of welltrack in grid blocks</span>
+<span class="sd">            - MD values for corresponding grid blocks</span>
+<span class="sd">            - ratio of perforated part of the well for each grid block.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">apply_perforations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_date</span><span class="o">=</span><span class="n">current_date</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="WellSegment.calculate_cf"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.well_segment.WellSegment.calculate_cf">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_cf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rock</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;METRIC&#39;</span><span class="p">,</span> <span class="n">cf_aggregation</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate connection factor values for each grid block of a segment.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rock : Rock</span>
+<span class="sd">            Rock component of geological model.</span>
+<span class="sd">        grid : Grid</span>
+<span class="sd">            Rock component of geological model.</span>
+<span class="sd">        segment : WellSegment</span>
+<span class="sd">            Well&#39;s node.</span>
+<span class="sd">        beta : list or ndarray</span>
+<span class="sd">            Additional multiplicator for productivity index of well.</span>
+<span class="sd">        units : str, &#39;METRIC&#39; or &#39;FIELD&#39;</span>
+<span class="sd">            Field units.</span>
+<span class="sd">        cf_aggregation: str, &#39;sum&#39; or &#39;eucl&#39;</span>
+<span class="sd">            The way of aggregating cf projection (&#39;sum&#39; - sum, &#39;eucl&#39; - Euclid norm).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        segment : WellSegment</span>
+<span class="sd">            Segment with a blocks_info attribute extended with calculated connection</span>
+<span class="sd">            factor values for all segment blocks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">calculate_cf</span><span class="p">(</span><span class="n">rock</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">cf_aggregation</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

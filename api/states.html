@@ -1,0 +1,2180 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>States &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">States</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>States</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/states.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="states">
+<h1>States<a class="headerlink" href="#states" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<dl class="class">
+<dt id="deepfield.field.States">
+<em class="property">class </em><code class="sig-name descname">States</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/states.html#States"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.States" title="Permalink to this definition">¶</a></dt>
+<dd><p>States component of geological model.</p>
+<dl class="method">
+<dt id="deepfield.field.States.affine_transform">
+<code class="sig-name descname">affine_transform</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.affine_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute affine_transform for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.affine_transform</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.affine_transform</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/states.html#States.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.States.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply function to each timestamp of states attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>callable</em>) – A function to apply. Must accept data as its first argument.</p></li>
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array-like</em>) – Attributes to get data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Modify сomponent inplace.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.States" title="deepfield.field.States">States</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.attributes">
+<em class="property">property </em><code class="sig-name descname">attributes</code><a class="headerlink" href="#deepfield.field.States.attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.binary_closing">
+<code class="sig-name descname">binary_closing</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.binary_closing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute binary_closing for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_closing</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_closing</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.binary_dilation">
+<code class="sig-name descname">binary_dilation</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.binary_dilation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute binary_dilation for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_dilation</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_dilation</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.binary_erosion">
+<code class="sig-name descname">binary_erosion</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.binary_erosion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute binary_erosion for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_erosion</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_erosion</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.binary_fill_holes">
+<code class="sig-name descname">binary_fill_holes</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.binary_fill_holes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute binary_fill_holes for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_fill_holes</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_fill_holes</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.binary_hit_or_miss">
+<code class="sig-name descname">binary_hit_or_miss</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.binary_hit_or_miss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute binary_hit_or_miss for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_hit_or_miss</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_hit_or_miss</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.binary_opening">
+<code class="sig-name descname">binary_opening</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.binary_opening" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute binary_opening for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_opening</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_opening</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.binary_propagation">
+<code class="sig-name descname">binary_propagation</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.binary_propagation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute binary_propagation for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_propagation</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.binary_propagation</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.black_tophat">
+<code class="sig-name descname">black_tophat</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.black_tophat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute black_tophat for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.black_tophat</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.black_tophat</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.center_of_mass">
+<code class="sig-name descname">center_of_mass</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.center_of_mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute center_of_mass for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.center_of_mass</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.center_of_mass</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.class_name">
+<em class="property">property </em><code class="sig-name descname">class_name</code><a class="headerlink" href="#deepfield.field.States.class_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.clip">
+<code class="sig-name descname">clip</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.clip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute array of cliped values for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">numpy.clip</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">numpy.clip</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.convolve">
+<code class="sig-name descname">convolve</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.convolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute convolve for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.convolve</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.convolve</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.convolve1d">
+<code class="sig-name descname">convolve1d</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.convolve1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute convolve1d for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.convolve1d</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.convolve1d</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a deepcopy of attributes. Cached properties are not copied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.correlate">
+<code class="sig-name descname">correlate</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.correlate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute correlate for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.correlate</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.correlate</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.correlate1d">
+<code class="sig-name descname">correlate1d</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.correlate1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute correlate1d for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.correlate1d</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.correlate1d</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.crop">
+<code class="sig-name descname">crop</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.crop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute cropped array by crop_width along each dimension for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">crop</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">crop</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.del_state">
+<code class="sig-name descname">del_state</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.del_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State remover.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.distance_transform_bf">
+<code class="sig-name descname">distance_transform_bf</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.distance_transform_bf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute distance_transform_bf for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.distance_transform_bf</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.distance_transform_bf</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.distance_transform_cdt">
+<code class="sig-name descname">distance_transform_cdt</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.distance_transform_cdt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute distance_transform_cdt for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.distance_transform_cdt</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.distance_transform_cdt</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.distance_transform_edt">
+<code class="sig-name descname">distance_transform_edt</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.distance_transform_edt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute distance_transform_edt for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.distance_transform_edt</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.distance_transform_edt</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.drop">
+<code class="sig-name descname">drop</code><span class="sig-paren">(</span><em class="sig-param">attr</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.drop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop an attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump attributes into file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to output file.</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – Any kwargs for dump method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – BaseComponent unchanged.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.dump_array_ascii">
+<em class="property">static </em><code class="sig-name descname">dump_array_ascii</code><span class="sig-paren">(</span><em class="sig-param">buffer</em>, <em class="sig-param">array</em>, <em class="sig-param">header=None</em>, <em class="sig-param">fmt='%f'</em>, <em class="sig-param">compressed=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.dump_array_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes array-like data into an ASCII buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<em>buffer-like</em>) – </p></li>
+<li><p><strong>array</strong> (<em>1d</em><em>, </em><em>array-like</em>) – Array to be saved</p></li>
+<li><p><strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – String to be written line before the array</p></li>
+<li><p><strong>fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><em>sequence of strs</em><em>, </em><em>optional</em>) – Format to be passed into <code class="docutils literal notranslate"><span class="pre">numpy.savetxt</span></code> function. Default to ‘%f’.</p></li>
+<li><p><strong>compressed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, uses compressed typing style</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.empty_like">
+<code class="sig-name descname">empty_like</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.empty_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an empty component with the same state and the structure of embedded BaseComponents (if any).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.extrema">
+<code class="sig-name descname">extrema</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.extrema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute extrema for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.extrema</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.extrema</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.find_objects">
+<code class="sig-name descname">find_objects</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.find_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute find_objects for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.find_objects</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.find_objects</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.flip">
+<code class="sig-name descname">flip</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.flip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute reversed order of elements in an array along the given axis for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">numpy.flip</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">numpy.flip</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.fourier_ellipsoid">
+<code class="sig-name descname">fourier_ellipsoid</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.fourier_ellipsoid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute fourier_ellipsoid for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.fourier_ellipsoid</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.fourier_ellipsoid</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.fourier_gaussian">
+<code class="sig-name descname">fourier_gaussian</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.fourier_gaussian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute fourier_gaussian for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.fourier_gaussian</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.fourier_gaussian</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.fourier_shift">
+<code class="sig-name descname">fourier_shift</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.fourier_shift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute fourier_shift for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.fourier_shift</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.fourier_shift</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.fourier_uniform">
+<code class="sig-name descname">fourier_uniform</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.fourier_uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute fourier_uniform for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.fourier_uniform</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.fourier_uniform</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.gaussian_filter">
+<code class="sig-name descname">gaussian_filter</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.gaussian_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute gaussian_filter for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.gaussian_filter</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.gaussian_filter</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.gaussian_filter1d">
+<code class="sig-name descname">gaussian_filter1d</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.gaussian_filter1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute gaussian_filter1d for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.gaussian_filter1d</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.gaussian_filter1d</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.gaussian_gradient_magnitude">
+<code class="sig-name descname">gaussian_gradient_magnitude</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.gaussian_gradient_magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute gaussian_gradient_magnitude for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.gaussian_gradient_magnitude</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.gaussian_gradient_magnitude</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.gaussian_laplace">
+<code class="sig-name descname">gaussian_laplace</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.gaussian_laplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute gaussian_laplace for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.gaussian_laplace</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.gaussian_laplace</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.generic_filter">
+<code class="sig-name descname">generic_filter</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.generic_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute generic_filter for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.generic_filter</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.generic_filter</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.generic_filter1d">
+<code class="sig-name descname">generic_filter1d</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.generic_filter1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute generic_filter1d for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.generic_filter1d</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.generic_filter1d</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.generic_gradient_magnitude">
+<code class="sig-name descname">generic_gradient_magnitude</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.generic_gradient_magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute generic_gradient_magnitude for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.generic_gradient_magnitude</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.generic_gradient_magnitude</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.generic_laplace">
+<code class="sig-name descname">generic_laplace</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.generic_laplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute generic_laplace for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.generic_laplace</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.generic_laplace</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.geometric_transform">
+<code class="sig-name descname">geometric_transform</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.geometric_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute geometric_transform for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.geometric_transform</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.geometric_transform</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.gradient">
+<code class="sig-name descname">gradient</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute gradient for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">numpy.gradient</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">numpy.gradient</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.grey_closing">
+<code class="sig-name descname">grey_closing</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.grey_closing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute grey_closing for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.grey_closing</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.grey_closing</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.grey_dilation">
+<code class="sig-name descname">grey_dilation</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.grey_dilation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute grey_dilation for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.grey_dilation</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.grey_dilation</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.grey_erosion">
+<code class="sig-name descname">grey_erosion</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.grey_erosion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute grey_erosion for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.grey_erosion</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.grey_erosion</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.grey_opening">
+<code class="sig-name descname">grey_opening</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.grey_opening" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute grey_opening for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.grey_opening</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.grey_opening</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.histogram">
+<code class="sig-name descname">histogram</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute histogram for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.histogram</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.histogram</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.init_state">
+<code class="sig-name descname">init_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.init_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init state attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.items">
+<code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns pairs of attribute’s names and data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.keys">
+<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.label">
+<code class="sig-name descname">label</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute label for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.label</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.label</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.labeled_comprehension">
+<code class="sig-name descname">labeled_comprehension</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.labeled_comprehension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute labeled_comprehension for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.labeled_comprehension</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.labeled_comprehension</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.laplace">
+<code class="sig-name descname">laplace</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.laplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute laplace for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.laplace</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.laplace</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">path_or_buffer</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load data from a file or buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_or_buffer</strong> (<em>str of string buffer</em>) – Source to read data from.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – Any kwargs to be passed to load method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – BaseComponent with loaded attributes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.map_coordinates">
+<code class="sig-name descname">map_coordinates</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.map_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute map_coordinates for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.map_coordinates</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.map_coordinates</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.maximum">
+<code class="sig-name descname">maximum</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.maximum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute maximum for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.maximum</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.maximum</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.maximum_filter">
+<code class="sig-name descname">maximum_filter</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.maximum_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute maximum_filter for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.maximum_filter</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.maximum_filter</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.maximum_filter1d">
+<code class="sig-name descname">maximum_filter1d</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.maximum_filter1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute maximum_filter1d for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.maximum_filter1d</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.maximum_filter1d</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.maximum_position">
+<code class="sig-name descname">maximum_position</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.maximum_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute maximum_position for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.maximum_position</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.maximum_position</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.mean">
+<code class="sig-name descname">mean</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute mean for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.mean</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.mean</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.median">
+<code class="sig-name descname">median</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.median" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute median for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.median</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.median</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.median_filter">
+<code class="sig-name descname">median_filter</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.median_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute median_filter for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.minimum">
+<code class="sig-name descname">minimum</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.minimum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute minimum for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.minimum</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.minimum</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.minimum_filter">
+<code class="sig-name descname">minimum_filter</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.minimum_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute minimum_filter for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.minimum_filter</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.minimum_filter</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.minimum_filter1d">
+<code class="sig-name descname">minimum_filter1d</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.minimum_filter1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute minimum_filter1d for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.minimum_filter1d</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.minimum_filter1d</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.minimum_position">
+<code class="sig-name descname">minimum_position</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.minimum_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute minimum_position for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.minimum_position</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.minimum_position</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.morphological_gradient">
+<code class="sig-name descname">morphological_gradient</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.morphological_gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute morphological_gradient for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.morphological_gradient</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.morphological_gradient</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.morphological_laplace">
+<code class="sig-name descname">morphological_laplace</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.morphological_laplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute morphological_laplace for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.morphological_laplace</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.morphological_laplace</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.n_timesteps">
+<em class="property">property </em><code class="sig-name descname">n_timesteps</code><a class="headerlink" href="#deepfield.field.States.n_timesteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Effective number of timesteps.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.pad">
+<code class="sig-name descname">pad</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.pad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute padded array for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">numpy.pad</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">numpy.pad</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.pad_na">
+<code class="sig-name descname">pad_na</code><span class="sig-paren">(</span><em class="sig-param">attr</em>, <em class="sig-param">actnum</em>, <em class="sig-param">fill_na=0.0</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/states.html#States.pad_na"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.States.pad_na" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add dummy cells into the state vector in the positions of non-active cells if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array-like</em>) – Attributes to be padded with non-active cells.</p></li>
+<li><p><strong>actnum</strong> (<em>array-like of type bool</em>) – Vector representing a mask of active and non-active cells.</p></li>
+<li><p><strong>fill_na</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Value to be used as filler.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Modify сomponent inplace.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>component if inplace else padded attribute.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.percentile_filter">
+<code class="sig-name descname">percentile_filter</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.percentile_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute percentile_filter for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.percentile_filter</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.percentile_filter</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.prewitt">
+<code class="sig-name descname">prewitt</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.prewitt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute prewitt for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.prewitt</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.prewitt</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.random_noise">
+<code class="sig-name descname">random_noise</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.random_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute array with added random noise of various types for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">random_noise</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">random_noise</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.rank_filter">
+<code class="sig-name descname">rank_filter</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.rank_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute rank_filter for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.rank_filter</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.rank_filter</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.ravel">
+<code class="sig-name descname">ravel</code><span class="sig-paren">(</span><em class="sig-param">attr=None</em>, <em class="sig-param">inplace=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.ravel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Brings component to ravel state. If not inplace returns
+ravel representation for attributes with pre-defined ravel transformation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to ravel.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Modify сomponent inplace.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Additional named arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>component if inplace else raveled attribute.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.rescale">
+<code class="sig-name descname">rescale</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.rescale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute rescale for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">skimage.transform.rescale</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">skimage.transform.rescale</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.reshape">
+<code class="sig-name descname">reshape</code><span class="sig-paren">(</span><em class="sig-param">attr</em>, <em class="sig-param">newshape</em>, <em class="sig-param">order='C'</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.reshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reshape <cite>numpy.ndarray</cite> attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to be reshaped.</p></li>
+<li><p><strong>newshape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – New shape.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Numpy reshape order. Default to ‘C’.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <cite>True</cite>, reshape is made inplace, return BaseComponent.
+Else, return reshaped attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BaseComponent if inplace else reshaped attribute itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.resize">
+<code class="sig-name descname">resize</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.resize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute resize for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">skimage.transform.resize</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">skimage.transform.resize</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.rot90">
+<code class="sig-name descname">rot90</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.rot90" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute rotated an array by 90 degrees in the plane specified by axes for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">numpy.rot90</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">numpy.rot90</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.rotate">
+<code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute rotate for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.rotate</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.rotate</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.sample_crops">
+<code class="sig-name descname">sample_crops</code><span class="sig-paren">(</span><em class="sig-param">attr</em>, <em class="sig-param">shape</em>, <em class="sig-param">size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.sample_crops" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample random crops of fixed shape.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array-like</em>) – Attributes to sample crops from. If None, use all attributes.</p></li>
+<li><p><strong>shape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Shape of crops.</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – Number of crops to sample. Default to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>crops</strong> – Sampled crops.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.set_state">
+<code class="sig-name descname">set_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.set_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State setter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.shift">
+<code class="sig-name descname">shift</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.shift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute shift for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.shift</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.shift</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.show_cube">
+<code class="sig-name descname">show_cube</code><span class="sig-paren">(</span><em class="sig-param">attr</em>, <em class="sig-param">t=None</em>, <em class="sig-param">x=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">z=None</em>, <em class="sig-param">actnum=None</em>, <em class="sig-param">figsize=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/states.html#States.show_cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.States.show_cube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualize slices of 4D states arrays. If no slice is specified, spatial slices
+will be shown with interactive slider widgets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Attribute to show.</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>, </em><em>optional</em>) – Timestamp to show.</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>, </em><em>optional</em>) – Slice along x-axis to show.</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>, </em><em>optional</em>) – Slice along y-axis to show.</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>, </em><em>optional</em>) – Slice along z-axis to show.</p></li>
+<li><p><strong>actnum</strong> (<em>array</em><em>, </em><em>optional</em>) – Actnum array. If None, all cell are active.</p></li>
+<li><p><strong>figsize</strong> (<em>array-like</em><em>, </em><em>optional</em>) – Output plot size.</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional keyword arguments for plot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.sobel">
+<code class="sig-name descname">sobel</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.sobel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute sobel for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.sobel</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.sobel</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.spline_filter">
+<code class="sig-name descname">spline_filter</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.spline_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute spline_filter for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.spline_filter</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.spline_filter</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.spline_filter1d">
+<code class="sig-name descname">spline_filter1d</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.spline_filter1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute spline_filter1d for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.spline_filter1d</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.spline_filter1d</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.standard_deviation">
+<code class="sig-name descname">standard_deviation</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.standard_deviation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute standard_deviation for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.standard_deviation</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.standard_deviation</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.state">
+<em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#deepfield.field.States.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.strip_na">
+<code class="sig-name descname">strip_na</code><span class="sig-paren">(</span><em class="sig-param">attr</em>, <em class="sig-param">actnum</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/states.html#States.strip_na"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.States.strip_na" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove non-active cells from the state vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array-like</em>) – Attributes to be stripped</p></li>
+<li><p><strong>actnum</strong> (<em>array-like of type bool</em>) – Vector representing mask of active and non-active cells.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Modify сomponent inplace.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>component if inplace else stripped attribute.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Outputs 1d array for each timestamp.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.sum">
+<code class="sig-name descname">sum</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute sum for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.sum</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.sum</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.to_spatial">
+<code class="sig-name descname">to_spatial</code><span class="sig-paren">(</span><em class="sig-param">attr=None</em>, <em class="sig-param">inplace=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.to_spatial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bring component to spatial state. If not inplace returns
+spatial representation for attributes with pre-defined spatial transformation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to ravel.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Modify сomponent inplace.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Additional named arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>сomponent if inplace else raveled attribute.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.uniform_filter">
+<code class="sig-name descname">uniform_filter</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.uniform_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute uniform_filter for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.uniform_filter</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.uniform_filter</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.uniform_filter1d">
+<code class="sig-name descname">uniform_filter1d</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.uniform_filter1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute uniform_filter1d for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.uniform_filter1d</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.uniform_filter1d</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.unravel">
+<code class="sig-name descname">unravel</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.unravel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for <cite>to_spatial</cite> method.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version Renamed: </span>to_spatial</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.values">
+<code class="sig-name descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator of attribute’s data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.variance">
+<code class="sig-name descname">variance</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.variance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute variance for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.variance</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.variance</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.watershed_ift">
+<code class="sig-name descname">watershed_ift</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.watershed_ift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute watershed_ift for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.watershed_ift</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.watershed_ift</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.white_tophat">
+<code class="sig-name descname">white_tophat</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.white_tophat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute white_tophat for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.white_tophat</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.white_tophat</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.States.zoom">
+<code class="sig-name descname">zoom</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.States.zoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute zoom for given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute to get the data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.zoom</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">scipy.ndimage.zoom</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_spatial.SpatialComponent" title="deepfield.field.base_spatial.SpatialComponent">SpatialComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

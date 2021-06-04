@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepfield.metamodelling.factories &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/deepfield.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepfield.metamodelling.factories</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepfield.metamodelling.factories</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Tools for fast custom module creation.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="k">import</span> <span class="n">nn</span>
+
+<span class="kn">from</span> <span class="nn">.custom_blocks</span> <span class="k">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="p">,</span> <span class="n">ResidualBlock</span><span class="p">,</span> <span class="n">MultiInputSequential</span><span class="p">,</span> <span class="n">TimeInvariantWrapper</span>
+
+
+<div class="viewcode-block" id="sequential_factory"><a class="viewcode-back" href="../../../api/training.html#deepfield.metamodelling.factories.sequential_factory">[docs]</a><span class="k">def</span> <span class="nf">sequential_factory</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">conv_module</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">ch</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">use_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_nonlin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">residual_connections</span><span class="o">=</span><span class="p">(),</span>
+                       <span class="n">wrappers</span><span class="o">=</span><span class="p">(</span><span class="n">MultiInputSequential</span><span class="p">,</span> <span class="n">TimeInvariantWrapper</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper for creation of sequential modules. Module is constructed based on the chosen `conv_module`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n: int</span>
+<span class="sd">        Number of conv_modules to stack.</span>
+<span class="sd">    conv_module: nn.Module</span>
+<span class="sd">        Base module from which sequential is constructed.</span>
+<span class="sd">    in_ch: int</span>
+<span class="sd">        Number of input channels in the resulting sequential.</span>
+<span class="sd">    ch: int, list</span>
+<span class="sd">        Number of output channels in each of `conv_module`s.</span>
+<span class="sd">        If `int` is passed, will use similar number of output channels across the modules.</span>
+<span class="sd">        If `list` is passed, use it&#39;s entries. List should have length n.</span>
+<span class="sd">    args: tuple</span>
+<span class="sd">        Any additional args passed to the constructor of `conv_module&#39;</span>
+<span class="sd">        Each arg should be either list or any. If arg is not a list, use similar values across modules.</span>
+<span class="sd">    use_norm: bool, nn.Module</span>
+<span class="sd">        If bool, marks the need of using normalization between modules (before the nonlin).</span>
+<span class="sd">        If nn.Module, uses this module as a normalization.</span>
+<span class="sd">        Default: True</span>
+<span class="sd">    use_nonlin: bool, nn.Module</span>
+<span class="sd">        If bool, marks the need of using nonlinearity between modules.</span>
+<span class="sd">        If nn.Module, uses this module as a nonlinearity.</span>
+<span class="sd">        Default: True</span>
+<span class="sd">    residual_connections: tuple</span>
+<span class="sd">        Tuple of pairs. Each pair marks which layers should be connected.</span>
+<span class="sd">        If pair (i, j) is given, connects the input of i-th layer and the output of j-th layer.</span>
+<span class="sd">        Pairs should not cross each other.</span>
+<span class="sd">        Default: ()</span>
+<span class="sd">    wrappers: tuple, list</span>
+<span class="sd">        List of wrappers, which will be used after constructing the composing modules. Order matters.</span>
+<span class="sd">        Default: (MultiInputSequential, TimeInvariantWrapper)</span>
+<span class="sd">    kwargs: dict</span>
+<span class="sd">        Any additional named args passed to the constructor of `conv_module&#39;</span>
+<span class="sd">        Each kwarg value should be either list or any. If value is not a list, use similar values across modules.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out: list, nn.Module</span>
+<span class="sd">        Composed modules, possibly with applied norm, nonlin, wrappers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ch</span> <span class="o">=</span> <span class="p">[</span><span class="n">in_ch</span><span class="p">]</span> <span class="o">+</span> <span class="n">_to_list</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_to_list</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">_to_list</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="n">layers</span> <span class="o">=</span> <span class="n">_compose_layers</span><span class="p">(</span><span class="n">conv_module</span><span class="p">,</span> <span class="n">ch</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">use_norm</span><span class="o">=</span><span class="n">use_norm</span><span class="p">,</span> <span class="n">use_nonlin</span><span class="o">=</span><span class="n">use_nonlin</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="n">_wrap_residuals</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="n">residual_connections</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">use_norm</span><span class="p">),</span> <span class="nb">bool</span><span class="p">(</span><span class="n">use_nonlin</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">_wrap</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="n">wrappers</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_to_list</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts x into list by repeating it n times.</span>
+<span class="sd">    If x is already a list and it has length n, returns x.</span>
+<span class="sd">    Else, if x is a list and has different length, raises ValueError.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sd">&#39;&#39;&#39;If list is passed, it should have len(x) == n.</span>
+<span class="sd">                Found: n = %d, len(x) = %d&#39;&#39;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+
+
+<span class="k">def</span> <span class="nf">_wrap</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">wrappers</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wraps the module with given wrappers. Order is important.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">wrapper</span> <span class="ow">in</span> <span class="n">wrappers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">wrapper</span> <span class="ow">in</span> <span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">,</span> <span class="n">MultiInputSequential</span><span class="p">):</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">module</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">wrapper</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">module</span>
+
+
+<span class="k">def</span> <span class="nf">_wrap_residuals</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="n">residual_connections</span><span class="p">,</span> <span class="n">use_norm</span><span class="p">,</span> <span class="n">use_nonlin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Connects chosen layers with skip connections.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    layers: list</span>
+<span class="sd">        List of layers.</span>
+<span class="sd">    residual_connections: tuple</span>
+<span class="sd">        Tuple of pairs. Each pair marks which layers should be connected.</span>
+<span class="sd">        If pair (i, j) is given, connects the input of i-th layer and the output of j-th layer.</span>
+<span class="sd">        Pairs should not cross each other.</span>
+<span class="sd">    use_norm: bool</span>
+<span class="sd">    use_nonlin: bool</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    wrapped_layers: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_other</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">use_norm</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">use_nonlin</span><span class="p">)</span>
+
+    <span class="n">residual_connections</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">residual_connections</span><span class="p">)</span>
+    <span class="c1"># Reindex modules with regard to use_norm and use_nonlin</span>
+    <span class="n">residual_connections</span> <span class="o">+=</span> <span class="n">residual_connections</span> <span class="o">*</span> <span class="n">n_other</span>
+
+    <span class="k">while</span> <span class="n">residual_connections</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">link</span><span class="p">,</span> <span class="n">residual_connections</span> <span class="o">=</span> <span class="n">_pop_innermost_residual</span><span class="p">(</span><span class="n">residual_connections</span><span class="p">)</span>
+
+        <span class="n">res_block</span> <span class="o">=</span> <span class="n">ResidualBlock</span><span class="p">(</span>
+            <span class="n">MultiInputSequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">[</span><span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[:</span><span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span><span class="n">res_block</span><span class="p">]</span> <span class="o">+</span> <span class="n">layers</span><span class="p">[</span><span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n_other</span><span class="p">:]</span>
+
+        <span class="c1"># Reindex modules with respect to changed block</span>
+        <span class="n">residual_connections</span><span class="p">[</span><span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">-=</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">n_other</span>
+    <span class="k">return</span> <span class="n">layers</span>
+
+
+<span class="k">def</span> <span class="nf">_pop_innermost_residual</span><span class="p">(</span><span class="n">residual_connections</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Pops one residual pair from a list of pairs. If pair are embeded, return innermost one, else the last one.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    residual_connections: np.array</span>
+<span class="sd">        List of residual pairs in the array-like form.</span>
+<span class="sd">        Shape: [n_pairs, 2]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    poped_pair: np.array</span>
+<span class="sd">        Shape: [2, ]</span>
+<span class="sd">    remaining_pairs: np.array</span>
+<span class="sd">        Shape: [n_pairs-1, 2]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start_ind</span> <span class="o">=</span> <span class="n">residual_connections</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">residual_connections</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">end_ind</span> <span class="o">=</span> <span class="n">residual_connections</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">residual_connections</span><span class="p">[</span><span class="n">start_ind</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">link_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">start_ind</span><span class="p">,</span> <span class="n">end_ind</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="n">residual_connections</span><span class="p">[</span><span class="n">link_ind</span><span class="p">]</span>
+    <span class="n">residual_connections</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">residual_connections</span><span class="p">[:</span><span class="n">link_ind</span><span class="p">],</span> <span class="n">residual_connections</span><span class="p">[</span><span class="n">link_ind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]])</span>
+    <span class="k">return</span> <span class="n">link</span><span class="p">,</span> <span class="n">residual_connections</span>
+
+
+<span class="k">def</span> <span class="nf">_compose_layers</span><span class="p">(</span><span class="n">conv_module</span><span class="p">,</span> <span class="n">ch</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">use_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_nonlin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compose list of layers, based on ch and additional args and kwargs.&quot;&quot;&quot;</span>
+    <span class="n">norm_layer</span> <span class="o">=</span> <span class="n">norm</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">use_norm</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="k">else</span> <span class="n">use_norm</span>
+    <span class="n">nonlin_layer</span> <span class="o">=</span> <span class="n">nonlinearity</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">use_nonlin</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="k">else</span> <span class="n">use_nonlin</span>
+
+    <span class="n">in_ch</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="n">ch</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">use_norm</span><span class="p">:</span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">norm_layer</span><span class="p">(</span><span class="n">in_ch</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">use_nonlin</span><span class="p">:</span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nonlin_layer</span><span class="p">())</span>
+
+        <span class="n">layer_args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+
+        <span class="n">layer_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conv_module</span><span class="p">(</span><span class="n">in_ch</span><span class="p">,</span> <span class="n">ch</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">*</span><span class="n">layer_args</span><span class="p">,</span> <span class="o">**</span><span class="n">layer_kwargs</span><span class="p">))</span>
+        <span class="n">in_ch</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">layers</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

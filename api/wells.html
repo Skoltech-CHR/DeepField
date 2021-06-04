@@ -1,0 +1,1539 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Wells &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Wells</a><ul>
+<li><a class="reference internal" href="#id1">Wells</a></li>
+<li><a class="reference internal" href="#wellsegment">WellSegment</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Wells</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/wells.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="wells">
+<h1>Wells<a class="headerlink" href="#wells" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="id1">
+<h2>Wells<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.field.wells.Wells">
+<em class="property">class </em><code class="sig-name descname">Wells</code><span class="sig-paren">(</span><em class="sig-param">node=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wells component.</p>
+<p>Contains wells and groups in a single tree structure, wells attributes
+and preprocessing actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="#deepfield.field.well_segment.WellSegment" title="deepfield.field.well_segment.WellSegment"><em>WellSegment</em></a><em>, </em><em>optional</em>) – Root node for well’s tree.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.add_null_results_column">
+<code class="sig-name descname">add_null_results_column</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">column</em>, <em class="sig-param">fill_with=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.add_null_results_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.add_null_results_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dummy column to results if it is absent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> – </p></li>
+<li><p><strong>column</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Column name to add</p></li>
+<li><p><strong>fill_with</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Value to fill the column</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>wells</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.add_welltrack">
+<code class="sig-name descname">add_welltrack</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">grid</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.add_welltrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.add_welltrack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct welltrack from COMPDAT table.</p>
+<p>To connect the end point of the current segment with the start point of the next segment
+we find a set of segments with nearest start point and take a segment with the lowest depth.
+Works fine for simple trajectories only.
+:param grid: Grid parameters.
+:type grid: Grid class instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>comp</strong> – Wells component with WELLTRACK attribute added.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply function to attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>callable</em>) – A function to apply. Must accept data as its first argument.</p></li>
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array-like</em>) – Attributes to get data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.apply_perforations">
+<code class="sig-name descname">apply_perforations</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">current_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.apply_perforations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.apply_perforations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open or close perforation intervals for given time interval.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<a class="reference internal" href="#deepfield.field.well_segment.WellSegment" title="deepfield.field.well_segment.WellSegment"><em>WellSegment</em></a>) – Well’s node.</p></li>
+<li><p><strong>current_date</strong> (<a class="reference external" href="http://pandas-docs.github.io/pandas-docs-travis/reference/api/pandas.Timestamp.html#pandas.Timestamp" title="(in pandas v0.25.0.dev0+752.g49f33f0d)"><em>pandas.Timestamp</em></a><em>, </em><em>optional</em>) – Final date to open new perforations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – Wells component with an updated blocks_info attribute which contains:
+- projections of welltrack in grid blocks
+- MD values for corresponding grid blocks
+- ratio of perforated part of the well for each grid block.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.attributes">
+<em class="property">property </em><code class="sig-name descname">attributes</code><a class="headerlink" href="#deepfield.field.wells.Wells.attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.blocks_ravel">
+<code class="sig-name descname">blocks_ravel</code><span class="sig-paren">(</span><em class="sig-param">grid</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.blocks_ravel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.blocks_ravel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms block coordinates into 1D representation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.blocks_to_spatial">
+<code class="sig-name descname">blocks_to_spatial</code><span class="sig-paren">(</span><em class="sig-param">grid</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.blocks_to_spatial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.blocks_to_spatial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms block coordinates into 3D representation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.calculate_cf">
+<code class="sig-name descname">calculate_cf</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">rock</em>, <em class="sig-param">grid</em>, <em class="sig-param">beta=1</em>, <em class="sig-param">units='METRIC'</em>, <em class="sig-param">cf_aggregation='sum'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.calculate_cf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.calculate_cf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate connection factor values for each grid block of a segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rock</strong> (<em>Rock class instance</em>) – Rock component of geological model.</p></li>
+<li><p><strong>grid</strong> (<em>Grid class instance</em>) – Rock component of geological model.</p></li>
+<li><p><strong>segment</strong> (<em>WellSegment class instance</em>) – Well’s node.</p></li>
+<li><p><strong>beta</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em> or </em><em>ndarray</em>) – Additional multiplicator for productivity index of well.</p></li>
+<li><p><strong>conversion_const</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Сonversion factor for field units.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – Wells component with a ‘CF’ columns in a blocks_info attribute.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.class_name">
+<em class="property">property </em><code class="sig-name descname">class_name</code><a class="headerlink" href="#deepfield.field.wells.Wells.class_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.compute_events">
+<code class="sig-name descname">compute_events</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">grid</em>, <em class="sig-param">attr='EVENTS'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.compute_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.compute_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make events from WCONPROD.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid</strong> (<a class="reference internal" href="grids.html#deepfield.field.Grid" title="deepfield.field.Grid"><em>Grid</em></a>) – Grid component.</p></li>
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute name for events. Default to ‘EVENTS’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>wells</strong> – Wells with an event attribute added.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a deepcopy. Cached properties are not copied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.cum_rates">
+<em class="property">property </em><code class="sig-name descname">cum_rates</code><a class="headerlink" href="#deepfield.field.wells.Wells.cum_rates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cumulative rates over all wells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.del_state">
+<code class="sig-name descname">del_state</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.del_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State remover.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.drop">
+<code class="sig-name descname">drop</code><span class="sig-paren">(</span><em class="sig-param">names</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.drop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.drop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detach nodes by names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array-like</em>) – Nodes to be detached.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Wells without detached nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.drop_empty_groups">
+<code class="sig-name descname">drop_empty_groups</code><span class="sig-paren">(</span><em class="sig-param">logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.drop_empty_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.drop_empty_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop groups without wells in descendants.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.drop_incomplete">
+<code class="sig-name descname">drop_incomplete</code><span class="sig-paren">(</span><em class="sig-param">logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.drop_incomplete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.drop_incomplete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop nodes with missing ‘WELLTRACK’ and ‘PERF’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> (<em>logger</em><em>, </em><em>optional</em>) – Logger for messages.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>wells</strong> – Wells without incomplete nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.drop_outside">
+<code class="sig-name descname">drop_outside</code><span class="sig-paren">(</span><em class="sig-param">keep_ancestors=False</em>, <em class="sig-param">logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.drop_outside"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.drop_outside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop nodes with missing ‘BLOCKS’ (outside of the grid).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keep_ancestors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Keep all ancestors segments for a segment with nonempty ‘BLOCKS’. Setting True might result
+in segments with empty ‘BLOCKS’, e.g. if a parent has no ‘BLOCKS’ but a child has nonempty
+‘BLOCKS’. If False, welltracks may be discontinued. Default False.</p></li>
+<li><p><strong>logger</strong> (<em>logger</em><em>, </em><em>optional</em>) – Logger for messages.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>wells</strong> – Wells without outside nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump attributes into file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to output file.</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – Any kwargs for dump method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – BaseComponent unchanged.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.dump_array_ascii">
+<em class="property">static </em><code class="sig-name descname">dump_array_ascii</code><span class="sig-paren">(</span><em class="sig-param">buffer</em>, <em class="sig-param">array</em>, <em class="sig-param">header=None</em>, <em class="sig-param">fmt='%f'</em>, <em class="sig-param">compressed=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.dump_array_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes array-like data into an ASCII buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<em>buffer-like</em>) – </p></li>
+<li><p><strong>array</strong> (<em>1d</em><em>, </em><em>array-like</em>) – Array to be saved</p></li>
+<li><p><strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – String to be written line before the array</p></li>
+<li><p><strong>fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><em>sequence of strs</em><em>, </em><em>optional</em>) – Format to be passed into <code class="docutils literal notranslate"><span class="pre">numpy.savetxt</span></code> function. Default to ‘%f’.</p></li>
+<li><p><strong>compressed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, uses compressed typing style</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.empty_like">
+<code class="sig-name descname">empty_like</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.empty_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an empty component with the same state and the structure of embedded BaseComponents (if any).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.event_dates">
+<em class="property">property </em><code class="sig-name descname">event_dates</code><a class="headerlink" href="#deepfield.field.wells.Wells.event_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of dates with any event in main branches.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.filter_blocks_with_perm">
+<code class="sig-name descname">filter_blocks_with_perm</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">permeab</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.filter_blocks_with_perm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.filter_blocks_with_perm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete blocks with zero permeability.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.get_wellblocks">
+<code class="sig-name descname">get_wellblocks</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">grid</em>, <em class="sig-param">logger=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.get_wellblocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.get_wellblocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate grid blocks for the tree of wells.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid</strong> (<em>class instance</em>) – Basic grid class.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to append.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – Wells component with calculated grid blocks and well in block projections.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.glob">
+<code class="sig-name descname">glob</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.glob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.glob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return instances at <code class="docutils literal notranslate"><span class="pre">name</span></code> supporting wildcards.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.group">
+<code class="sig-name descname">group</code><span class="sig-paren">(</span><em class="sig-param">node_names</em>, <em class="sig-param">group_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group nodes in a new group attached to root.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_names</strong> (<em>array-like</em>) – Array of nodes to be grouped.</p></li>
+<li><p><strong>group_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of a new group.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Wells with a new group added.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.history_dates">
+<em class="property">property </em><code class="sig-name descname">history_dates</code><a class="headerlink" href="#deepfield.field.wells.Wells.history_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of dates with any history in main branches.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.init_state">
+<code class="sig-name descname">init_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.init_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init state attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.items">
+<code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns pairs of attribute’s names and data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.keys">
+<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">path_or_buffer</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load data from a file or buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_or_buffer</strong> (<em>str of string buffer</em>) – Source to read data from.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – Any kwargs to be passed to load method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – BaseComponent with loaded attributes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.main_branches">
+<em class="property">property </em><code class="sig-name descname">main_branches</code><a class="headerlink" href="#deepfield.field.wells.Wells.main_branches" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of main branches names.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.names">
+<em class="property">property </em><code class="sig-name descname">names</code><a class="headerlink" href="#deepfield.field.wells.Wells.names" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of well names.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.randomize_events">
+<code class="sig-name descname">randomize_events</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">additive=False</em>, <em class="sig-param">clip=None</em>, <em class="sig-param">equality_condition=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.randomize_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.randomize_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add random values to events or fill with new random values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dict of {keyword: sampler} pairs. A keyword should be one
+of event keywords. A sampler should be callable that accepts parameter size
+(number of samples to generate).</p></li>
+<li><p><strong>additive</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, add random value to existing one. If False, substitute existing value
+with a new random. Default to False.</p></li>
+<li><p><strong>clip</strong> (<em>(</em><em>2</em><em>, </em><em>)</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – If not None, apply clip with given min and max values.</p></li>
+<li><p><strong>equality_condition</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – If not None, randomize only those events that satisfy
+df[k] == v for all (k, v) from equality_condition.items()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>wells</strong> – Wells with randomized events.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.ravel">
+<code class="sig-name descname">ravel</code><span class="sig-paren">(</span><em class="sig-param">attr=None</em>, <em class="sig-param">order='F'</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.ravel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ravel attributes where applicable assuming by default Fortran order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to ravel.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Numpy reshape order. Default to ‘F’.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <cite>True</cite>, ravel is made inplace, return BaseComponent.
+Else, return raveled attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BaseComponent if inplace else raveled attribute itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.render_tree">
+<code class="sig-name descname">render_tree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.render_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.render_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print tree structure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.reshape">
+<code class="sig-name descname">reshape</code><span class="sig-paren">(</span><em class="sig-param">attr</em>, <em class="sig-param">newshape</em>, <em class="sig-param">order='C'</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.reshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reshape <cite>numpy.ndarray</cite> attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to be reshaped.</p></li>
+<li><p><strong>newshape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – New shape.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Numpy reshape order. Default to ‘C’.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <cite>True</cite>, reshape is made inplace, return BaseComponent.
+Else, return reshaped attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BaseComponent if inplace else reshaped attribute itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.resolver">
+<em class="property">property </em><code class="sig-name descname">resolver</code><a class="headerlink" href="#deepfield.field.wells.Wells.resolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tree resolver.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.result_dates">
+<em class="property">property </em><code class="sig-name descname">result_dates</code><a class="headerlink" href="#deepfield.field.wells.Wells.result_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of dates with any result in main branches.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.results_to_events">
+<code class="sig-name descname">results_to_events</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">grid</em>, <em class="sig-param">production_mode='BHPT'</em>, <em class="sig-param">attr='EVENTS'</em>, <em class="sig-param">drop_duplicates=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.results_to_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.results_to_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make events from results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid</strong> (<a class="reference internal" href="grids.html#deepfield.field.Grid" title="deepfield.field.Grid"><em>Grid</em></a>) – Grid component.</p></li>
+<li><p><strong>production_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>'BHPT'</em><em> or </em><em>'LPT'. Default to 'BHPT'.</em>) – Control mode for production wells.</p></li>
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute name for events. Default to ‘EVENTS’.</p></li>
+<li><p><strong>drop_duplicates</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Drop repeated events. Default to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>wells</strong> – Wells with an event attribute added.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.root">
+<em class="property">property </em><code class="sig-name descname">root</code><a class="headerlink" href="#deepfield.field.wells.Wells.root" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tree root.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.set_state">
+<code class="sig-name descname">set_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.set_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State setter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.show_blocks_dynamics">
+<code class="sig-name descname">show_blocks_dynamics</code><span class="sig-paren">(</span><em class="sig-param">timesteps=None</em>, <em class="sig-param">wellnames=None</em>, <em class="sig-param">figsize=(16</em>, <em class="sig-param">6)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.show_blocks_dynamics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.show_blocks_dynamics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot liquid or gas rates and pvt props for a chosen block of
+a chosen well segment on two separate axes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timesteps</strong> (<em>list of Timestamps</em>) – Dates at which rates were calculated.</p></li>
+<li><p><strong>wellnames</strong> (<em>array-like</em>) – List of wells to plot.</p></li>
+<li><p><strong>figsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Figsize for two axes plots.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.show_rates">
+<code class="sig-name descname">show_rates</code><span class="sig-paren">(</span><em class="sig-param">timesteps=None</em>, <em class="sig-param">wellnames=None</em>, <em class="sig-param">wells2=None</em>, <em class="sig-param">labels=None</em>, <em class="sig-param">figsize=(16</em>, <em class="sig-param">6)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.show_rates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.show_rates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot total or cumulative liquid and gas rates for a chosen node including branches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timesteps</strong> (<em>list of Timestamps</em>) – Dates at which rates were calculated.</p></li>
+<li><p><strong>wellnames</strong> (<em>array-like</em>) – List of wells to show.</p></li>
+<li><p><strong>figsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Figsize for two axes plots.</p></li>
+<li><p><strong>wells2</strong> (<a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells"><em>Wells</em></a>) – Target model to compare with.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.show_rates2">
+<code class="sig-name descname">show_rates2</code><span class="sig-paren">(</span><em class="sig-param">timesteps=None</em>, <em class="sig-param">wellnames=None</em>, <em class="sig-param">wells2=None</em>, <em class="sig-param">labels=None</em>, <em class="sig-param">figsize=(16</em>, <em class="sig-param">6)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.show_rates2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.show_rates2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot total or cumulative liquid and gas rates for a chosen node including branches
+on two separate axes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timesteps</strong> (<em>list of Timestamps</em>) – Dates at which rates were calculated.</p></li>
+<li><p><strong>wellnames</strong> (<em>array-like</em>) – List of wells to show.</p></li>
+<li><p><strong>figsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Figsize for two axes plots.</p></li>
+<li><p><strong>wells2</strong> (<a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells"><em>Wells</em></a>) – Target model to compare with.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.show_wells">
+<code class="sig-name descname">show_wells</code><span class="sig-paren">(</span><em class="sig-param">figsize=None</em>, <em class="sig-param">c='r'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.show_wells"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.show_wells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return 3D visualization of wells.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>figsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Output figsize.</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Line color, default red.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional kwargs for plot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.split_perforations">
+<code class="sig-name descname">split_perforations</code><span class="sig-paren">(</span><em class="sig-param">segment</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.split_perforations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.split_perforations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split well perforations in a way that each perforation correspond
+to one specific cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>segment</strong> (<a class="reference internal" href="#deepfield.field.well_segment.WellSegment" title="deepfield.field.well_segment.WellSegment"><em>WellSegment</em></a>) – Well node</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Wells component with updated perforations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.state">
+<em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#deepfield.field.wells.Wells.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.total_rates">
+<em class="property">property </em><code class="sig-name descname">total_rates</code><a class="headerlink" href="#deepfield.field.wells.Wells.total_rates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total rates over all wells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">wellsdata</em>, <em class="sig-param">mode='w'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update tree nodes with new wellsdata. If node does not exists,
+it will be attached to root.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wellsdata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – Keys are well names, values are dicts with well attributes.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – If ‘w’, write new data. If ‘a’, try to append new data. Default to ‘w’.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to append.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Wells with updated attributes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.update_wpi_mult">
+<code class="sig-name descname">update_wpi_mult</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">mults</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/wells.html#Wells.update_wpi_mult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.wells.Wells.update_wpi_mult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update WPI multipliers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<a class="reference internal" href="#deepfield.field.well_segment.WellSegment" title="deepfield.field.well_segment.WellSegment"><em>WellSegment</em></a>) – Well node</p></li>
+<li><p><strong>mults</strong> (<a class="reference external" href="http://pandas-docs.github.io/pandas-docs-travis/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.25.0.dev0+752.g49f33f0d)"><em>pandas.DataFrame</em></a>) – Multiplyers to be updated.
+A table with following columns
+– I:
+– J:
+– K: indices
+– MULT correspnding multipliers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Wells component with updated WPI multipliers in <cite>perf</cite> tables.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.wells.Wells" title="deepfield.field.wells.Wells">Wells</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.wells.Wells.values">
+<code class="sig-name descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.wells.Wells.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator of attribute’s data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="wellsegment">
+<h2>WellSegment<a class="headerlink" href="#wellsegment" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.field.well_segment.WellSegment">
+<em class="property">class </em><code class="sig-name descname">WellSegment</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">parent=None</em>, <em class="sig-param">children=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">is_group=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/well_segment.html#WellSegment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.well_segment.WellSegment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Well’s node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Node’s name.</p></li>
+<li><p><strong>is_group</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Should a node represet a group of wells. Default to False.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="deepfield.field.well_segment.WellSegment.is_group">
+<code class="sig-name descname">is_group</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.is_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicator of a group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.well_segment.WellSegment.is_main_branch">
+<code class="sig-name descname">is_main_branch</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.is_main_branch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicator of a main branch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.well_segment.WellSegment.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Node’s name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.well_segment.WellSegment.fullname">
+<code class="sig-name descname">fullname</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.fullname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Node’s full name from root.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.all_perforated_blocks">
+<code class="sig-name descname">all_perforated_blocks</code><span class="sig-paren">(</span><em class="sig-param">t=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/well_segment.html#WellSegment.all_perforated_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.all_perforated_blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of perforated blocks for current node and all its descendants.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.ancestors">
+<em class="property">property </em><code class="sig-name descname">ancestors</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.ancestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>All parent nodes and their parent nodes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">ancestors</span>
+<span class="go">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">ancestors</span>
+<span class="go">(Node(&#39;/Udo&#39;),)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">ancestors</span>
+<span class="go">(Node(&#39;/Udo&#39;), Node(&#39;/Udo/Marc&#39;))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.anchestors">
+<em class="property">property </em><code class="sig-name descname">anchestors</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.anchestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>All parent nodes and their parent nodes - see <a class="reference internal" href="#deepfield.field.well_segment.WellSegment.ancestors" title="deepfield.field.well_segment.WellSegment.ancestors"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">ancestors</span></code></a>.</p>
+<p>The attribute <cite>anchestors</cite> is just a typo of <cite>ancestors</cite>. Please use <cite>ancestors</cite>.
+This attribute will be removed in the 3.0.0 release.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply function to attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>callable</em>) – A function to apply. Must accept data as its first argument.</p></li>
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array-like</em>) – Attributes to get data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.apply_perforations">
+<code class="sig-name descname">apply_perforations</code><span class="sig-paren">(</span><em class="sig-param">current_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/well_segment.html#WellSegment.apply_perforations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.apply_perforations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open or close perforation intervals for given time interval.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>segment</strong> (<a class="reference internal" href="#deepfield.field.well_segment.WellSegment" title="deepfield.field.well_segment.WellSegment"><em>WellSegment</em></a>) – Well’s node.</p></li>
+<li><p><strong>current_date</strong> (<a class="reference external" href="http://pandas-docs.github.io/pandas-docs-travis/reference/api/pandas.Timestamp.html#pandas.Timestamp" title="(in pandas v0.25.0.dev0+752.g49f33f0d)"><em>pandas.Timestamp</em></a>) – Final date to open new perforations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>segment</strong> – Segment with a blocks_info attribute that contains:
+- projections of welltrack in grid blocks
+- MD values for corresponding grid blocks
+- ratio of perforated part of the well for each grid block.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.well_segment.WellSegment" title="deepfield.field.well_segment.WellSegment">WellSegment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.attributes">
+<em class="property">property </em><code class="sig-name descname">attributes</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.calculate_cf">
+<code class="sig-name descname">calculate_cf</code><span class="sig-paren">(</span><em class="sig-param">rock</em>, <em class="sig-param">grid</em>, <em class="sig-param">beta=1</em>, <em class="sig-param">units='METRIC'</em>, <em class="sig-param">cf_aggregation='sum'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/well_segment.html#WellSegment.calculate_cf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.calculate_cf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate connection factor values for each grid block of a segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rock</strong> (<a class="reference internal" href="rock.html#deepfield.field.Rock" title="deepfield.field.Rock"><em>Rock</em></a>) – Rock component of geological model.</p></li>
+<li><p><strong>grid</strong> (<a class="reference internal" href="grids.html#deepfield.field.Grid" title="deepfield.field.Grid"><em>Grid</em></a>) – Rock component of geological model.</p></li>
+<li><p><strong>segment</strong> (<a class="reference internal" href="#deepfield.field.well_segment.WellSegment" title="deepfield.field.well_segment.WellSegment"><em>WellSegment</em></a>) – Well’s node.</p></li>
+<li><p><strong>beta</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em> or </em><em>ndarray</em>) – Additional multiplicator for productivity index of well.</p></li>
+<li><p><strong>units</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>'METRIC'</em><em> or </em><em>'FIELD'</em>) – Field units.</p></li>
+<li><p><strong>cf_aggregation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>'sum'</em><em> or </em><em>'eucl'</em>) – The way of aggregating cf projection (‘sum’ - sum, ‘eucl’ - Euclid norm).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>segment</strong> – Segment with a blocks_info attribute extended with calculated connection
+factor values for all segment blocks.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.well_segment.WellSegment" title="deepfield.field.well_segment.WellSegment">WellSegment</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.children">
+<em class="property">property </em><code class="sig-name descname">children</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>All child nodes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span>
+<span class="go">(Node(&#39;/n/a&#39;), Node(&#39;/n/b&#39;), Node(&#39;/n/c&#39;))</span>
+</pre></div>
+</div>
+<p>Modifying the children attribute modifies the tree.</p>
+<p><strong>Detach</strong></p>
+<p>The children attribute can be updated by setting to an iterable.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span>
+<span class="go">(Node(&#39;/n/a&#39;), Node(&#39;/n/b&#39;))</span>
+</pre></div>
+</div>
+<p>Node <cite>c</cite> is removed from the tree.
+In case of an existing reference, the node <cite>c</cite> does not vanish and is the root of its own tree.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>
+<span class="go">Node(&#39;/c&#39;)</span>
+</pre></div>
+</div>
+<p><strong>Attach</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
+<span class="go">Node(&#39;/d&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span>
+<span class="go">(Node(&#39;/n/a&#39;), Node(&#39;/n/b&#39;), Node(&#39;/n/d&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
+<span class="go">Node(&#39;/n/d&#39;)</span>
+</pre></div>
+</div>
+<p><strong>Duplicate</strong></p>
+<p>A node can just be the children once. Duplicates cause a <code class="xref any docutils literal notranslate"><span class="pre">TreeError</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">a</span><span class="p">]</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">anytree.node.exceptions.TreeError</span>: <span class="n">Cannot add node Node(&#39;/n/a&#39;) multiple times as child.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.class_name">
+<em class="property">property </em><code class="sig-name descname">class_name</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.class_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/well_segment.html#WellSegment.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a deepcopy. Cached properties are not copied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.cum_rates">
+<em class="property">property </em><code class="sig-name descname">cum_rates</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.cum_rates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cumulative rates for the current node and all its branches.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.del_state">
+<code class="sig-name descname">del_state</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.del_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State remover.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.depth">
+<em class="property">property </em><code class="sig-name descname">depth</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of edges to the root <cite>Node</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">depth</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">depth</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">depth</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.descendants">
+<em class="property">property </em><code class="sig-name descname">descendants</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.descendants" title="Permalink to this definition">¶</a></dt>
+<dd><p>All child nodes and all their child nodes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loui</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Loui&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">soe</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Soe&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">lian</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">descendants</span>
+<span class="go">(Node(&#39;/Udo/Marc&#39;), Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Lian/Soe&#39;), Node(&#39;/Udo/Marc/Loui&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">descendants</span>
+<span class="go">(Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Lian/Soe&#39;), Node(&#39;/Udo/Marc/Loui&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">descendants</span>
+<span class="go">(Node(&#39;/Udo/Marc/Lian/Soe&#39;),)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.drop">
+<code class="sig-name descname">drop</code><span class="sig-paren">(</span><em class="sig-param">attr</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.drop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop an attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump attributes into file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to output file.</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – Any kwargs for dump method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – BaseComponent unchanged.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.dump_array_ascii">
+<em class="property">static </em><code class="sig-name descname">dump_array_ascii</code><span class="sig-paren">(</span><em class="sig-param">buffer</em>, <em class="sig-param">array</em>, <em class="sig-param">header=None</em>, <em class="sig-param">fmt='%f'</em>, <em class="sig-param">compressed=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.dump_array_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes array-like data into an ASCII buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<em>buffer-like</em>) – </p></li>
+<li><p><strong>array</strong> (<em>1d</em><em>, </em><em>array-like</em>) – Array to be saved</p></li>
+<li><p><strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – String to be written line before the array</p></li>
+<li><p><strong>fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><em>sequence of strs</em><em>, </em><em>optional</em>) – Format to be passed into <code class="docutils literal notranslate"><span class="pre">numpy.savetxt</span></code> function. Default to ‘%f’.</p></li>
+<li><p><strong>compressed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, uses compressed typing style</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.empty_like">
+<code class="sig-name descname">empty_like</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.empty_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an empty component with the same state and the structure of embedded BaseComponents (if any).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">fullname</code></dt>
+<dd><p>Full name from root.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.height">
+<em class="property">property </em><code class="sig-name descname">height</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of edges on the longest path to a leaf <cite>Node</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">height</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">height</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">height</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.init_state">
+<code class="sig-name descname">init_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.init_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init state attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">is_group</code></dt>
+<dd><p>Check that node is a group of wells.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.is_leaf">
+<em class="property">property </em><code class="sig-name descname">is_leaf</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.is_leaf" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>Node</cite> has no children (External Node).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">is_leaf</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">is_leaf</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">is_leaf</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">is_main_branch</code></dt>
+<dd><p>Check that node in a main well’s branch.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.is_root">
+<em class="property">property </em><code class="sig-name descname">is_root</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.is_root" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>Node</cite> is tree root.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">is_root</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">is_root</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">is_root</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.items">
+<code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns pairs of attribute’s names and data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.iter_path_reverse">
+<code class="sig-name descname">iter_path_reverse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.iter_path_reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate up the tree from the current node.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">udo</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">marc</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="go">Node(&#39;/Udo/Marc&#39;)</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">lian</span><span class="o">.</span><span class="n">iter_path_reverse</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="go">Node(&#39;/Udo/Marc/Lian&#39;)</span>
+<span class="go">Node(&#39;/Udo/Marc&#39;)</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.keys">
+<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.leaves">
+<em class="property">property </em><code class="sig-name descname">leaves</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.leaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tuple of all leaf nodes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loui</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Loui&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lazy</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lazy&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">leaves</span>
+<span class="go">(Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Loui&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">leaves</span>
+<span class="go">(Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Loui&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">path_or_buffer</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load data from a file or buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_or_buffer</strong> (<em>str of string buffer</em>) – Source to read data from.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – Any kwargs to be passed to load method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>comp</strong> – BaseComponent with loaded attributes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<em class="property">property </em><code class="sig-name descname">name</code></dt>
+<dd><p>Node’s name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.parent">
+<em class="property">property </em><code class="sig-name descname">parent</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parent Node.</p>
+<p>On set, the node is detached from any previous parent node and attached
+to the new node.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">RenderTree</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="n">udo</span><span class="p">))</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="n">marc</span><span class="p">))</span>
+<span class="go">Node(&#39;/Marc&#39;)</span>
+<span class="go">└── Node(&#39;/Marc/Lian&#39;)</span>
+</pre></div>
+</div>
+<p><strong>Attach</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">udo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="n">udo</span><span class="p">))</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="go">└── Node(&#39;/Udo/Marc&#39;)</span>
+<span class="go">    └── Node(&#39;/Udo/Marc/Lian&#39;)</span>
+</pre></div>
+</div>
+<p><strong>Detach</strong></p>
+<p>To make a node to a root node, just set this attribute to <cite>None</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">is_root</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">is_root</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.path">
+<em class="property">property </em><code class="sig-name descname">path</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path of this <cite>Node</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">path</span>
+<span class="go">(Node(&#39;/Udo&#39;),)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">path</span>
+<span class="go">(Node(&#39;/Udo&#39;), Node(&#39;/Udo/Marc&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">path</span>
+<span class="go">(Node(&#39;/Udo&#39;), Node(&#39;/Udo/Marc&#39;), Node(&#39;/Udo/Marc/Lian&#39;))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.perforated_blocks">
+<code class="sig-name descname">perforated_blocks</code><span class="sig-paren">(</span><em class="sig-param">t=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/well_segment.html#WellSegment.perforated_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.perforated_blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of perforated blocks for current node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.perforated_indices">
+<code class="sig-name descname">perforated_indices</code><span class="sig-paren">(</span><em class="sig-param">t=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/well_segment.html#WellSegment.perforated_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.perforated_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mask indicating perforated blocks.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.ravel">
+<code class="sig-name descname">ravel</code><span class="sig-paren">(</span><em class="sig-param">attr=None</em>, <em class="sig-param">order='F'</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.ravel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ravel attributes where applicable assuming by default Fortran order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to ravel.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Numpy reshape order. Default to ‘F’.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <cite>True</cite>, ravel is made inplace, return BaseComponent.
+Else, return raveled attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BaseComponent if inplace else raveled attribute itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.reshape">
+<code class="sig-name descname">reshape</code><span class="sig-paren">(</span><em class="sig-param">attr</em>, <em class="sig-param">newshape</em>, <em class="sig-param">order='C'</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.reshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reshape <cite>numpy.ndarray</cite> attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to be reshaped.</p></li>
+<li><p><strong>newshape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – New shape.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Numpy reshape order. Default to ‘C’.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <cite>True</cite>, reshape is made inplace, return BaseComponent.
+Else, return reshaped attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BaseComponent if inplace else reshaped attribute itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.root">
+<em class="property">property </em><code class="sig-name descname">root</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.root" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tree Root Node.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">root</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">root</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">root</span>
+<span class="go">Node(&#39;/Udo&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.well_segment.WellSegment.separator">
+<code class="sig-name descname">separator</code><em class="property"> = '/'</em><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.separator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.set_state">
+<code class="sig-name descname">set_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.set_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State setter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.siblings">
+<em class="property">property </em><code class="sig-name descname">siblings</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.siblings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tuple of nodes with the same parent.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Udo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Marc&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">udo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lian&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loui</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Loui&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lazy</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Lazy&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">marc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udo</span><span class="o">.</span><span class="n">siblings</span>
+<span class="go">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marc</span><span class="o">.</span><span class="n">siblings</span>
+<span class="go">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lian</span><span class="o">.</span><span class="n">siblings</span>
+<span class="go">(Node(&#39;/Udo/Marc/Loui&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loui</span><span class="o">.</span><span class="n">siblings</span>
+<span class="go">(Node(&#39;/Udo/Marc/Lian&#39;), Node(&#39;/Udo/Marc/Lazy&#39;))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.state">
+<em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.total_rates">
+<em class="property">property </em><code class="sig-name descname">total_rates</code><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.total_rates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total rates for the current node and all its branches.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.well_segment.WellSegment.values">
+<code class="sig-name descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.field.well_segment.WellSegment.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator of attribute’s data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

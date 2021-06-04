@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Loaders and samplers &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Loaders and samplers</a><ul>
+<li><a class="reference internal" href="#fielddataset">FieldDataset</a></li>
+<li><a class="reference internal" href="#fieldsample">FieldSample</a></li>
+<li><a class="reference internal" href="#uniformsequencesubset">UniformSequenceSubset</a></li>
+<li><a class="reference internal" href="#randomsubsequence">RandomSubsequence</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Loaders and samplers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/datasets.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="loaders-and-samplers">
+<h1>Loaders and samplers<a class="headerlink" href="#loaders-and-samplers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="fielddataset">
+<h2>FieldDataset<a class="headerlink" href="#fielddataset" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.datasets.FieldDataset">
+<em class="property">class </em><code class="sig-name descname">FieldDataset</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">sample_attrs=None</em>, <em class="sig-param">fmt=('dat'</em>, <em class="sig-param">'data'</em>, <em class="sig-param">'hdf5')</em>, <em class="sig-param">subset_generator=None</em>, <em class="sig-param">unravel_model=None</em>, <em class="sig-param">from_samples=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Baseclass for dataset of fields loaded with similar configs.</p>
+<dl class="method">
+<dt id="deepfield.datasets.FieldDataset.calculate_statistics">
+<code class="sig-name descname">calculate_statistics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldDataset.calculate_statistics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldDataset.calculate_statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate mean and std values for the attributes of the dataset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldDataset.convert_to_other_fmt">
+<code class="sig-name descname">convert_to_other_fmt</code><span class="sig-paren">(</span><em class="sig-param">new_root_dir</em>, <em class="sig-param">new_fmt='hdf5'</em>, <em class="sig-param">results_to_events=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldDataset.convert_to_other_fmt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldDataset.convert_to_other_fmt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert dataset to a new format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_root_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Directory to save converted dataset</p></li>
+<li><p><strong>new_fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Extension to use</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – Any additional named arguments passed to Field.dump</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.datasets.FieldDataset" title="deepfield.datasets.FieldDataset">FieldDataset</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.datasets.FieldDataset.default_sample_attrs">
+<code class="sig-name descname">default_sample_attrs</code><em class="property"> = {'CONTROL': ['BHPT', 'WWIR'], 'GRID': [], 'MASKS': ['ACTNUM', 'TIME'], 'ROCK': ['PORO', 'PERMX', 'PERMY', 'PERMZ'], 'STATES': ['PRESSURE', 'RS', 'SGAS', 'SOIL', 'SWAT']}</em><a class="headerlink" href="#deepfield.datasets.FieldDataset.default_sample_attrs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldDataset.dump_samples">
+<code class="sig-name descname">dump_samples</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">n_epoch=1</em>, <em class="sig-param">prefix=None</em>, <em class="sig-param">state=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldDataset.dump_samples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldDataset.dump_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump samples from the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to the directory for dump.</p></li>
+<li><p><strong>n_epoch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of times to pass through the dataset.</p></li>
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – Prefix for dumped samples.</p></li>
+<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, dump the state of the samples</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – Additional named arguments for sample.dump</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldDataset.dump_statistics">
+<code class="sig-name descname">dump_statistics</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldDataset.dump_statistics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldDataset.dump_statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump mean and std values of the dataset into a file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldDataset.filtered_statistics">
+<em class="property">property </em><code class="sig-name descname">filtered_statistics</code><a class="headerlink" href="#deepfield.datasets.FieldDataset.filtered_statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters out non-normalized attrs and attrs, which are not presented in <cite>sample_attrs</cite>, from statistics.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldDataset.load_statistics">
+<code class="sig-name descname">load_statistics</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldDataset.load_statistics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldDataset.load_statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load mean and std values of the dataset from a file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldDataset.sample_attrs">
+<em class="property">property </em><code class="sig-name descname">sample_attrs</code><a class="headerlink" href="#deepfield.datasets.FieldDataset.sample_attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attributes represented in the samples.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldDataset.set_transform">
+<code class="sig-name descname">set_transform</code><span class="sig-paren">(</span><em class="sig-param">transform</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldDataset.set_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldDataset.set_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set transforms to be applied to each sample</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>transform</strong> (<em>class</em>) – Class of transform to apply
+list of Classes can be used to compose several transforms</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.datasets.FieldDataset" title="deepfield.datasets.FieldDataset">FieldDataset</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldDataset.to_dates">
+<em class="property">static </em><code class="sig-name descname">to_dates</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldDataset.to_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldDataset.to_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restore actual dates from time deltas.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="fieldsample">
+<h2>FieldSample<a class="headerlink" href="#fieldsample" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.datasets.FieldSample">
+<em class="property">class </em><code class="sig-name descname">FieldSample</code><span class="sig-paren">(</span><em class="sig-param">path=None</em>, <em class="sig-param">field=None</em>, <em class="sig-param">dataset=None</em>, <em class="sig-param">state=None</em>, <em class="sig-param">**sample</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldSample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldSample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing the samples from the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Path to the file. Only HDF5 files are supported at the moment.</p></li>
+<li><p><strong>field</strong> (<a class="reference internal" href="field.html#deepfield.field.Field" title="deepfield.field.Field"><em>Field</em></a><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>dataset</strong> (<a class="reference internal" href="#deepfield.datasets.FieldDataset" title="deepfield.datasets.FieldDataset"><em>FieldDataset</em></a><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>sample</strong> (<em>dict-like</em><em>, </em><em>optional</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">attr</em>, <em class="sig-param">*args</em>, <em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply function to attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>callable</em>) – A function to apply. Must accept data as its first argument.</p></li>
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array-like</em>) – Attributes to get data from.</p></li>
+<li><p><strong>args</strong> (<em>misc</em>) – Any additional positional arguments to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – Transformed component.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="base_classes.html#deepfield.field.base_component.BaseComponent" title="deepfield.field.base_component.BaseComponent">BaseComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.as_ravel">
+<code class="sig-name descname">as_ravel</code><span class="sig-paren">(</span><em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldSample.as_ravel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldSample.as_ravel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.as_spatial">
+<code class="sig-name descname">as_spatial</code><span class="sig-paren">(</span><em class="sig-param">inplace=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldSample.as_spatial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldSample.as_spatial" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.at_wells">
+<code class="sig-name descname">at_wells</code><span class="sig-paren">(</span><em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldSample.at_wells"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldSample.at_wells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop all the spatial arrays to the perforated cells. Ravel if needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>sample</strong> – Cropped sample.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.datasets.FieldSample" title="deepfield.datasets.FieldSample">FieldSample</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.attributes">
+<em class="property">property </em><code class="sig-name descname">attributes</code><a class="headerlink" href="#deepfield.datasets.FieldSample.attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.class_name">
+<em class="property">property </em><code class="sig-name descname">class_name</code><a class="headerlink" href="#deepfield.datasets.FieldSample.class_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldSample.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldSample.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a copy of the sample.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.dataset">
+<em class="property">property </em><code class="sig-name descname">dataset</code><a class="headerlink" href="#deepfield.datasets.FieldSample.dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Link to the parent dataset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.del_state">
+<code class="sig-name descname">del_state</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.del_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State remover.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.device">
+<em class="property">property </em><code class="sig-name descname">device</code><a class="headerlink" href="#deepfield.datasets.FieldSample.device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the sample’s device (if it is in Torch format)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>device</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>torch.device</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.drop">
+<code class="sig-name descname">drop</code><span class="sig-paren">(</span><em class="sig-param">attr</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.drop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop an attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldSample.dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldSample.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the sample into a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to the file.</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – Additional named arguments passed to BaseComponent’s dump method.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.dump_array_ascii">
+<em class="property">static </em><code class="sig-name descname">dump_array_ascii</code><span class="sig-paren">(</span><em class="sig-param">buffer</em>, <em class="sig-param">array</em>, <em class="sig-param">header=None</em>, <em class="sig-param">fmt='%f'</em>, <em class="sig-param">compressed=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.dump_array_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes array-like data into an ASCII buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<em>buffer-like</em>) – </p></li>
+<li><p><strong>array</strong> (<em>1d</em><em>, </em><em>array-like</em>) – Array to be saved</p></li>
+<li><p><strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – String to be written line before the array</p></li>
+<li><p><strong>fmt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><em>sequence of strs</em><em>, </em><em>optional</em>) – Format to be passed into <code class="docutils literal notranslate"><span class="pre">numpy.savetxt</span></code> function. Default to ‘%f’.</p></li>
+<li><p><strong>compressed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, uses compressed typing style</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.empty_like">
+<code class="sig-name descname">empty_like</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldSample.empty_like"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldSample.empty_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an empty sample with the same state and the structure of embedded BaseComponents (if any).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.field">
+<em class="property">property </em><code class="sig-name descname">field</code><a class="headerlink" href="#deepfield.datasets.FieldSample.field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Link to the parent field.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.init_state">
+<code class="sig-name descname">init_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.init_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init state attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.items">
+<code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns pairs of attribute’s names and data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.keys">
+<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of attributes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldSample.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldSample.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load sample from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – Additional named arguments passed to the load method.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>sample</strong> – Sample with loaded data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.datasets.FieldSample" title="deepfield.datasets.FieldSample">FieldSample</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.ravel">
+<code class="sig-name descname">ravel</code><span class="sig-paren">(</span><em class="sig-param">attr=None</em>, <em class="sig-param">order='F'</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.ravel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ravel attributes where applicable assuming by default Fortran order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to ravel.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Numpy reshape order. Default to ‘F’.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <cite>True</cite>, ravel is made inplace, return BaseComponent.
+Else, return raveled attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BaseComponent if inplace else raveled attribute itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.reshape">
+<code class="sig-name descname">reshape</code><span class="sig-paren">(</span><em class="sig-param">attr</em>, <em class="sig-param">newshape</em>, <em class="sig-param">order='C'</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.reshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reshape <cite>numpy.ndarray</cite> attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>array of str</em>) – Attribute to be reshaped.</p></li>
+<li><p><strong>newshape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – New shape.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Numpy reshape order. Default to ‘C’.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <cite>True</cite>, reshape is made inplace, return BaseComponent.
+Else, return reshaped attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BaseComponent if inplace else reshaped attribute itself.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.sample_attrs">
+<em class="property">property </em><code class="sig-name descname">sample_attrs</code><a class="headerlink" href="#deepfield.datasets.FieldSample.sample_attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attributes represented in the sample.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.set_state">
+<code class="sig-name descname">set_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.set_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State setter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.state">
+<em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#deepfield.datasets.FieldSample.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.to">
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param">device</em>, <em class="sig-param">inplace=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldSample.to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldSample.to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the sample’s device (if it is in Torch format).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>torch.device</em>) – </p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>sample</strong> – Sample at the new device</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.datasets.FieldSample" title="deepfield.datasets.FieldSample">FieldSample</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.transformed">
+<code class="sig-name descname">transformed</code><span class="sig-paren">(</span><em class="sig-param">transforms</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldSample.transformed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldSample.transformed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply a set of transforms to the sample.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transforms</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>, </em><a class="reference internal" href="transforms.html#deepfield.datasets.Compose" title="deepfield.datasets.Compose"><em>Compose</em></a><em>, </em><em>Transform</em>) – Transform to apply</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>sample</strong> – Transformed sample.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.datasets.FieldSample" title="deepfield.datasets.FieldSample">FieldSample</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.datasets.FieldSample.values">
+<code class="sig-name descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.datasets.FieldSample.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generator of attribute’s data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="uniformsequencesubset">
+<h2>UniformSequenceSubset<a class="headerlink" href="#uniformsequencesubset" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.datasets.UniformSequenceSubset">
+<em class="property">class </em><code class="sig-name descname">UniformSequenceSubset</code><span class="sig-paren">(</span><em class="sig-param">size</em>, <em class="sig-param">low</em>, <em class="sig-param">high</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#UniformSequenceSubset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.UniformSequenceSubset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator of timesteps sampled from a uniform distribution [low, high).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="randomsubsequence">
+<h2>RandomSubsequence<a class="headerlink" href="#randomsubsequence" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.datasets.RandomSubsequence">
+<em class="property">class </em><code class="sig-name descname">RandomSubsequence</code><span class="sig-paren">(</span><em class="sig-param">size</em>, <em class="sig-param">low</em>, <em class="sig-param">high</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#RandomSubsequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.RandomSubsequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator of timestep subsequences.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

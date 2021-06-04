@@ -1,0 +1,1738 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Dynamics &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Dynamics</a><ul>
+<li><a class="reference internal" href="#neuraldifferentialequation">NeuralDifferentialEquation</a></li>
+<li><a class="reference internal" href="#latentspacedynamics">LatentSpaceDynamics</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Dynamics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/dynamics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dynamics">
+<h1>Dynamics<a class="headerlink" href="#dynamics" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="neuraldifferentialequation">
+<h2>NeuralDifferentialEquation<a class="headerlink" href="#neuraldifferentialequation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation">
+<em class="property">class </em><code class="sig-name descname">NeuralDifferentialEquation</code><span class="sig-paren">(</span><em class="sig-param">time_derivative_module</em>, <em class="sig-param">time_scale=30.5</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/dynamics/nde.html#NeuralDifferentialEquation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Module for modelling dynamics in the form of Neural Ordinary Differential Equation.</p>
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.add_module">
+<code class="sig-name descname">add_module</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">module</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.add_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a child module to the current module.</p>
+<p>The module can be accessed as an attribute using the given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – name of the child module. The child module can be
+accessed from this module using the given name</p></li>
+<li><p><strong>module</strong> (<em>Module</em>) – child module to be added to the module.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">fn</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies <code class="docutils literal notranslate"><span class="pre">fn</span></code> recursively to every submodule (as returned by <code class="docutils literal notranslate"><span class="pre">.children()</span></code>)
+as well as self. Typical use includes initializing the parameters of a model
+(see also <span class="xref std std-ref">torch-nn-init</span>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fn</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> -&gt; None) – function to be applied to each submodule</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">init_weights</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">==</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_weights</span><span class="p">)</span>
+<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 1.,  1.],</span>
+<span class="go">        [ 1.,  1.]])</span>
+<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 1.,  1.],</span>
+<span class="go">        [ 1.,  1.]])</span>
+<span class="go">Sequential(</span>
+<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">)</span>
+<span class="go">Sequential(</span>
+<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.buffers">
+<code class="sig-name descname">buffers</code><span class="sig-paren">(</span><em class="sig-param">recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.buffers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over module buffers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, then yields buffers of this module
+and all submodules. Otherwise, yields only buffers that
+are direct members of this module.</p>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>torch.Tensor</em> – module buffer</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">buf</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">buffers</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">buf</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+<span class="go">&lt;class &#39;torch.FloatTensor&#39;&gt; (20L,)</span>
+<span class="go">&lt;class &#39;torch.FloatTensor&#39;&gt; (20L, 1L, 5L, 5L)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.children">
+<code class="sig-name descname">children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over immediate children modules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>Module</em> – a child module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.cpu">
+<code class="sig-name descname">cpu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.cpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves all model parameters and buffers to the CPU.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.cuda">
+<code class="sig-name descname">cuda</code><span class="sig-paren">(</span><em class="sig-param">device=None</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.cuda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves all model parameters and buffers to the GPU.</p>
+<p>This also makes associated parameters and buffers different objects. So
+it should be called before constructing optimizer if the module will
+live on GPU while being optimized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – if specified, all parameters will be
+copied to that device</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.double">
+<code class="sig-name descname">double</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">double</span></code> datatype.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump model parameters into the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to the file for dump.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.dump_patches">
+<code class="sig-name descname">dump_patches</code><em class="property"> = False</em><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.dump_patches" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.eval">
+<code class="sig-name descname">eval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the module in evaluation mode.</p>
+<p>This has any effect only on certain modules. See documentations of
+particular modules for details of their behaviors in training/evaluation
+mode, if they are affected, e.g. <code class="xref py py-class docutils literal notranslate"><span class="pre">Dropout</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm</span></code>,
+etc.</p>
+<p>This is equivalent with <code class="xref py py-meth docutils literal notranslate"><span class="pre">self.train(False)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.extra_repr">
+<code class="sig-name descname">extra_repr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.extra_repr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the extra representation of the module</p>
+<p>To print customized extra information, you should reimplement
+this method in your own modules. Both single-line and multi-line
+strings are acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.float">
+<code class="sig-name descname">float</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casts all floating point parameters and buffers to float datatype.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">init_state</em>, <em class="sig-param">params</em>, <em class="sig-param">control</em>, <em class="sig-param">control_t</em>, <em class="sig-param">t</em>, <em class="sig-param">*der_args</em>, <em class="sig-param">max_integration_timestep=100</em>, <em class="sig-param">solver='rk4'</em>, <em class="sig-param">rtol=0.0001</em>, <em class="sig-param">atol=0.0001</em>, <em class="sig-param">use_adjoint=False</em>, <em class="sig-param">max_seq_len=None</em>, <em class="sig-param">use_outer_checkpointing=False</em>, <em class="sig-param">use_inner_checkpointing=True</em>, <em class="sig-param">**der_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/dynamics/nde.html#NeuralDifferentialEquation.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.forward" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>init_state</strong> (<em>torch.Tensor</em>) – Initial state. Shape: (B, C_s, <a href="#id1"><span class="problematic" id="id2">*</span></a>dims)</p></li>
+<li><p><strong>params</strong> (<em>torch.Tensor</em>) – Params tensor (rock mostly). Shape: (B, C_p, <a href="#id3"><span class="problematic" id="id4">*</span></a>dims)</p></li>
+<li><p><strong>control</strong> (<em>torch.Tensor</em>) – Spatial control tensor. Shape: (B, T, C_c, <a href="#id5"><span class="problematic" id="id6">*</span></a>dims)</p></li>
+<li><p><strong>control_t</strong> (<em>torch.Tensor</em>) – Tensor holding a sequence of time points for which control is given.
+Each time must be strictly larger than the previous time. Shape: (B, T_c)</p></li>
+<li><p><strong>t</strong> (<em>torch.Tensor</em>) – Tensor holding a sequence of time points for which to solve for states.
+The initial time point (i.e. time point of the init_state) should be the first
+element of this sequence, and each time must be strictly larger than the previous time.
+Shape: (B, T)</p></li>
+<li><p><strong>der_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Any additional args passed to the dynamics module.</p></li>
+<li><p><strong>max_integration_timestep</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximal timestep can be made internally by the solver.</p></li>
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – <p>Name of the solver to use. From the list:
+[</p>
+<blockquote>
+<div><p>’explicit_adams’,
+‘fixed_adams’,
+‘adams’,
+‘tsit5’,
+‘dopri5’,
+‘euler’,
+‘midpoint’,
+‘rk4’,
+‘adaptive_heun’,</p>
+</div></blockquote>
+<p>]</p>
+</p></li>
+<li><p><strong>rtol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Relative tolerance.</p></li>
+<li><p><strong>atol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Absolute tolerance.</p></li>
+<li><p><strong>use_adjoint</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, use Adjoint method at the backward pass.</p></li>
+<li><p><strong>max_seq_len</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximal lenght of the sequence, that can be passed into single forward pass.
+If required solution has a greater length, several forward passes will be done.</p></li>
+<li><p><strong>use_outer_checkpointing</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, decorates the Integrator class with CheckpointWrapper. Default: False.</p></li>
+<li><p><strong>use_inner_checkpointing</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, wraps individual forward passes of length <cite>max_seq_len</cite> with CheckpointWrapper. Default: True.</p></li>
+<li><p><strong>der_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – Any additional named arguments passed to the <cite>time_derivative_module</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>solution</strong> – Predicted states. Shape: (B, T, C_s, <a href="#id7"><span class="problematic" id="id8">*</span></a>dims)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.half">
+<code class="sig-name descname">half</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.half" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">half</span></code> datatype.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load model parameters from the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to the file with stored parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.load_state_dict">
+<code class="sig-name descname">load_state_dict</code><span class="sig-paren">(</span><em class="sig-param">state_dict</em>, <em class="sig-param">strict=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.load_state_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies parameters and buffers from <a class="reference internal" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.state_dict" title="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.state_dict"><code class="xref py py-attr docutils literal notranslate"><span class="pre">state_dict</span></code></a> into
+this module and its descendants. If <code class="xref py py-attr docutils literal notranslate"><span class="pre">strict</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, then
+the keys of <a class="reference internal" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.state_dict" title="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.state_dict"><code class="xref py py-attr docutils literal notranslate"><span class="pre">state_dict</span></code></a> must exactly match the keys returned
+by this module’s <code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – a dict containing parameters and
+persistent buffers.</p></li>
+<li><p><strong>strict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to strictly enforce that the keys
+in <a class="reference internal" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.state_dict" title="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.state_dict"><code class="xref py py-attr docutils literal notranslate"><span class="pre">state_dict</span></code></a> match the keys returned by this module’s
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code> function. Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>missing_keys</strong> is a list of str containing the missing keys</p></li>
+<li><p><strong>unexpected_keys</strong> is a list of str containing the unexpected keys</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">NamedTuple</span></code> with <code class="docutils literal notranslate"><span class="pre">missing_keys</span></code> and <code class="docutils literal notranslate"><span class="pre">unexpected_keys</span></code> fields</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.make_evaluation_iter">
+<code class="sig-name descname">make_evaluation_iter</code><span class="sig-paren">(</span><em class="sig-param">sample</em>, <em class="sig-param">loss_pattern</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.make_evaluation_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make evaluation iteration.
+Wraps self.make_training_iter with torch.no_grad wrapper.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.make_training_iter">
+<code class="sig-name descname">make_training_iter</code><span class="sig-paren">(</span><em class="sig-param">sample</em>, <em class="sig-param">loss_pattern</em>, <em class="sig-param">loss_between_differences=False</em>, <em class="sig-param">tbptt_step=None</em>, <em class="sig-param">tbptt_tail=None</em>, <em class="sig-param">tbptt_loss_between_steps=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/dynamics/nde.html#NeuralDifferentialEquation.make_training_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.make_training_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make one training iteration. Runs backward pass. Return loss of the prediction.
+Loss should be detached.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.modules">
+<code class="sig-name descname">modules</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over all modules in the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>Module</em> – a module in the network</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Duplicate modules are returned only once. In the following
+example, <code class="docutils literal notranslate"><span class="pre">l</span></code> will be returned only once.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">modules</span><span class="p">()):</span>
+<span class="go">        print(idx, &#39;-&gt;&#39;, m)</span>
+
+<span class="go">0 -&gt; Sequential(</span>
+<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">)</span>
+<span class="go">1 -&gt; Linear(in_features=2, out_features=2, bias=True)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.named_buffers">
+<code class="sig-name descname">named_buffers</code><span class="sig-paren">(</span><em class="sig-param">prefix=''</em>, <em class="sig-param">recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.named_buffers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over module buffers, yielding both the
+name of the buffer as well as the buffer itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – prefix to prepend to all buffer names.</p></li>
+<li><p><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, then yields buffers of this module
+and all submodules. Otherwise, yields only buffers that
+are direct members of this module.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>(string, torch.Tensor)</em> – Tuple containing the name and buffer</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">buf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_buffers</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;running_var&#39;</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="nb">print</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.named_children">
+<code class="sig-name descname">named_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.named_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over immediate children modules, yielding both
+the name of the module as well as the module itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>(string, Module)</em> – Tuple containing a name and child module</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;conv4&#39;</span><span class="p">,</span> <span class="s1">&#39;conv5&#39;</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.named_modules">
+<code class="sig-name descname">named_modules</code><span class="sig-paren">(</span><em class="sig-param">memo=None</em>, <em class="sig-param">prefix=''</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.named_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over all modules in the network, yielding
+both the name of the module as well as the module itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>(string, Module)</em> – Tuple of name and module</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Duplicate modules are returned only once. In the following
+example, <code class="docutils literal notranslate"><span class="pre">l</span></code> will be returned only once.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()):</span>
+<span class="go">        print(idx, &#39;-&gt;&#39;, m)</span>
+
+<span class="go">0 -&gt; (&#39;&#39;, Sequential(</span>
+<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">))</span>
+<span class="go">1 -&gt; (&#39;0&#39;, Linear(in_features=2, out_features=2, bias=True))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.named_parameters">
+<code class="sig-name descname">named_parameters</code><span class="sig-paren">(</span><em class="sig-param">prefix=''</em>, <em class="sig-param">recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.named_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over module parameters, yielding both the
+name of the parameter as well as the parameter itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – prefix to prepend to all parameter names.</p></li>
+<li><p><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, then yields parameters of this module
+and all submodules. Otherwise, yields only parameters that
+are direct members of this module.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>(string, Parameter)</em> – Tuple containing the name and parameter</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bias&#39;</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="nb">print</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.parameters">
+<code class="sig-name descname">parameters</code><span class="sig-paren">(</span><em class="sig-param">recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over module parameters.</p>
+<p>This is typically passed to an optimizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, then yields parameters of this module
+and all submodules. Otherwise, yields only parameters that
+are direct members of this module.</p>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>Parameter</em> – module parameter</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+<span class="go">&lt;class &#39;torch.FloatTensor&#39;&gt; (20L,)</span>
+<span class="go">&lt;class &#39;torch.FloatTensor&#39;&gt; (20L, 1L, 5L, 5L)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.register_backward_hook">
+<code class="sig-name descname">register_backward_hook</code><span class="sig-paren">(</span><em class="sig-param">hook</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.register_backward_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a backward hook on the module.</p>
+<p>The hook will be called every time the gradients with respect to module
+inputs are computed. The hook should have the following signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">grad_input</span><span class="p">,</span> <span class="n">grad_output</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span> <span class="ow">or</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>The <code class="xref py py-attr docutils literal notranslate"><span class="pre">grad_input</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">grad_output</span></code> may be tuples if the
+module has multiple inputs or outputs. The hook should not modify its
+arguments, but it can optionally return a new gradient with respect to
+input that will be used in place of <code class="xref py py-attr docutils literal notranslate"><span class="pre">grad_input</span></code> in subsequent
+computations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a handle that can be used to remove the added hook by calling
+<code class="docutils literal notranslate"><span class="pre">handle.remove()</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.hooks.RemovableHandle</span></code></p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The current implementation will not have the presented behavior
+for complex <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> that perform many operations.
+In some failure cases, <code class="xref py py-attr docutils literal notranslate"><span class="pre">grad_input</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">grad_output</span></code> will only
+contain the gradients for a subset of the inputs and outputs.
+For such <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>, you should use <code class="xref py py-func docutils literal notranslate"><span class="pre">torch.Tensor.register_hook()</span></code>
+directly on a specific input or output to get the required gradients.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.register_buffer">
+<code class="sig-name descname">register_buffer</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.register_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a persistent buffer to the module.</p>
+<p>This is typically used to register a buffer that should not to be
+considered a model parameter. For example, BatchNorm’s <code class="docutils literal notranslate"><span class="pre">running_mean</span></code>
+is not a parameter, but is part of the persistent state.</p>
+<p>Buffers can be accessed as attributes using given names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – name of the buffer. The buffer can be accessed
+from this module using the given name</p></li>
+<li><p><strong>tensor</strong> (<em>Tensor</em>) – buffer to be registered.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s1">&#39;running_mean&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.register_forward_hook">
+<code class="sig-name descname">register_forward_hook</code><span class="sig-paren">(</span><em class="sig-param">hook</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.register_forward_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a forward hook on the module.</p>
+<p>The hook will be called every time after <a class="reference internal" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.forward" title="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> has computed an output.
+It should have the following signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">modified</span> <span class="n">output</span>
+</pre></div>
+</div>
+<p>The hook can modify the output. It can modify the input inplace but
+it will not have effect on forward since this is called after
+<a class="reference internal" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.forward" title="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> is called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a handle that can be used to remove the added hook by calling
+<code class="docutils literal notranslate"><span class="pre">handle.remove()</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.hooks.RemovableHandle</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.register_forward_pre_hook">
+<code class="sig-name descname">register_forward_pre_hook</code><span class="sig-paren">(</span><em class="sig-param">hook</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.register_forward_pre_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a forward pre-hook on the module.</p>
+<p>The hook will be called every time before <a class="reference internal" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.forward" title="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> is invoked.
+It should have the following signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">modified</span> <span class="nb">input</span>
+</pre></div>
+</div>
+<p>The hook can modify the input. User can either return a tuple or a
+single modified value in the hook. We will wrap the value into a tuple
+if a single value is returned(unless that value is already a tuple).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a handle that can be used to remove the added hook by calling
+<code class="docutils literal notranslate"><span class="pre">handle.remove()</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.hooks.RemovableHandle</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.register_parameter">
+<code class="sig-name descname">register_parameter</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">param</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.register_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a parameter to the module.</p>
+<p>The parameter can be accessed as an attribute using given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – name of the parameter. The parameter can be accessed
+from this module using the given name</p></li>
+<li><p><strong>param</strong> (<em>Parameter</em>) – parameter to be added to the module.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.requires_grad_">
+<code class="sig-name descname">requires_grad_</code><span class="sig-paren">(</span><em class="sig-param">requires_grad=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.requires_grad_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change if autograd should record operations on parameters in this
+module.</p>
+<p>This method sets the parameters’ <code class="xref py py-attr docutils literal notranslate"><span class="pre">requires_grad</span></code> attributes
+in-place.</p>
+<p>This method is helpful for freezing part of the module for finetuning
+or training parts of a model individually (e.g., GAN training).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>requires_grad</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – whether autograd should record operations on
+parameters in this module. Default: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.share_memory">
+<code class="sig-name descname">share_memory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.share_memory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.state_dict">
+<code class="sig-name descname">state_dict</code><span class="sig-paren">(</span><em class="sig-param">destination=None</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">keep_vars=False</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.state_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary containing a whole state of the module.</p>
+<p>Both parameters and persistent buffers (e.g. running averages) are
+included. Keys are corresponding parameter and buffer names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dictionary containing a whole state of the module</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">module</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;bias&#39;, &#39;weight&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.to">
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves and/or casts the parameters and buffers.</p>
+<p>This can be called as</p>
+<dl class="function">
+<dt>
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param">device=None</em>, <em class="sig-param">dtype=None</em>, <em class="sig-param">non_blocking=False</em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param">dtype</em>, <em class="sig-param">non_blocking=False</em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param">tensor</em>, <em class="sig-param">non_blocking=False</em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<p>Its signature is similar to <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code>, but only accepts
+floating point desired <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code> s. In addition, this method will
+only cast the floating point parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code>
+(if given). The integral parameters and buffers will be moved
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">device</span></code>, if that is given, but with dtypes unchanged. When
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">non_blocking</span></code> is set, it tries to convert/move asynchronously
+with respect to the host if possible, e.g., moving CPU Tensors with
+pinned memory to CUDA devices.</p>
+<p>See below for examples.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method modifies the module in-place.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code>) – the desired device of the parameters
+and buffers in this module</p></li>
+<li><p><strong>dtype</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.dtype</span></code>) – the desired floating point type of
+the floating point parameters and buffers in this module</p></li>
+<li><p><strong>tensor</strong> (<em>torch.Tensor</em>) – Tensor whose dtype and device are the desired
+dtype and device for all parameters and buffers in this module</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 0.1913, -0.3420],</span>
+<span class="go">        [-0.5113, -0.2325]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 0.1913, -0.3420],</span>
+<span class="go">        [-0.5113, -0.2325]], dtype=torch.float64)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gpu1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">gpu1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">half</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 0.1914, -0.3420],</span>
+<span class="go">        [-0.5112, -0.2324]], dtype=torch.float16, device=&#39;cuda:1&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cpu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">cpu</span><span class="p">)</span>
+<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 0.1914, -0.3420],</span>
+<span class="go">        [-0.5112, -0.2324]], dtype=torch.float16)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">mode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the module in training mode.</p>
+<p>This has any effect only on certain modules. See documentations of
+particular modules for details of their behaviors in training/evaluation
+mode, if they are affected, e.g. <code class="xref py py-class docutils literal notranslate"><span class="pre">Dropout</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm</span></code>,
+etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – whether to set training mode (<code class="docutils literal notranslate"><span class="pre">True</span></code>) or evaluation
+mode (<code class="docutils literal notranslate"><span class="pre">False</span></code>). Default: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.type">
+<code class="sig-name descname">type</code><span class="sig-paren">(</span><em class="sig-param">dst_type</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casts all parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dst_type</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dst_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a><em> or </em><em>string</em>) – the desired type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.NeuralDifferentialEquation.zero_grad">
+<code class="sig-name descname">zero_grad</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.NeuralDifferentialEquation.zero_grad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets gradients of all model parameters to zero.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="latentspacedynamics">
+<h2>LatentSpaceDynamics<a class="headerlink" href="#latentspacedynamics" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics">
+<em class="property">class </em><code class="sig-name descname">LatentSpaceDynamics</code><span class="sig-paren">(</span><em class="sig-param">state_enc</em>, <em class="sig-param">state_dec</em>, <em class="sig-param">params_enc</em>, <em class="sig-param">control_enc</em>, <em class="sig-param">dynamics</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/dynamics/latent_space_dynamics.html#LatentSpaceDynamics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Module for modelling dynamics in a learnable latent space.</p>
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.add_module">
+<code class="sig-name descname">add_module</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">module</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.add_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a child module to the current module.</p>
+<p>The module can be accessed as an attribute using the given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – name of the child module. The child module can be
+accessed from this module using the given name</p></li>
+<li><p><strong>module</strong> (<em>Module</em>) – child module to be added to the module.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">fn</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies <code class="docutils literal notranslate"><span class="pre">fn</span></code> recursively to every submodule (as returned by <code class="docutils literal notranslate"><span class="pre">.children()</span></code>)
+as well as self. Typical use includes initializing the parameters of a model
+(see also <span class="xref std std-ref">torch-nn-init</span>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fn</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> -&gt; None) – function to be applied to each submodule</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">init_weights</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">==</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_weights</span><span class="p">)</span>
+<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 1.,  1.],</span>
+<span class="go">        [ 1.,  1.]])</span>
+<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 1.,  1.],</span>
+<span class="go">        [ 1.,  1.]])</span>
+<span class="go">Sequential(</span>
+<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">)</span>
+<span class="go">Sequential(</span>
+<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.buffers">
+<code class="sig-name descname">buffers</code><span class="sig-paren">(</span><em class="sig-param">recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.buffers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over module buffers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, then yields buffers of this module
+and all submodules. Otherwise, yields only buffers that
+are direct members of this module.</p>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>torch.Tensor</em> – module buffer</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">buf</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">buffers</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">buf</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+<span class="go">&lt;class &#39;torch.FloatTensor&#39;&gt; (20L,)</span>
+<span class="go">&lt;class &#39;torch.FloatTensor&#39;&gt; (20L, 1L, 5L, 5L)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.children">
+<code class="sig-name descname">children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over immediate children modules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>Module</em> – a child module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.cpu">
+<code class="sig-name descname">cpu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.cpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves all model parameters and buffers to the CPU.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.cuda">
+<code class="sig-name descname">cuda</code><span class="sig-paren">(</span><em class="sig-param">device=None</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.cuda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves all model parameters and buffers to the GPU.</p>
+<p>This also makes associated parameters and buffers different objects. So
+it should be called before constructing optimizer if the module will
+live on GPU while being optimized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – if specified, all parameters will be
+copied to that device</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.double">
+<code class="sig-name descname">double</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">double</span></code> datatype.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump model parameters into the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to the file for dump.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.dump_patches">
+<code class="sig-name descname">dump_patches</code><em class="property"> = False</em><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.dump_patches" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.eval">
+<code class="sig-name descname">eval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the module in evaluation mode.</p>
+<p>This has any effect only on certain modules. See documentations of
+particular modules for details of their behaviors in training/evaluation
+mode, if they are affected, e.g. <code class="xref py py-class docutils literal notranslate"><span class="pre">Dropout</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm</span></code>,
+etc.</p>
+<p>This is equivalent with <code class="xref py py-meth docutils literal notranslate"><span class="pre">self.train(False)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.extra_repr">
+<code class="sig-name descname">extra_repr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.extra_repr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the extra representation of the module</p>
+<p>To print customized extra information, you should reimplement
+this method in your own modules. Both single-line and multi-line
+strings are acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.float">
+<code class="sig-name descname">float</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casts all floating point parameters and buffers to float datatype.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">init_state</em>, <em class="sig-param">params</em>, <em class="sig-param">control</em>, <em class="sig-param">control_t</em>, <em class="sig-param">t</em>, <em class="sig-param">*args</em>, <em class="sig-param">get_latent_states=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/dynamics/latent_space_dynamics.html#LatentSpaceDynamics.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.forward" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>init_state</strong> (<em>torch.Tensor</em>) – Initial state. Shape: (B, C_s, <a href="#id9"><span class="problematic" id="id10">*</span></a>dims)</p></li>
+<li><p><strong>params</strong> (<em>torch.Tensor</em>) – Params tensor (rock mostly). Shape: (B, C_p, <a href="#id11"><span class="problematic" id="id12">*</span></a>dims)</p></li>
+<li><p><strong>control</strong> (<em>torch.Tensor</em>) – Spatial control tensor. Shape: (B, T_c, C_c, <a href="#id13"><span class="problematic" id="id14">*</span></a>dims)</p></li>
+<li><p><strong>control_t</strong> (<em>torch.Tensor</em>) – Tensor holding a sequence of time points for which control is given.
+Each time must be strictly larger than the previous time. Shape: (B, T_c)</p></li>
+<li><p><strong>t</strong> (<em>torch.Tensor</em>) – Tensor holding a sequence of time points for which to solve for states.
+The initial time point (i.e. time point of the init_state) should be the first
+element of this sequence, and each time must be strictly larger than the previous time.
+Shape: (B, T)</p></li>
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Any additional args passed to the encoders, decoder and dynamics modules.</p></li>
+<li><p><strong>get_latent_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, return solutions in the latent space as a second argument.</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>solution</strong> (<em>torch.Tensor</em>) – Shape: (B, T, C_s, <a href="#id15"><span class="problematic" id="id16">*</span></a>dims)</p></li>
+<li><p><strong>latent_solution</strong> (<em>torch.Tensor</em>) – Returned only if <cite>get_latent_states=True</cite>.
+Shape: (B, T, C_l, <a href="#id17"><span class="problematic" id="id18">*</span></a>latent_dims)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.get_control_subset">
+<em class="property">static </em><code class="sig-name descname">get_control_subset</code><span class="sig-paren">(</span><em class="sig-param">control</em>, <em class="sig-param">control_t</em>, <em class="sig-param">time_interval</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/dynamics/latent_space_dynamics.html#LatentSpaceDynamics.get_control_subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.get_control_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a control subset that corresponds to the target result time interval.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.half">
+<code class="sig-name descname">half</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.half" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">half</span></code> datatype.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load model parameters from the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to the file with stored parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.load_state_dict">
+<code class="sig-name descname">load_state_dict</code><span class="sig-paren">(</span><em class="sig-param">state_dict</em>, <em class="sig-param">strict=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.load_state_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies parameters and buffers from <a class="reference internal" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.state_dict" title="deepfield.metamodelling.dynamics.LatentSpaceDynamics.state_dict"><code class="xref py py-attr docutils literal notranslate"><span class="pre">state_dict</span></code></a> into
+this module and its descendants. If <code class="xref py py-attr docutils literal notranslate"><span class="pre">strict</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, then
+the keys of <a class="reference internal" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.state_dict" title="deepfield.metamodelling.dynamics.LatentSpaceDynamics.state_dict"><code class="xref py py-attr docutils literal notranslate"><span class="pre">state_dict</span></code></a> must exactly match the keys returned
+by this module’s <code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – a dict containing parameters and
+persistent buffers.</p></li>
+<li><p><strong>strict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to strictly enforce that the keys
+in <a class="reference internal" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.state_dict" title="deepfield.metamodelling.dynamics.LatentSpaceDynamics.state_dict"><code class="xref py py-attr docutils literal notranslate"><span class="pre">state_dict</span></code></a> match the keys returned by this module’s
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code> function. Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>missing_keys</strong> is a list of str containing the missing keys</p></li>
+<li><p><strong>unexpected_keys</strong> is a list of str containing the unexpected keys</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">NamedTuple</span></code> with <code class="docutils literal notranslate"><span class="pre">missing_keys</span></code> and <code class="docutils literal notranslate"><span class="pre">unexpected_keys</span></code> fields</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.make_evaluation_iter">
+<code class="sig-name descname">make_evaluation_iter</code><span class="sig-paren">(</span><em class="sig-param">sample</em>, <em class="sig-param">loss_pattern</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.make_evaluation_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make evaluation iteration.
+Wraps self.make_training_iter with torch.no_grad wrapper.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.make_training_iter">
+<code class="sig-name descname">make_training_iter</code><span class="sig-paren">(</span><em class="sig-param">sample</em>, <em class="sig-param">loss_pattern</em>, <em class="sig-param">latent_loss_pattern=()</em>, <em class="sig-param">autoencoder_loss_pattern=()</em>, <em class="sig-param">loss_between_differences=False</em>, <em class="sig-param">tbptt_step=None</em>, <em class="sig-param">tbptt_tail=None</em>, <em class="sig-param">tbptt_loss_between_steps=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/dynamics/latent_space_dynamics.html#LatentSpaceDynamics.make_training_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.make_training_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make one training iteration. Runs backward pass. Return loss of the prediction.
+Loss should be detached.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.modules">
+<code class="sig-name descname">modules</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over all modules in the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>Module</em> – a module in the network</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Duplicate modules are returned only once. In the following
+example, <code class="docutils literal notranslate"><span class="pre">l</span></code> will be returned only once.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">modules</span><span class="p">()):</span>
+<span class="go">        print(idx, &#39;-&gt;&#39;, m)</span>
+
+<span class="go">0 -&gt; Sequential(</span>
+<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">)</span>
+<span class="go">1 -&gt; Linear(in_features=2, out_features=2, bias=True)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.named_buffers">
+<code class="sig-name descname">named_buffers</code><span class="sig-paren">(</span><em class="sig-param">prefix=''</em>, <em class="sig-param">recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.named_buffers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over module buffers, yielding both the
+name of the buffer as well as the buffer itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – prefix to prepend to all buffer names.</p></li>
+<li><p><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, then yields buffers of this module
+and all submodules. Otherwise, yields only buffers that
+are direct members of this module.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>(string, torch.Tensor)</em> – Tuple containing the name and buffer</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">buf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_buffers</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;running_var&#39;</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="nb">print</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.named_children">
+<code class="sig-name descname">named_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.named_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over immediate children modules, yielding both
+the name of the module as well as the module itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>(string, Module)</em> – Tuple containing a name and child module</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_children</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;conv4&#39;</span><span class="p">,</span> <span class="s1">&#39;conv5&#39;</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.named_modules">
+<code class="sig-name descname">named_modules</code><span class="sig-paren">(</span><em class="sig-param">memo=None</em>, <em class="sig-param">prefix=''</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.named_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over all modules in the network, yielding
+both the name of the module as well as the module itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>(string, Module)</em> – Tuple of name and module</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Duplicate modules are returned only once. In the following
+example, <code class="docutils literal notranslate"><span class="pre">l</span></code> will be returned only once.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()):</span>
+<span class="go">        print(idx, &#39;-&gt;&#39;, m)</span>
+
+<span class="go">0 -&gt; (&#39;&#39;, Sequential(</span>
+<span class="go">  (0): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">  (1): Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="go">))</span>
+<span class="go">1 -&gt; (&#39;0&#39;, Linear(in_features=2, out_features=2, bias=True))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.named_parameters">
+<code class="sig-name descname">named_parameters</code><span class="sig-paren">(</span><em class="sig-param">prefix=''</em>, <em class="sig-param">recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.named_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over module parameters, yielding both the
+name of the parameter as well as the parameter itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – prefix to prepend to all parameter names.</p></li>
+<li><p><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, then yields parameters of this module
+and all submodules. Otherwise, yields only parameters that
+are direct members of this module.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>(string, Parameter)</em> – Tuple containing the name and parameter</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bias&#39;</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="nb">print</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.parameters">
+<code class="sig-name descname">parameters</code><span class="sig-paren">(</span><em class="sig-param">recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over module parameters.</p>
+<p>This is typically passed to an optimizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, then yields parameters of this module
+and all submodules. Otherwise, yields only parameters that
+are direct members of this module.</p>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>Parameter</em> – module parameter</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+<span class="go">&lt;class &#39;torch.FloatTensor&#39;&gt; (20L,)</span>
+<span class="go">&lt;class &#39;torch.FloatTensor&#39;&gt; (20L, 1L, 5L, 5L)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.register_backward_hook">
+<code class="sig-name descname">register_backward_hook</code><span class="sig-paren">(</span><em class="sig-param">hook</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.register_backward_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a backward hook on the module.</p>
+<p>The hook will be called every time the gradients with respect to module
+inputs are computed. The hook should have the following signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">grad_input</span><span class="p">,</span> <span class="n">grad_output</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span> <span class="ow">or</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>The <code class="xref py py-attr docutils literal notranslate"><span class="pre">grad_input</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">grad_output</span></code> may be tuples if the
+module has multiple inputs or outputs. The hook should not modify its
+arguments, but it can optionally return a new gradient with respect to
+input that will be used in place of <code class="xref py py-attr docutils literal notranslate"><span class="pre">grad_input</span></code> in subsequent
+computations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a handle that can be used to remove the added hook by calling
+<code class="docutils literal notranslate"><span class="pre">handle.remove()</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.hooks.RemovableHandle</span></code></p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The current implementation will not have the presented behavior
+for complex <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> that perform many operations.
+In some failure cases, <code class="xref py py-attr docutils literal notranslate"><span class="pre">grad_input</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">grad_output</span></code> will only
+contain the gradients for a subset of the inputs and outputs.
+For such <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>, you should use <code class="xref py py-func docutils literal notranslate"><span class="pre">torch.Tensor.register_hook()</span></code>
+directly on a specific input or output to get the required gradients.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.register_buffer">
+<code class="sig-name descname">register_buffer</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.register_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a persistent buffer to the module.</p>
+<p>This is typically used to register a buffer that should not to be
+considered a model parameter. For example, BatchNorm’s <code class="docutils literal notranslate"><span class="pre">running_mean</span></code>
+is not a parameter, but is part of the persistent state.</p>
+<p>Buffers can be accessed as attributes using given names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – name of the buffer. The buffer can be accessed
+from this module using the given name</p></li>
+<li><p><strong>tensor</strong> (<em>Tensor</em>) – buffer to be registered.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s1">&#39;running_mean&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_features</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.register_forward_hook">
+<code class="sig-name descname">register_forward_hook</code><span class="sig-paren">(</span><em class="sig-param">hook</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.register_forward_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a forward hook on the module.</p>
+<p>The hook will be called every time after <a class="reference internal" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.forward" title="deepfield.metamodelling.dynamics.LatentSpaceDynamics.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> has computed an output.
+It should have the following signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">modified</span> <span class="n">output</span>
+</pre></div>
+</div>
+<p>The hook can modify the output. It can modify the input inplace but
+it will not have effect on forward since this is called after
+<a class="reference internal" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.forward" title="deepfield.metamodelling.dynamics.LatentSpaceDynamics.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> is called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a handle that can be used to remove the added hook by calling
+<code class="docutils literal notranslate"><span class="pre">handle.remove()</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.hooks.RemovableHandle</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.register_forward_pre_hook">
+<code class="sig-name descname">register_forward_pre_hook</code><span class="sig-paren">(</span><em class="sig-param">hook</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.register_forward_pre_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a forward pre-hook on the module.</p>
+<p>The hook will be called every time before <a class="reference internal" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.forward" title="deepfield.metamodelling.dynamics.LatentSpaceDynamics.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> is invoked.
+It should have the following signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">modified</span> <span class="nb">input</span>
+</pre></div>
+</div>
+<p>The hook can modify the input. User can either return a tuple or a
+single modified value in the hook. We will wrap the value into a tuple
+if a single value is returned(unless that value is already a tuple).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a handle that can be used to remove the added hook by calling
+<code class="docutils literal notranslate"><span class="pre">handle.remove()</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.hooks.RemovableHandle</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.register_parameter">
+<code class="sig-name descname">register_parameter</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">param</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.register_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a parameter to the module.</p>
+<p>The parameter can be accessed as an attribute using given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>string</em>) – name of the parameter. The parameter can be accessed
+from this module using the given name</p></li>
+<li><p><strong>param</strong> (<em>Parameter</em>) – parameter to be added to the module.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.requires_grad_">
+<code class="sig-name descname">requires_grad_</code><span class="sig-paren">(</span><em class="sig-param">requires_grad=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.requires_grad_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change if autograd should record operations on parameters in this
+module.</p>
+<p>This method sets the parameters’ <code class="xref py py-attr docutils literal notranslate"><span class="pre">requires_grad</span></code> attributes
+in-place.</p>
+<p>This method is helpful for freezing part of the module for finetuning
+or training parts of a model individually (e.g., GAN training).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>requires_grad</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – whether autograd should record operations on
+parameters in this module. Default: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.share_memory">
+<code class="sig-name descname">share_memory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.share_memory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.state_dict">
+<code class="sig-name descname">state_dict</code><span class="sig-paren">(</span><em class="sig-param">destination=None</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">keep_vars=False</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.state_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary containing a whole state of the module.</p>
+<p>Both parameters and persistent buffers (e.g. running averages) are
+included. Keys are corresponding parameter and buffer names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dictionary containing a whole state of the module</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">module</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;bias&#39;, &#39;weight&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.to">
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves and/or casts the parameters and buffers.</p>
+<p>This can be called as</p>
+<dl class="function">
+<dt>
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param">device=None</em>, <em class="sig-param">dtype=None</em>, <em class="sig-param">non_blocking=False</em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param">dtype</em>, <em class="sig-param">non_blocking=False</em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param">tensor</em>, <em class="sig-param">non_blocking=False</em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<p>Its signature is similar to <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code>, but only accepts
+floating point desired <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code> s. In addition, this method will
+only cast the floating point parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code>
+(if given). The integral parameters and buffers will be moved
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">device</span></code>, if that is given, but with dtypes unchanged. When
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">non_blocking</span></code> is set, it tries to convert/move asynchronously
+with respect to the host if possible, e.g., moving CPU Tensors with
+pinned memory to CUDA devices.</p>
+<p>See below for examples.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method modifies the module in-place.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code>) – the desired device of the parameters
+and buffers in this module</p></li>
+<li><p><strong>dtype</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.dtype</span></code>) – the desired floating point type of
+the floating point parameters and buffers in this module</p></li>
+<li><p><strong>tensor</strong> (<em>torch.Tensor</em>) – Tensor whose dtype and device are the desired
+dtype and device for all parameters and buffers in this module</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 0.1913, -0.3420],</span>
+<span class="go">        [-0.5113, -0.2325]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 0.1913, -0.3420],</span>
+<span class="go">        [-0.5113, -0.2325]], dtype=torch.float64)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gpu1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">gpu1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">half</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 0.1914, -0.3420],</span>
+<span class="go">        [-0.5112, -0.2324]], dtype=torch.float16, device=&#39;cuda:1&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cpu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">cpu</span><span class="p">)</span>
+<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
+<span class="go">Parameter containing:</span>
+<span class="go">tensor([[ 0.1914, -0.3420],</span>
+<span class="go">        [-0.5112, -0.2324]], dtype=torch.float16)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">mode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the module in training mode.</p>
+<p>This has any effect only on certain modules. See documentations of
+particular modules for details of their behaviors in training/evaluation
+mode, if they are affected, e.g. <code class="xref py py-class docutils literal notranslate"><span class="pre">Dropout</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm</span></code>,
+etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – whether to set training mode (<code class="docutils literal notranslate"><span class="pre">True</span></code>) or evaluation
+mode (<code class="docutils literal notranslate"><span class="pre">False</span></code>). Default: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.type">
+<code class="sig-name descname">type</code><span class="sig-paren">(</span><em class="sig-param">dst_type</em><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casts all parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dst_type</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dst_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a><em> or </em><em>string</em>) – the desired type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.dynamics.LatentSpaceDynamics.zero_grad">
+<code class="sig-name descname">zero_grad</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#deepfield.metamodelling.dynamics.LatentSpaceDynamics.zero_grad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets gradients of all model parameters to zero.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

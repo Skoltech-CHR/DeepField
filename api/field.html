@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Field &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Field</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Field</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/field.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="field">
+<h1>Field<a class="headerlink" href="#field" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<dl class="class">
+<dt id="deepfield.field.Field">
+<em class="property">class </em><code class="sig-name descname">Field</code><span class="sig-paren">(</span><em class="sig-param">path=None</em>, <em class="sig-param">config=None</em>, <em class="sig-param">logfile=None</em>, <em class="sig-param">encoding='auto'</em>, <em class="sig-param">loglevel='INFO'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reservoir model.</p>
+<p>Contains components of reservoir model and preprocessing actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Path to source model files.</p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – Components and attributes to load.</p></li>
+<li><p><strong>logfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Path to log file.</p></li>
+<li><p><strong>enoding</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Files encoding. Set ‘auto’ to infer encoding from initial file block.
+Sometimes it might help to specify block size, e.g. ‘auto:3000’ will
+read first 3000 bytes to infer encoding.</p></li>
+<li><p><strong>loglevel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Log level to be printed while loading. Default to ‘INFO’.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="deepfield.field.Field.aquifers">
+<em class="property">property </em><code class="sig-name descname">aquifers</code><a class="headerlink" href="#deepfield.field.Field.aquifers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aquifers component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.assert_components_available">
+<code class="sig-name descname">assert_components_available</code><span class="sig-paren">(</span><em class="sig-param">*comp_names</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.assert_components_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.assert_components_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises ValueError in case comp_names are not presented in self.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.basename">
+<em class="property">property </em><code class="sig-name descname">basename</code><a class="headerlink" href="#deepfield.field.Field.basename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model filename without extention.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.calculate_rates">
+<code class="sig-name descname">calculate_rates</code><span class="sig-paren">(</span><em class="sig-param">timesteps=None</em>, <em class="sig-param">wellnames=None</em>, <em class="sig-param">cf_aggregation='sum'</em>, <em class="sig-param">multiprocessing=True</em>, <em class="sig-param">verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.calculate_rates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.calculate_rates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate oil/water/gas rates for each well segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timesteps</strong> (<em>list of pd.Timestamps</em>) – Dates to calculate rates for.</p></li>
+<li><p><strong>wellnames</strong> (<em>list of str</em>) – Wellnames for rates calculation. If None, all wells are included. Default to None.</p></li>
+<li><p><strong>cf_aggregation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>'sum'</em><em> or </em><em>'eucl'</em>) – The way of aggregating cf projection (‘sum’ - sum, ‘eucl’ - Euclid norm).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>rates</strong> (<em>pd.DataFrame</em>) – pd.Dataframe filled with production rates for each phase.</p></li>
+<li><p><strong>block_rates</strong> (<em>pd.DataFrame of ndarrays</em>) – pd.Dataframe filled with arrays of production rates in each grid block.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.components">
+<em class="property">property </em><code class="sig-name descname">components</code><a class="headerlink" href="#deepfield.field.Field.components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model components.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a deepcopy of Field.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">path=None</em>, <em class="sig-param">mode='a'</em>, <em class="sig-param">data=True</em>, <em class="sig-param">results=True</em>, <em class="sig-param">title=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump model components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Common path for output files. If None path will be inherited from model path.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode to open file.
+‘w’: write, a new file is created (an existing file with
+the same name would be deleted).
+‘a’: append, an existing file is opened for reading and writing,
+and if the file does not exist it is created.
+Default to ‘a’.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Dump initial model data. No effect for HDF5 output. Default True.</p></li>
+<li><p><strong>results</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Dump calculated results. No effect for HDF5 output. Default True.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Model name. No effect for HDF5 output.</p></li>
+<li><p><strong>kwargs</strong> (<em>misc</em>) – Any additional named arguments to <code class="docutils literal notranslate"><span class="pre">dump</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Field unchanged.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.Field" title="deepfield.field.Field">Field</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.get_spatial_connection_factors_and_perforation_ratio">
+<code class="sig-name descname">get_spatial_connection_factors_and_perforation_ratio</code><span class="sig-paren">(</span><em class="sig-param">subset=None</em>, <em class="sig-param">mode=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.get_spatial_connection_factors_and_perforation_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.get_spatial_connection_factors_and_perforation_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get model’s connection factors and perforation ratios in a spatial form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subset</strong> (<em>array-like</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – Subset of timesteps to pick. If None, picks all timesteps available.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – If not None, pick the blocks only with specified mode.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>connection_factors</strong> (<em>np.array</em>)</p></li>
+<li><p><strong>perf_ratio</strong> (<em>np.array</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.get_spatial_well_control">
+<code class="sig-name descname">get_spatial_well_control</code><span class="sig-paren">(</span><em class="sig-param">attrs</em>, <em class="sig-param">date_range=None</em>, <em class="sig-param">fill_shut=0.0</em>, <em class="sig-param">fill_outside=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.get_spatial_well_control"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.get_spatial_well_control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the model’s control in a spatial form</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attrs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – Conrol attributes to get data from.</p></li>
+<li><p><strong>date_range</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Minimal and maximal dates for control events.</p></li>
+<li><p><strong>fill_shut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Value to fill shutted perforations</p></li>
+<li><p><strong>fill_outside</strong> – Value to fill non-perforated cells</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>control</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.grid">
+<em class="property">property </em><code class="sig-name descname">grid</code><a class="headerlink" href="#deepfield.field.Field.grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grid component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.history_to_results">
+<code class="sig-name descname">history_to_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.history_to_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.history_to_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert history to results.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.items">
+<code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns pairs of components’s names and instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">raise_errors=False</em>, <em class="sig-param">include_binary=True</em>, <em class="sig-param">spatial=True</em>, <em class="sig-param">fill_na=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load model components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raise_errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Error handling mode. If True, errors will be raised and stop loading.
+If False, errors will be printed but do not stop loading.</p></li>
+<li><p><strong>include_binary</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Read data from binary files in RESULTS folder. Default to True.</p></li>
+<li><p><strong>spatial</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return Field components is spatial state.</p></li>
+<li><p><strong>fill_na</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Value to fill at non-active cells. Default to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Field with loaded components.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.Field" title="deepfield.field.Field">Field</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.meta">
+<em class="property">property </em><code class="sig-name descname">meta</code><a class="headerlink" href="#deepfield.field.Field.meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Model meta data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.path">
+<em class="property">property </em><code class="sig-name descname">path</code><a class="headerlink" href="#deepfield.field.Field.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to original model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.ravel">
+<code class="sig-name descname">ravel</code><span class="sig-paren">(</span><em class="sig-param">only_active=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.ravel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.ravel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ravel data in spatial components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>only_active</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Strip non-active cells fron state vectors. Default is True.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Field with reshaped spatial components.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.Field" title="deepfield.field.Field">Field</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.result_dates">
+<em class="property">property </em><code class="sig-name descname">result_dates</code><a class="headerlink" href="#deepfield.field.Field.result_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Result dates, actual if present, target otherwise.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.rock">
+<em class="property">property </em><code class="sig-name descname">rock</code><a class="headerlink" href="#deepfield.field.Field.rock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rock component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.set_state">
+<code class="sig-name descname">set_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.set_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.set_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>State setter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.show">
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><em class="sig-param">attr=None</em>, <em class="sig-param">opacity=0.5</em>, <em class="sig-param">thresholding=False</em>, <em class="sig-param">slicing=False</em>, <em class="sig-param">timestamp=None</em>, <em class="sig-param">use_only_active=True</em>, <em class="sig-param">cell_size=None</em>, <em class="sig-param">scaling=True</em>, <em class="sig-param">cmap=None</em>, <em class="sig-param">show_wells=True</em>, <em class="sig-param">notebook=False</em>, <em class="sig-param">theme='default'</em>, <em class="sig-param">show_labels=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Field visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – Attribute of the grid to show. If None, ACTNUM will be shown.</p></li>
+<li><p><strong>opacity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – Opacity of the visualization. Default is 0.5.</p></li>
+<li><p><strong>thresholding</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Show slider for thresholding. Cells with attribute value less than
+threshold will not be shown. Default False.</p></li>
+<li><p><strong>slicing</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Show by slices. Default False.</p></li>
+<li><p><strong>timestamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – The timestamp to show. Meaningful only for sequential attributes (States).
+Has no effect given non-sequential attributes.</p></li>
+<li><p><strong>use_only_active</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Corner point grid creation using only active cells. Default to True.</p></li>
+<li><p><strong>cell_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Cell size for orthogonal uniform grid.</p></li>
+<li><p><strong>scaling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – The ratio of the axes in case of iterable, if True then it’s (1, 1, 1),
+if False then it is natural. Default True.</p></li>
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – Matplotlib, Colorcet, cmocean, or custom colormap</p></li>
+<li><p><strong>show_wells</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Show well trajectories. Default True.</p></li>
+<li><p><strong>notebook</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – When True, the resulting plot is placed inline a jupyter notebook.
+Assumes a jupyter console is active. Automatically enables off_screen.</p></li>
+<li><p><strong>theme</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – PyVista theme, e.g. ‘default’, ‘night’, ‘document’.
+See <a class="reference external" href="https://docs.pyvista.org/examples/02-plot/themes.html">https://docs.pyvista.org/examples/02-plot/themes.html</a> for more options.</p></li>
+<li><p><strong>show_labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Show x, y, z axis labels. Default True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.start">
+<em class="property">property </em><code class="sig-name descname">start</code><a class="headerlink" href="#deepfield.field.Field.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model start time in a datetime format.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.state">
+<em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#deepfield.field.Field.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Field state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.states">
+<em class="property">property </em><code class="sig-name descname">states</code><a class="headerlink" href="#deepfield.field.Field.states" title="Permalink to this definition">¶</a></dt>
+<dd><p>States component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.tables">
+<em class="property">property </em><code class="sig-name descname">tables</code><a class="headerlink" href="#deepfield.field.Field.tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tables component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.to_spatial">
+<code class="sig-name descname">to_spatial</code><span class="sig-paren">(</span><em class="sig-param">fill_na=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.to_spatial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.to_spatial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bring data to spatial state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fill_na</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Value to fill at non-active cells. Default to 0.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Field in spatial representation.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#deepfield.field.Field" title="deepfield.field.Field">Field</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.unravel">
+<code class="sig-name descname">unravel</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.unravel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.unravel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for <cite>to_spatial</cite> method.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version Renamed: </span>to_spatial</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="deepfield.field.Field.well_mask">
+<code class="sig-name descname">well_mask</code><a class="headerlink" href="#deepfield.field.Field.well_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the model’s well mask in a spatial form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>well_mask</strong> – Array with well-names in cells which are registered as well-blocks and empty strings everywhere else.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.field.Field.wells">
+<em class="property">property </em><code class="sig-name descname">wells</code><a class="headerlink" href="#deepfield.field.Field.wells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wells component.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

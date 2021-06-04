@@ -1,0 +1,1302 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepfield.field.wells &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/deepfield.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepfield.field.wells</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepfield.field.wells</h1><div class="highlight"><pre>
+<span></span><span class="c1">#pylint: disable=too-many-lines</span>
+<span class="sd">&quot;&quot;&quot;Wells and WellSegment components.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">from</span> <span class="nn">anytree</span> <span class="k">import</span> <span class="p">(</span><span class="n">RenderTree</span><span class="p">,</span> <span class="n">AsciiStyle</span><span class="p">,</span> <span class="n">Resolver</span><span class="p">,</span> <span class="n">PreOrderIter</span><span class="p">,</span> <span class="n">PostOrderIter</span><span class="p">,</span>
+                     <span class="n">find_by_attr</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.well_segment</span> <span class="k">import</span> <span class="n">WellSegment</span>
+<span class="kn">from</span> <span class="nn">.rates</span> <span class="k">import</span> <span class="n">calculate_cf</span><span class="p">,</span> <span class="n">show_rates</span><span class="p">,</span> <span class="n">show_rates2</span><span class="p">,</span> <span class="n">show_blocks_dynamics</span>
+<span class="kn">from</span> <span class="nn">.grids</span> <span class="k">import</span> <span class="n">OrthogonalUniformGrid</span>
+<span class="kn">from</span> <span class="nn">.base_component</span> <span class="k">import</span> <span class="n">BaseComponent</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">full_ind_to_active_ind</span><span class="p">,</span> <span class="n">active_ind_to_full_ind</span>
+<span class="kn">from</span> <span class="nn">.getting_wellblocks</span> <span class="k">import</span> <span class="n">defining_wellblocks_vtk</span><span class="p">,</span> <span class="n">find_first_entering_point</span><span class="p">,</span> <span class="n">defining_wellblocks_compdat</span>
+<span class="kn">from</span> <span class="nn">.wells_dump_utils</span> <span class="k">import</span> <span class="n">write_perf</span><span class="p">,</span> <span class="n">write_events</span><span class="p">,</span> <span class="n">write_schedule</span><span class="p">,</span> <span class="n">write_welspecs</span>
+<span class="kn">from</span> <span class="nn">.wells_load_utils</span> <span class="k">import</span> <span class="p">(</span><span class="n">load_rsm</span><span class="p">,</span> <span class="n">load_ecl_binary</span><span class="p">,</span> <span class="n">load_group</span><span class="p">,</span> <span class="n">load_grouptree</span><span class="p">,</span>
+                               <span class="n">load_welspecs</span><span class="p">,</span> <span class="n">load_compdat</span><span class="p">,</span> <span class="n">load_wconprod</span><span class="p">,</span> <span class="n">load_wconinje</span><span class="p">,</span>
+                               <span class="n">load_welltracks</span><span class="p">,</span> <span class="n">load_events</span><span class="p">,</span> <span class="n">load_history</span><span class="p">,</span>
+                               <span class="n">DEFAULTS</span><span class="p">,</span> <span class="n">VALUE_CONTROL</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">apply_to_each_segment</span><span class="p">,</span> <span class="n">state_check</span>
+
+
+<span class="k">class</span> <span class="nc">IterableWells</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Wells iterator.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iter</span> <span class="o">=</span> <span class="n">PreOrderIter</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_group</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+
+<div class="viewcode-block" id="Wells"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells">[docs]</a><span class="k">class</span> <span class="nc">Wells</span><span class="p">(</span><span class="n">BaseComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wells component.</span>
+
+<span class="sd">    Contains wells and groups in a single tree structure, wells attributes</span>
+<span class="sd">    and preprocessing actions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    node : WellSegment, optional</span>
+<span class="sd">        Root node for well&#39;s tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">WellSegment</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;FIELD&#39;</span><span class="p">,</span> <span class="n">is_group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resolver</span> <span class="o">=</span> <span class="n">Resolver</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_state</span><span class="p">(</span><span class="n">has_blocks</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">has_cf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">spatial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">all_tracks_complete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">all_tracks_inside</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">full_perforation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Wells.copy"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a deepcopy. Cached properties are not copied.&quot;&quot;&quot;</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="n">copy</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="c1">#pylint: disable=protected-access</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">PreOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_root</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">node_copy</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">node_copy</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">copy</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">copy</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tree root.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">resolver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tree resolver.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolver</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">main_branches</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of main branches names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_main_branch</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of well names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">event_dates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of dates with any event in main branches.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_dates</span><span class="p">(</span><span class="s1">&#39;EVENTS&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">result_dates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of dates with any result in main branches.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_dates</span><span class="p">(</span><span class="s1">&#39;RESULTS&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">history_dates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of dates with any history in main branches.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_dates</span><span class="p">(</span><span class="s1">&#39;HISTORY&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_collect_dates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of common dates given in the attribute of main branches.&quot;&quot;&quot;</span>
+        <span class="n">agg</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span><span class="o">.</span><span class="n">DATE</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">node</span> <span class="ow">and</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">node</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">agg</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([])</span>
+        <span class="n">dates</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">agg</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">total_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Total rates over all wells.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">total_rates</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cum_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cumulative rates over all wells.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">cum_rates</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">find_by_attr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">node</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">IterableWells</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">find_by_attr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_get_fmt_loader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get loader for given file format.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;RSM&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_rsm</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_get_fmt_loader</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Wells.update"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wellsdata</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update tree nodes with new wellsdata. If node does not exists,</span>
+<span class="sd">        it will be attached to root.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        wellsdata : dict</span>
+<span class="sd">            Keys are well names, values are dicts with well attributes.</span>
+<span class="sd">        mode : str, optional</span>
+<span class="sd">            If &#39;w&#39;, write new data. If &#39;a&#39;, try to append new data. Default to &#39;w&#39;.</span>
+<span class="sd">        kwargs : misc</span>
+<span class="sd">            Any additional named arguments to append.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : Wells</span>
+<span class="sd">            Wells with updated attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">_get_parent</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span>
+            <span class="k">if</span> <span class="s1">&#39;WELSPECS&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">groupname</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;WELSPECS&#39;</span><span class="p">][</span><span class="s1">&#39;GROUP&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">groupname</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">WellSegment</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">groupname</span><span class="p">,</span> <span class="n">is_group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">wellsdata</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">wellsdata</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; </span><span class="se">\t\&#39;</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">parent</span> <span class="o">=</span> <span class="n">_get_parent</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">WellSegment</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;w&#39;</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+                        <span class="n">att</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                        <span class="nb">setattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">att</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">setattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown mode </span><span class="si">{}</span><span class="s2">. Expected &#39;w&#39; (write) or &#39;a&#39; (append)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mode</span><span class="p">))</span>
+                <span class="n">att</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">att</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;DATE&#39;</span> <span class="ow">in</span> <span class="n">att</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">att</span> <span class="o">=</span> <span class="n">att</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;DATE&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">att</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.group"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.group">[docs]</a>    <span class="k">def</span> <span class="nf">group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_names</span><span class="p">,</span> <span class="n">group_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Group nodes in a new group attached to root.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node_names : array-like</span>
+<span class="sd">            Array of nodes to be grouped.</span>
+<span class="sd">        group_name : str</span>
+<span class="sd">            Name of a new group.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : Wells</span>
+<span class="sd">            Wells with a new group added.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">WellSegment</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">group_name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">is_group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">node_names</span><span class="p">]</span>
+        <span class="n">node_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">is_group</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">node_types</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can not group mixture of wells and groups in a new group.&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">group</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.drop"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.drop">[docs]</a>    <span class="k">def</span> <span class="nf">drop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Detach nodes by names.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        names : str, array-like</span>
+<span class="sd">            Nodes to be detached.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : Wells</span>
+<span class="sd">            Wells without detached nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">continue</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.drop_incomplete"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.drop_incomplete">[docs]</a>    <span class="k">def</span> <span class="nf">drop_incomplete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop nodes with missing &#39;WELLTRACK&#39; and &#39;PERF&#39;.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        logger : logger, optional</span>
+<span class="sd">            Logger for messages.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        wells : Wells</span>
+<span class="sd">            Wells without incomplete nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;COMPDAT&#39;</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;WELLTRACK&#39;</span><span class="p">,</span> <span class="s1">&#39;PERF&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Node </span><span class="si">%s</span><span class="s1"> is incomplete and is removed.&#39;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">all_tracks_complete</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.drop_outside"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.drop_outside">[docs]</a>    <span class="k">def</span> <span class="nf">drop_outside</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keep_ancestors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop nodes with missing &#39;BLOCKS&#39; (outside of the grid).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        keep_ancestors : bool</span>
+<span class="sd">            Keep all ancestors segments for a segment with nonempty &#39;BLOCKS&#39;. Setting True might result</span>
+<span class="sd">            in segments with empty &#39;BLOCKS&#39;, e.g. if a parent has no &#39;BLOCKS&#39; but a child has nonempty</span>
+<span class="sd">            &#39;BLOCKS&#39;. If False, welltracks may be discontinued. Default False.</span>
+<span class="sd">        logger : logger, optional</span>
+<span class="sd">            Logger for messages.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        wells : Wells</span>
+<span class="sd">            Wells without outside nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">logger_print</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Segment </span><span class="si">{node.name}</span><span class="s1"> is outside the grid and is removed.&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">PostOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_root</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;FIELD&#39;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_group</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">:</span>
+                    <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">logger_print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">keep_ancestors</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+                    <span class="n">p</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+                    <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">logger_print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">all_tracks_inside</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.drop_empty_groups"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.drop_empty_groups">[docs]</a>    <span class="k">def</span> <span class="nf">drop_empty_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop groups without wells in descendants.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">PostOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_group</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Group </span><span class="si">{node.name}</span><span class="s1"> is empty and is removed.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.glob"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.glob">[docs]</a>    <span class="k">def</span> <span class="nf">glob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return instances at ``name`` supporting wildcards.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Wells.render_tree"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.render_tree">[docs]</a>    <span class="k">def</span> <span class="nf">render_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print tree structure.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">AsciiStyle</span><span class="p">())</span><span class="o">.</span><span class="n">by_attr</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.blocks_ravel"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.blocks_ravel">[docs]</a>    <span class="k">def</span> <span class="nf">blocks_ravel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transforms block coordinates into 1D representation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">spatial</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">spatial</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_blocks_ravel</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Wells.blocks_to_spatial"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.blocks_to_spatial">[docs]</a>    <span class="k">def</span> <span class="nf">blocks_to_spatial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transforms block coordinates into 3D representation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">spatial</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">spatial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_blocks_to_spatial</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span></div>
+
+    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">_blocks_ravel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;BLOCKS&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">segment</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span>
+            <span class="nb">tuple</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
+            <span class="n">dims</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">dimens</span><span class="p">,</span>
+            <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span>
+        <span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">full_ind_to_active_ind</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;BLOCKS&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">_blocks_to_spatial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;BLOCKS&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">segment</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">active_ind_to_full_ind</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">dimens</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;BLOCKS&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Wells.add_welltrack"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.add_welltrack">[docs]</a>    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">add_welltrack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reconstruct welltrack from COMPDAT table.</span>
+
+<span class="sd">        To connect the end point of the current segment with the start point of the next segment</span>
+<span class="sd">        we find a set of segments with nearest start point and take a segment with the lowest depth.</span>
+<span class="sd">        Works fine for simple trajectories only.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        grid : Grid class instance</span>
+<span class="sd">            Grid parameters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Wells</span>
+<span class="sd">            Wells component with WELLTRACK attribute added.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;WELLTRACK&#39;</span> <span class="ow">in</span> <span class="n">segment</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;COMPDAT&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">segment</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">COMPDAT</span><span class="p">[[</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">,</span> <span class="s1">&#39;K1&#39;</span><span class="p">,</span> <span class="s1">&#39;K2&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;K1&#39;</span><span class="p">,</span> <span class="s1">&#39;K2&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">WELSPECS</span><span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">])</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;J&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;J&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">WELSPECS</span><span class="p">[</span><span class="s1">&#39;J&#39;</span><span class="p">])</span>
+        <span class="n">i0</span><span class="p">,</span> <span class="n">j0</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">WELSPECS</span><span class="p">[[</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i0</span><span class="p">,</span> <span class="n">j0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">track</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">centroids</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">cell_centroids</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">grid</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">spatial</span><span class="p">:</span>
+            <span class="n">centroids</span> <span class="o">=</span> <span class="n">centroids</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">dimens</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)):</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">,</span> <span class="s1">&#39;K1&#39;</span><span class="p">]]</span> <span class="o">-</span> <span class="n">root</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="n">dist</span><span class="o">.</span><span class="n">argmin</span><span class="p">()]]</span>
+            <span class="n">track</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">centroids</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;J&#39;</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;K1&#39;</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">track</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">centroids</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;J&#39;</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;K2&#39;</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">row</span><span class="p">[[</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">,</span> <span class="s1">&#39;K2&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">track</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">track</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">WELLTRACK</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">track</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">track</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.get_wellblocks"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.get_wellblocks">[docs]</a>    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">get_wellblocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate grid blocks for the tree of wells.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        grid : class instance</span>
+<span class="sd">            Basic grid class.</span>
+<span class="sd">        kwargs : misc</span>
+<span class="sd">            Any additional named arguments to append.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Wells</span>
+<span class="sd">            Wells component with calculated grid blocks and well in block projections.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="s1">&#39;COMPDAT&#39;</span> <span class="ow">in</span> <span class="n">segment</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="n">segment</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="n">defining_wellblocks_compdat</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">compdat</span><span class="p">)</span>
+            <span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">as_corner_point</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">OrthogonalUniformGrid</span><span class="p">):</span>
+                <span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">to_spatial</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">grid</span><span class="o">.</span><span class="n">_vtk_locator</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">grid</span><span class="o">.</span><span class="n">_cell_id_d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="c1">#pylint: disable=protected-access</span>
+                <span class="n">grid</span><span class="o">.</span><span class="n">create_vtk_locator</span><span class="p">(</span><span class="n">use_only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scaling</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="n">output</span> <span class="o">=</span> <span class="n">defining_wellblocks_vtk</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">welltrack</span><span class="p">,</span> <span class="n">segment</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                             <span class="n">grid</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">_vtk_locator</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">_cell_id_d</span><span class="p">,</span> <span class="c1">#pylint: disable=protected-access</span>
+                                             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">xyz_block</span><span class="p">,</span> <span class="n">h_well</span><span class="p">,</span> <span class="n">welltr_block_md</span><span class="p">,</span> <span class="n">inters</span> <span class="o">=</span> <span class="n">output</span>
+
+
+
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">h_well</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">h_well</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">((</span>
+                            <span class="s1">&#39;Well projections in the last block of well &#39;</span> <span class="o">+</span>
+                            <span class="s1">&#39;`</span><span class="si">{}</span><span class="s1">` are close to 0. Block </span><span class="si">{}</span><span class="s1"> will be removed &#39;</span><span class="o">+</span>
+                            <span class="s1">&#39;from well blocks.&#39;</span>
+                        <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">xyz_block</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+                    <span class="n">h_well</span> <span class="o">=</span> <span class="n">h_well</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">xyz_block</span> <span class="o">=</span> <span class="n">xyz_block</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">welltr_block_md</span> <span class="o">=</span> <span class="n">welltr_block_md</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">inters</span> <span class="o">=</span> <span class="n">inters</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">bases</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">cell_bases</span><span class="p">((</span><span class="n">xyz_block</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">xyz_block</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">xyz_block</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]))</span>
+                <span class="n">h_well</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span> <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bases</span><span class="p">,</span> <span class="n">h_well</span><span class="p">)]</span>
+            <span class="n">segment</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="n">xyz_block</span>
+            <span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">h_well</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Hx&#39;</span><span class="p">,</span> <span class="s1">&#39;Hy&#39;</span><span class="p">,</span> <span class="s1">&#39;Hz&#39;</span><span class="p">])</span>
+            <span class="n">segment</span><span class="o">.</span><span class="n">_inters</span> <span class="o">=</span> <span class="n">inters</span> <span class="c1">#pylint: disable=protected-access</span>
+            <span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span><span class="p">[</span><span class="s1">&#39;MD&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">welltr_block_md</span>
+            <span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+                <span class="n">PERF_RATIO</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="n">RAD</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">DEFAULTS</span><span class="p">[</span><span class="s1">&#39;RAD&#39;</span><span class="p">],</span>
+                <span class="n">SKIN</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">DEFAULTS</span><span class="p">[</span><span class="s1">&#39;SKIN&#39;</span><span class="p">],</span>
+                <span class="n">MULT</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">DEFAULTS</span><span class="p">[</span><span class="s1">&#39;MULT&#39;</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;PERF&#39;</span> <span class="ow">in</span> <span class="n">segment</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+                <span class="n">segment</span><span class="o">.</span><span class="n">perf</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">perf</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">COVERED</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">perf</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">has_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                       <span class="n">has_cf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">all_tracks_inside</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">full_perforation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.add_null_results_column"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.add_null_results_column">[docs]</a>    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">add_null_results_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">fill_with</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a dummy column to results if it is absent.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        segment</span>
+<span class="sd">        column: str</span>
+<span class="sd">            Column name to add</span>
+<span class="sd">        fill_with: float</span>
+<span class="sd">            Value to fill the column</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        wells: Wells</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;RESULTS&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">segment</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">perforated_blocks</span><span class="p">()</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">segment</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+            <span class="n">segment</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">fill_with</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.compute_events"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.compute_events">[docs]</a>    <span class="nd">@state_check</span><span class="p">(</span><span class="k">lambda</span> <span class="n">state</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">full_perforation</span><span class="p">)</span>
+    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">compute_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s1">&#39;EVENTS&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make events from WCONPROD.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        grid : Grid</span>
+<span class="sd">            Grid component.</span>
+<span class="sd">        attr : str, optional</span>
+<span class="sd">            Attribute name for events. Default to &#39;EVENTS&#39;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        wells : Wells</span>
+<span class="sd">            Wells with an event attribute added.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;WCONPROD&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">segment</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">,</span> <span class="s1">&#39;MODE&#39;</span><span class="p">,</span> <span class="s1">&#39;DREF&#39;</span><span class="p">,</span> <span class="s1">&#39;WIT&#39;</span><span class="p">,</span> <span class="s1">&#39;BHPT&#39;</span><span class="p">,</span> <span class="s1">&#39;LPT&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">segment</span><span class="o">.</span><span class="n">perforated_blocks</span><span class="p">()</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">wconprod</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">wconprod</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;DATE&#39;</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">]</span>
+        <span class="n">dref_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">perforated_blocks</span><span class="p">()[:,</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="n">dref_index</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">perforated_blocks</span><span class="p">()[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">][</span><span class="n">dref_index</span><span class="p">]</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DREF&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">cell_centroids</span><span class="p">[</span><span class="n">dref_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dref_index</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dref_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]][</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;MODE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;MODE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;OPEN&#39;</span><span class="p">,</span> <span class="s1">&#39;PROD&#39;</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;LPT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;LPT&#39;</span><span class="p">]</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;BHPT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;BHPT&#39;</span><span class="p">]</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.results_to_events"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.results_to_events">[docs]</a>    <span class="nd">@state_check</span><span class="p">(</span><span class="k">lambda</span> <span class="n">state</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">full_perforation</span><span class="p">)</span>
+    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">results_to_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">production_mode</span><span class="o">=</span><span class="s1">&#39;BHPT&#39;</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s1">&#39;EVENTS&#39;</span><span class="p">,</span>
+                          <span class="n">drop_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make events from results.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        grid : Grid</span>
+<span class="sd">            Grid component.</span>
+<span class="sd">        production_mode: str, &#39;BHPT&#39; or &#39;LPT&#39;. Default to &#39;BHPT&#39;.</span>
+<span class="sd">            Control mode for production wells.</span>
+<span class="sd">        attr : str, optional</span>
+<span class="sd">            Attribute name for events. Default to &#39;EVENTS&#39;.</span>
+<span class="sd">        drop_duplicates : bool, optional</span>
+<span class="sd">            Drop repeated events. Default to True.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        wells : Wells</span>
+<span class="sd">            Wells with an event attribute added.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;RESULTS&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">segment</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">,</span> <span class="s1">&#39;MODE&#39;</span><span class="p">,</span> <span class="s1">&#39;DREF&#39;</span><span class="p">,</span> <span class="s1">&#39;WIT&#39;</span><span class="p">,</span> <span class="s1">&#39;BHPT&#39;</span><span class="p">,</span> <span class="s1">&#39;LPT&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">segment</span><span class="o">.</span><span class="n">perforated_blocks</span><span class="p">()</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;WWIR&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">segment</span><span class="o">.</span><span class="n">results</span> <span class="ow">or</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">results_tmp</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">dref_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">perforated_blocks</span><span class="p">()[:,</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="n">dref_index</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">perforated_blocks</span><span class="p">()[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">][</span><span class="n">dref_index</span><span class="p">]</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DREF&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">cell_centroids</span><span class="p">[</span><span class="n">dref_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dref_index</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dref_index</span><span class="p">[</span><span class="mi">2</span><span class="p">]][</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="n">mask_inje</span> <span class="o">=</span> <span class="p">(</span><span class="n">results_tmp</span><span class="p">[</span><span class="s1">&#39;WWIR&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_inje</span><span class="p">,</span> <span class="s1">&#39;WIT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_inje</span><span class="p">,</span> <span class="s1">&#39;WWIR&#39;</span><span class="p">]</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_inje</span><span class="p">,</span> <span class="s1">&#39;MODE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;INJE&#39;</span>
+
+        <span class="k">if</span> <span class="s1">&#39;WBHP&#39;</span> <span class="ow">in</span> <span class="n">results_tmp</span> <span class="ow">and</span> <span class="n">production_mode</span> <span class="o">==</span> <span class="s1">&#39;BHPT&#39;</span><span class="p">:</span>
+            <span class="n">mask_prod</span> <span class="o">=</span> <span class="p">(</span><span class="n">results_tmp</span><span class="p">[</span><span class="s1">&#39;WBHP&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">mask_inje</span> <span class="o">&amp;</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">results_tmp</span><span class="p">[</span><span class="s1">&#39;WOPR&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span>
+                <span class="p">(</span><span class="n">results_tmp</span><span class="p">[</span><span class="s1">&#39;WWPR&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span>
+                <span class="p">(</span><span class="n">results_tmp</span><span class="p">[</span><span class="s1">&#39;WGPR&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_prod</span><span class="p">,</span> <span class="s1">&#39;BHPT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_prod</span><span class="p">,</span> <span class="s1">&#39;WBHP&#39;</span><span class="p">]</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_prod</span><span class="p">,</span> <span class="s1">&#39;MODE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;PROD&#39;</span>
+        <span class="k">elif</span> <span class="nb">set</span><span class="p">((</span><span class="s1">&#39;WBHP&#39;</span><span class="p">,</span> <span class="s1">&#39;WOPR&#39;</span><span class="p">,</span> <span class="s1">&#39;WWPR&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">results_tmp</span><span class="p">))</span> <span class="ow">and</span> <span class="n">production_mode</span> <span class="o">==</span> <span class="s1">&#39;LPT&#39;</span><span class="p">:</span>
+            <span class="n">mask_prod</span> <span class="o">=</span> <span class="p">(</span><span class="n">results_tmp</span><span class="p">[</span><span class="s1">&#39;WBHP&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">mask_inje</span> <span class="o">&amp;</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">results_tmp</span><span class="p">[</span><span class="s1">&#39;WOPR&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span>
+                <span class="p">(</span><span class="n">results_tmp</span><span class="p">[</span><span class="s1">&#39;WWPR&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span>
+                <span class="p">(</span><span class="n">results_tmp</span><span class="p">[</span><span class="s1">&#39;WGPR&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_prod</span><span class="p">,</span> <span class="s1">&#39;LPT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_prod</span><span class="p">,</span> <span class="s1">&#39;WOPR&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">results_tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_prod</span><span class="p">,</span> <span class="s1">&#39;WWPR&#39;</span><span class="p">]</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_prod</span><span class="p">,</span> <span class="s1">&#39;MODE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;PROD&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mask_prod</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">mask_stop</span> <span class="o">=</span> <span class="o">~</span><span class="n">mask_prod</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">mask_inje</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_stop</span><span class="p">,</span> <span class="s1">&#39;MODE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;STOP&#39;</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;DATE&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">drop_duplicates</span><span class="p">:</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
+            <span class="n">ind_to_drop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">arr</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="n">arr</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">ind_to_drop</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;COMPDAT&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">segment</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">,</span> <span class="s1">&#39;WELL&#39;</span><span class="p">,</span> <span class="s1">&#39;MODE&#39;</span><span class="p">,</span> <span class="s1">&#39;CONTROL&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;OPT&#39;</span><span class="p">,</span> <span class="s1">&#39;WPT&#39;</span><span class="p">,</span> <span class="s1">&#39;GPT&#39;</span><span class="p">,</span> <span class="s1">&#39;SLPT&#39;</span><span class="p">,</span> <span class="s1">&#39;LPT&#39;</span><span class="p">,</span> <span class="s1">&#39;BHPT&#39;</span><span class="p">]</span>
+        <span class="n">wconprod</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="n">mask_prod</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;MODE&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;INJE&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">mask_prod</span><span class="p">]</span>
+        <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prod</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">]</span>
+        <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;WELL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;MODE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prod</span><span class="p">[</span><span class="s1">&#39;MODE&#39;</span><span class="p">]</span>
+        <span class="n">wconprod</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;MODE&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;STOP&#39;</span><span class="p">,</span> <span class="s1">&#39;MODE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;OPEN&#39;</span>
+
+        <span class="k">if</span> <span class="n">production_mode</span> <span class="o">==</span> <span class="s1">&#39;BHPT&#39;</span><span class="p">:</span>
+            <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;CONTROL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;BHP&#39;</span>
+            <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;BHPT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prod</span><span class="p">[</span><span class="s1">&#39;BHPT&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">production_mode</span> <span class="o">==</span> <span class="s1">&#39;LPT&#39;</span><span class="p">:</span>
+            <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;CONTROL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;LRAT&#39;</span>
+            <span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;LPT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prod</span><span class="p">[</span><span class="s1">&#39;LPT&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown production mode </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">production_mode</span><span class="p">))</span>
+
+        <span class="n">first_date</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">compdat</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">wconprod</span> <span class="o">=</span> <span class="n">wconprod</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">wconprod</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">first_date</span><span class="p">]</span>
+
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="s1">&#39;WCONPROD&#39;</span><span class="p">,</span> <span class="n">wconprod</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.calculate_cf"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.calculate_cf">[docs]</a>    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">calculate_cf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">rock</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;METRIC&#39;</span><span class="p">,</span> <span class="n">cf_aggregation</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate connection factor values for each grid block of a segment.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rock : Rock class instance</span>
+<span class="sd">            Rock component of geological model.</span>
+<span class="sd">        grid : Grid class instance</span>
+<span class="sd">            Rock component of geological model.</span>
+<span class="sd">        segment : WellSegment class instance</span>
+<span class="sd">            Well&#39;s node.</span>
+<span class="sd">        beta : list or ndarray</span>
+<span class="sd">            Additional multiplicator for productivity index of well.</span>
+<span class="sd">        conversion_const : float</span>
+<span class="sd">            Сonversion factor for field units.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Wells</span>
+<span class="sd">            Wells component with a &#39;CF&#39; columns in a blocks_info attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">calculate_cf</span><span class="p">(</span><span class="n">rock</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">cf_aggregation</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">has_cf</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.apply_perforations"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.apply_perforations">[docs]</a>    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">apply_perforations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">current_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Open or close perforation intervals for given time interval.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        segment : WellSegment</span>
+<span class="sd">            Well&#39;s node.</span>
+<span class="sd">        current_date : pandas.Timestamp, optional</span>
+<span class="sd">            Final date to open new perforations.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Wells</span>
+<span class="sd">            Wells component with an updated blocks_info attribute which contains:</span>
+<span class="sd">            - projections of welltrack in grid blocks</span>
+<span class="sd">            - MD values for corresponding grid blocks</span>
+<span class="sd">            - ratio of perforated part of the well for each grid block.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">apply_perforations</span><span class="p">(</span><span class="n">current_date</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">full_perforation</span><span class="o">=</span><span class="p">(</span><span class="n">current_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.split_perforations"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.split_perforations">[docs]</a>    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">split_perforations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Split well perforations in a way that each perforation correspond</span>
+<span class="sd">        to one specific cell.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        segment : WellSegment</span>
+<span class="sd">            Well node</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Wells</span>
+<span class="sd">            Wells component with updated perforations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_perf_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">segment</span><span class="o">.</span><span class="n">perf</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">])))</span>
+        <span class="n">new_perf_df</span> <span class="o">=</span> <span class="n">new_perf_df</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span>
+            <span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="s1">&#39;K&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="s1">&#39;COVERED&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="s1">&#39;CLOSE&#39;</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="p">})</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">segment</span><span class="o">.</span><span class="n">perf</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">perforations_new</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">mdl</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;MDL&#39;</span><span class="p">]</span>
+            <span class="n">mdu</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;MDU&#39;</span><span class="p">]</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">mdl</span>
+            <span class="n">index_last</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="p">((</span><span class="n">index</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">block</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks</span><span class="p">),</span>
+                                                <span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">block</span><span class="p">[</span><span class="s1">&#39;MD&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">mdl</span> <span class="ow">and</span> <span class="n">block</span><span class="p">[</span><span class="s1">&#39;MD&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">mdu</span><span class="p">:</span>
+                    <span class="n">end</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s1">&#39;MD&#39;</span><span class="p">]</span>
+                    <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">index</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">perforations_new</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s1">&#39;MD&#39;</span><span class="p">]</span>
+                    <span class="n">index_last</span> <span class="o">=</span> <span class="n">index</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">mdu</span>
+            <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">index_last</span><span class="p">]</span> <span class="k">if</span> <span class="n">index_last</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">perforations_new</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">perforations_new</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;MDL&#39;</span><span class="p">,</span> <span class="s1">&#39;MDU&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">new_perf_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
+                    <span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
+            <span class="n">new_perf_df</span> <span class="o">=</span> <span class="n">new_perf_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">segment</span><span class="o">.</span><span class="n">perf</span> <span class="o">=</span> <span class="n">new_perf_df</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.update_wpi_mult"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.update_wpi_mult">[docs]</a>    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">update_wpi_mult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">mults</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update WPI multipliers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        segment : WellSegment</span>
+<span class="sd">            Well node</span>
+<span class="sd">        mults : pandas.DataFrame</span>
+<span class="sd">            Multiplyers to be updated.</span>
+<span class="sd">            A table with following columns</span>
+<span class="sd">            -- I:</span>
+<span class="sd">            -- J:</span>
+<span class="sd">            -- K: indices</span>
+<span class="sd">            -- MULT correspnding multipliers</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Wells</span>
+<span class="sd">            Wells component with updated WPI multipliers in `perf` tables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">perf</span><span class="p">,</span> <span class="n">mults</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+        <span class="n">res</span><span class="p">[</span><span class="s1">&#39;MULT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;MULT_y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;MULT_x&#39;</span><span class="p">])</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;MULT_x&#39;</span><span class="p">,</span> <span class="s1">&#39;MULT_y&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">perf</span> <span class="o">=</span> <span class="n">res</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.filter_blocks_with_perm"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.filter_blocks_with_perm">[docs]</a>    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">filter_blocks_with_perm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">permeab</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete blocks with zero permeability.&quot;&quot;&quot;</span>
+        <span class="n">x_blocks</span><span class="p">,</span> <span class="n">y_blocks</span><span class="p">,</span> <span class="n">z_blocks</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">permx</span> <span class="o">=</span> <span class="n">permeab</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_blocks</span><span class="p">,</span> <span class="n">y_blocks</span><span class="p">,</span> <span class="n">z_blocks</span><span class="p">]</span>
+        <span class="n">permy</span> <span class="o">=</span> <span class="n">permeab</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_blocks</span><span class="p">,</span> <span class="n">y_blocks</span><span class="p">,</span> <span class="n">z_blocks</span><span class="p">]</span>
+        <span class="n">permz</span> <span class="o">=</span> <span class="n">permeab</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="n">x_blocks</span><span class="p">,</span> <span class="n">y_blocks</span><span class="p">,</span> <span class="n">z_blocks</span><span class="p">]</span>
+        <span class="n">ind_del</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">permx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">permy</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">permz</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">blocks</span><span class="p">,</span> <span class="n">ind_del</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">blocks_info</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">ind_del</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.randomize_events"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.randomize_events">[docs]</a>    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">randomize_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">additive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">equality_condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add random values to events or fill with new random values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            A dict of {keyword: sampler} pairs. A keyword should be one</span>
+<span class="sd">            of event keywords. A sampler should be callable that accepts parameter size</span>
+<span class="sd">            (number of samples to generate).</span>
+<span class="sd">        additive : bool</span>
+<span class="sd">            If True, add random value to existing one. If False, substitute existing value</span>
+<span class="sd">            with a new random. Default to False.</span>
+<span class="sd">        clip : (2, ), tuple</span>
+<span class="sd">            If not None, apply clip with given min and max values.</span>
+<span class="sd">        equality_condition: dict, None</span>
+<span class="sd">            If not None, randomize only those events that satisfy</span>
+<span class="sd">            df[k] == v for all (k, v) from equality_condition.items()</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        wells : Wells</span>
+<span class="sd">            Wells with randomized events.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;EVENTS&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">segment</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">events</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">sampler</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">eq_cond</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">equality_condition</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">cond</span> <span class="ow">in</span> <span class="n">equality_condition</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">eq_cond</span> <span class="o">&amp;=</span> <span class="n">df</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">==</span> <span class="n">cond</span>
+            <span class="n">rnd</span> <span class="o">=</span> <span class="n">sampler</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">eq_cond</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">additive</span><span class="p">:</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">eq_cond</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rnd</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">eq_cond</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">rnd</span>
+            <span class="k">if</span> <span class="n">clip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">eq_cond</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">eq_cond</span><span class="p">,</span> <span class="n">k</span><span class="p">],</span> <span class="o">*</span><span class="n">clip</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Wells.show_wells"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.show_wells">[docs]</a>    <span class="k">def</span> <span class="nf">show_wells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return 3D visualization of wells.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        figsize : tuple</span>
+<span class="sd">            Output figsize.</span>
+<span class="sd">        c : str</span>
+<span class="sd">            Line color, default red.</span>
+<span class="sd">        kwargs : misc</span>
+<span class="sd">            Any additional kwargs for plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">welltrack</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">*</span><span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="n">segment</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">invert_zaxis</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">azim</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">elev</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Wells.show_rates"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.show_rates">[docs]</a>    <span class="k">def</span> <span class="nf">show_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesteps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wellnames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wells2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">6</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Plot total or cumulative liquid and gas rates for a chosen node including branches.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        timesteps : list of Timestamps</span>
+<span class="sd">            Dates at which rates were calculated.</span>
+<span class="sd">        wellnames : array-like</span>
+<span class="sd">            List of wells to show.</span>
+<span class="sd">        figsize : tuple</span>
+<span class="sd">            Figsize for two axes plots.</span>
+<span class="sd">        wells2 : Wells</span>
+<span class="sd">            Target model to compare with.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">timesteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_dates</span> <span class="k">if</span> <span class="n">timesteps</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">timesteps</span>
+        <span class="n">wellnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">PreOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">show_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesteps</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">wellnames</span><span class="o">=</span><span class="n">wellnames</span><span class="p">,</span> <span class="n">wells2</span><span class="o">=</span><span class="n">wells2</span><span class="p">,</span>
+                          <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Wells.show_rates2"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.show_rates2">[docs]</a>    <span class="k">def</span> <span class="nf">show_rates2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesteps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wellnames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wells2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">6</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Plot total or cumulative liquid and gas rates for a chosen node including branches</span>
+<span class="sd">        on two separate axes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        timesteps : list of Timestamps</span>
+<span class="sd">            Dates at which rates were calculated.</span>
+<span class="sd">        wellnames : array-like</span>
+<span class="sd">            List of wells to show.</span>
+<span class="sd">        figsize : tuple</span>
+<span class="sd">            Figsize for two axes plots.</span>
+<span class="sd">        wells2 : Wells</span>
+<span class="sd">            Target model to compare with.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">timesteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_dates</span> <span class="k">if</span> <span class="n">timesteps</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">timesteps</span>
+        <span class="n">wellnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">PreOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">show_rates2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesteps</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">wellnames</span><span class="o">=</span><span class="n">wellnames</span><span class="p">,</span> <span class="n">wells2</span><span class="o">=</span><span class="n">wells2</span><span class="p">,</span>
+                           <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Wells.show_blocks_dynamics"><a class="viewcode-back" href="../../../api/wells.html#deepfield.field.wells.Wells.show_blocks_dynamics">[docs]</a>    <span class="k">def</span> <span class="nf">show_blocks_dynamics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesteps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wellnames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">6</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Plot liquid or gas rates and pvt props for a chosen block of</span>
+<span class="sd">        a chosen well segment on two separate axes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        timesteps : list of Timestamps</span>
+<span class="sd">            Dates at which rates were calculated.</span>
+<span class="sd">        wellnames : array-like</span>
+<span class="sd">            List of wells to plot.</span>
+<span class="sd">        figsize : tuple</span>
+<span class="sd">            Figsize for two axes plots.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">timesteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_dates</span> <span class="k">if</span> <span class="n">timesteps</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">timesteps</span>
+        <span class="n">wellnames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="k">if</span> <span class="n">wellnames</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">wellnames</span>
+        <span class="k">return</span> <span class="n">show_blocks_dynamics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesteps</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">wellnames</span><span class="o">=</span><span class="n">wellnames</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_load_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load data from a HDF5 file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path to file to load data from.</span>
+<span class="sd">        attrs : str or array of str, optional</span>
+<span class="sd">            Array of dataset&#39;s names to get from file. If not given, loads all.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : BaseComponent</span>
+<span class="sd">            BaseComponent with loaded attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">attrs</span><span class="p">]</span>
+
+        <span class="k">def</span> <span class="nf">update_tree</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Build tree recursively following HDF5 node hierarchy.&quot;&quot;&quot;</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span>
+                    <span class="n">WellSegment</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">grp</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                <span class="n">is_group</span><span class="o">=</span><span class="n">grp</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;is_group&#39;</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">grp</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">attrs</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">data</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">att</span><span class="p">]</span>
+                        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
+                            <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_hdf</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">grp</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">att</span><span class="p">]),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+                            <span class="nb">setattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">att</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="nb">setattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">att</span><span class="p">,</span> <span class="n">data</span><span class="p">[()])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">update_tree</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+            <span class="n">update_tree</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">class_name</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_read_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load well data from an ASCII file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        buffer : StringIteratorIO</span>
+<span class="sd">            Buffer to get string from.</span>
+<span class="sd">        attr : str</span>
+<span class="sd">            Target keyword.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Wells</span>
+<span class="sd">            Wells component with loaded well data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;WELSPECS&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">load_welspecs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;DATES&#39;</span><span class="p">:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="s1">&#39;DATES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DATES&#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">([]))</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;COMPDAT&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">load_compdat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;WCONPROD&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">load_wconprod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;WCONINJE&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">load_wconinje</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TFIL&quot;</span><span class="p">,</span> <span class="s2">&quot;WELLTRACK&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">load_welltracks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;EFIL&quot;</span><span class="p">,</span> <span class="s2">&quot;EFILE&quot;</span><span class="p">,</span> <span class="s2">&quot;ETAB&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">load_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;HFIL&quot;</span><span class="p">,</span> <span class="s2">&quot;HFILE&quot;</span><span class="p">,</span> <span class="s2">&quot;HTAB&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">load_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GROU&quot;</span><span class="p">,</span> <span class="s2">&quot;GROUP&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">load_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">load_grouptree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Keyword </span><span class="si">{}</span><span class="s2"> is not supported in Wells.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_load_rsm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load RSM well data from file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">load_rsm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_load_ecl_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load results from UNSMRY file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">load_ecl_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_dump_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1">#pylint: disable=too-many-branches</span>
+        <span class="sd">&quot;&quot;&quot;Save data into HDF5 file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path to output file.</span>
+<span class="sd">        mode : str</span>
+<span class="sd">            Mode to open file.</span>
+<span class="sd">            &#39;w&#39;: write, a new file is created (an existing file with</span>
+<span class="sd">            the same name would be deleted).</span>
+<span class="sd">            &#39;a&#39;: append, an existing file is opened for reading and writing,</span>
+<span class="sd">            and if the file does not exist it is created.</span>
+<span class="sd">            Default to &#39;a&#39;.</span>
+<span class="sd">        state : bool</span>
+<span class="sd">            Dump compoments&#39;s state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Wells</span>
+<span class="sd">            Wells unchanged.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">wells</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">class_name</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_name</span> <span class="ow">in</span> <span class="n">f</span> <span class="k">else</span> <span class="n">f</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">state</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">wells</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">PreOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_root</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">node_path</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">fullname</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Name &#39;data&#39; is not allowed for nodes.&quot;</span><span class="p">)</span>
+                <span class="n">grp</span> <span class="o">=</span> <span class="n">wells</span><span class="p">[</span><span class="n">node_path</span><span class="p">]</span> <span class="k">if</span> <span class="n">node_path</span> <span class="ow">in</span> <span class="n">wells</span> <span class="k">else</span> <span class="n">wells</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">node_path</span><span class="p">)</span>
+                <span class="n">grp</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;is_group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">is_group</span>
+                <span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">:</span>
+                    <span class="n">grp_data</span> <span class="o">=</span> <span class="n">wells</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">node_path</span> <span class="o">+</span> <span class="s1">&#39;/data&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">grp_data</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">att</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="n">att</span> <span class="ow">in</span> <span class="n">grp_data</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">grp_data</span><span class="p">[</span><span class="n">att</span><span class="p">]</span>
+                    <span class="n">grp_data</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">att</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">PreOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_root</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">for</span> <span class="n">att</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                        <span class="n">data</span><span class="o">.</span><span class="n">to_hdf</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">class_name</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">fullname</span><span class="p">,</span>
+                                                        <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">att</span><span class="p">]),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_dump_ascii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save data into text file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path to output file.</span>
+<span class="sd">        attr : str</span>
+<span class="sd">            Attribute to dump into file.</span>
+<span class="sd">        mode : str</span>
+<span class="sd">            Mode to open file.</span>
+<span class="sd">            &#39;w&#39;: write, a new file is created (an existing file with</span>
+<span class="sd">            the same name would be deleted).</span>
+<span class="sd">            &#39;a&#39;: append, an existing file is opened for reading and writing,</span>
+<span class="sd">            and if the file does not exist it is created.</span>
+<span class="sd">            Default to &#39;w&#39;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Wells</span>
+<span class="sd">            Wells unchanged.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;WELLTRACK&#39;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;WELLTRACK&#39;</span> <span class="ow">in</span> <span class="n">node</span> <span class="ow">and</span> <span class="s1">&#39;COMPDAT&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;WELLTRACK</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">welltrack</span><span class="p">:</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">attr</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;PERF&#39;</span><span class="p">:</span>
+                <span class="n">write_perf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">DEFAULTS</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">attr</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;GROUP&#39;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">PreOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_root</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_group</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_group</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;GROUP&#39;</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">+</span>
+                                         <span class="p">[</span><span class="n">child</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;/</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">attr</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;GRUPTREE&#39;</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;GRUPTREE</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">PreOrderIter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_root</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_group</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">is_group</span><span class="p">:</span>
+                        <span class="n">p_name</span> <span class="o">=</span> <span class="s1">&#39;1*&#39;</span> <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">is_root</span> <span class="k">else</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p_name</span><span class="p">,</span> <span class="s1">&#39;/</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">]))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;/</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">attr</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EVENTS&#39;</span><span class="p">:</span>
+                <span class="n">write_events</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">VALUE_CONTROL</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">attr</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;SCHEDULE&#39;</span><span class="p">:</span>
+                <span class="n">write_schedule</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">attr</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;WELSPECS&#39;</span><span class="p">:</span>
+                <span class="n">write_welspecs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Dump for </span><span class="si">{}</span><span class="s2"> is not implemented.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
+
+    <span class="nd">@apply_to_each_segment</span>
+    <span class="k">def</span> <span class="nf">_get_first_entering_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate grid blocks for the tree of wells.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        grid : Grid</span>
+<span class="sd">            Basic grid class.</span>
+<span class="sd">        kwargs : misc</span>
+<span class="sd">            Any additional named arguments to append.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        comp : Wells</span>
+<span class="sd">            Wells component with calculated grid blocks and well in block projections.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">as_corner_point</span>
+        <span class="k">if</span> <span class="n">grid</span><span class="o">.</span><span class="n">_vtk_locator</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">grid</span><span class="o">.</span><span class="n">_cell_id_d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="c1">#pylint: disable=protected-access</span>
+            <span class="n">grid</span><span class="o">.</span><span class="n">create_vtk_locator</span><span class="p">(</span><span class="n">use_only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scaling</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="n">find_first_entering_point</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">welltrack</span><span class="p">,</span>
+                                           <span class="n">grid</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">_vtk_locator</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">_cell_id_d</span><span class="p">)</span> <span class="c1">#pylint: disable=protected-access</span>
+        <span class="n">segment</span><span class="o">.</span><span class="n">_first_entering_point</span> <span class="o">=</span> <span class="n">output</span> <span class="c1">#pylint: disable=protected-access</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

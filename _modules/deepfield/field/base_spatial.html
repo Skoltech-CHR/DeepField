@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepfield.field.base_spatial &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/deepfield.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepfield.field.base_spatial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepfield.field.base_spatial</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;SpatialComponent class.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">skimage</span>
+<span class="kn">from</span> <span class="nn">skimage.transform</span> <span class="k">import</span> <span class="n">rescale</span><span class="p">,</span> <span class="n">resize</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="k">import</span> <span class="n">deprecated</span>
+
+<span class="kn">from</span> <span class="nn">.base_component</span> <span class="k">import</span> <span class="n">BaseComponent</span>
+<span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">apply_to_each_input</span><span class="p">,</span> <span class="n">add_actions</span><span class="p">,</span> <span class="n">extract_actions</span><span class="p">,</span> <span class="n">TEMPLATE_DOCSTRING</span>
+
+<span class="n">ACTIONS_DICT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;pad&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">,</span> <span class="s2">&quot;numpy.pad&quot;</span><span class="p">,</span> <span class="s2">&quot;padded array&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;flip&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">,</span> <span class="s2">&quot;numpy.flip&quot;</span><span class="p">,</span> <span class="s2">&quot;reversed order of elements in an array along the given axis&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;clip&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">,</span> <span class="s2">&quot;numpy.clip&quot;</span><span class="p">,</span> <span class="s2">&quot;array of cliped values&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;rot90&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">,</span> <span class="s2">&quot;numpy.rot90&quot;</span><span class="p">,</span> <span class="s2">&quot;rotated an array by 90 degrees in the plane specified by axes&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;gradient&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">,</span> <span class="s2">&quot;numpy.gradient&quot;</span><span class="p">,</span> <span class="s2">&quot;gradient&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;resize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">resize</span><span class="p">,</span> <span class="s2">&quot;skimage.transform.resize&quot;</span><span class="p">,</span> <span class="s2">&quot;resize&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;rescale&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">rescale</span><span class="p">,</span> <span class="s2">&quot;skimage.transform.rescale&quot;</span><span class="p">,</span> <span class="s2">&quot;rescale&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;crop&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">skimage</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">crop</span><span class="p">,</span> <span class="s2">&quot;crop&quot;</span><span class="p">,</span> <span class="s2">&quot;cropped array by crop_width along each dimension&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;random_noise&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">skimage</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">random_noise</span><span class="p">,</span> <span class="s2">&quot;random_noise&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;array with added random noise of various types&quot;</span><span class="p">),</span>
+<span class="p">}</span>
+
+<div class="viewcode-block" id="SpatialComponent"><a class="viewcode-back" href="../../../api/base_classes.html#deepfield.field.base_spatial.SpatialComponent">[docs]</a><span class="nd">@add_actions</span><span class="p">(</span><span class="n">extract_actions</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">ndimage</span><span class="p">),</span> <span class="n">TEMPLATE_DOCSTRING</span><span class="p">)</span>
+<span class="nd">@add_actions</span><span class="p">(</span><span class="n">ACTIONS_DICT</span><span class="p">,</span> <span class="n">TEMPLATE_DOCSTRING</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SpatialComponent</span><span class="p">(</span><span class="n">BaseComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base component for spatial-type attributes.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_state</span><span class="p">(</span><span class="n">spatial</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SpatialComponent.sample_crops"><a class="viewcode-back" href="../../../api/base_classes.html#deepfield.field.base_spatial.SpatialComponent.sample_crops">[docs]</a>    <span class="k">def</span> <span class="nf">sample_crops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sample random crops of fixed shape.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr : str, array-like</span>
+<span class="sd">            Attributes to sample crops from. If None, use all attributes.</span>
+<span class="sd">        shape : tuple</span>
+<span class="sd">            Shape of crops.</span>
+<span class="sd">        size : int, optional</span>
+<span class="sd">            Number of crops to sample. Default to 1.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        crops : ndarray</span>
+<span class="sd">            Sampled crops.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">is_list</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span><span class="p">]</span>
+            <span class="n">is_list</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span>
+        <span class="n">data_shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">valid_range</span> <span class="o">=</span> <span class="n">data_shape</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">before</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">valid_range</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">after</span> <span class="o">=</span> <span class="n">valid_range</span> <span class="o">-</span> <span class="n">before</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="n">attr</span><span class="p">,</span> <span class="n">crop_width</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">before</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">after</span><span class="p">[</span><span class="n">i</span><span class="p">])))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">is_list</span> <span class="k">else</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="SpatialComponent.ravel"><a class="viewcode-back" href="../../../api/base_classes.html#deepfield.field.base_spatial.SpatialComponent.ravel">[docs]</a>    <span class="k">def</span> <span class="nf">ravel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Brings component to ravel state. If not inplace returns</span>
+<span class="sd">        ravel representation for attributes with pre-defined ravel transformation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr : str, array of str</span>
+<span class="sd">            Attribute to ravel.</span>
+<span class="sd">        inplace : bool</span>
+<span class="sd">            Modify сomponent inplace.</span>
+<span class="sd">        kwargs : misc</span>
+<span class="sd">            Additional named arguments.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : component if inplace else raveled attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;`attr` should be None for inplace operation.&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ravel</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="n">attr</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">spatial</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_ravel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">inplace</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ravel transformations.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="n">attr</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SpatialComponent.to_spatial"><a class="viewcode-back" href="../../../api/base_classes.html#deepfield.field.base_spatial.SpatialComponent.to_spatial">[docs]</a>    <span class="k">def</span> <span class="nf">to_spatial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Bring component to spatial state. If not inplace returns</span>
+<span class="sd">        spatial representation for attributes with pre-defined spatial transformation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attr : str, array of str</span>
+<span class="sd">            Attribute to ravel.</span>
+<span class="sd">        inplace : bool</span>
+<span class="sd">            Modify сomponent inplace.</span>
+<span class="sd">        kwargs : misc</span>
+<span class="sd">            Additional named arguments.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : сomponent if inplace else raveled attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;`attr` should be None for inplace operation.&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_spatial</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="n">attr</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">spatial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@apply_to_each_input</span>
+    <span class="k">def</span> <span class="nf">_to_spatial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">inplace</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Spatial transformations.&quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">attr</span><span class="p">,</span> <span class="n">inplace</span><span class="p">,</span> <span class="n">kwargs</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SpatialComponent.unravel"><a class="viewcode-back" href="../../../api/base_classes.html#deepfield.field.base_spatial.SpatialComponent.unravel">[docs]</a>    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s2">&quot;Renamed to_spatial&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">unravel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Alias for `to_spatial` method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_spatial</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_make_data_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">kwargs</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="n">attr</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

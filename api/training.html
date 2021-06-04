@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Training &mdash; DeepField  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DeepField
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Training</a><ul>
+<li><a class="reference internal" href="#nntrainer">NNTrainer</a></li>
+<li><a class="reference internal" href="#l2loss">L2Loss</a></li>
+<li><a class="reference internal" href="#module-deepfield.metamodelling.factories">Factories</a></li>
+<li><a class="reference internal" href="#module-deepfield.metamodelling.utils">Utils</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepField</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Training</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/training.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="training">
+<h1>Training<a class="headerlink" href="#training" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="nntrainer">
+<h2>NNTrainer<a class="headerlink" href="#nntrainer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.metamodelling.NNTrainer">
+<em class="property">class </em><code class="sig-name descname">NNTrainer</code><a class="reference internal" href="../_modules/deepfield/metamodelling/training.html#NNTrainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.NNTrainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for neural-networks training.</p>
+<dl class="method">
+<dt id="deepfield.metamodelling.NNTrainer.split_dataset">
+<em class="property">static </em><code class="sig-name descname">split_dataset</code><span class="sig-paren">(</span><em class="sig-param">dataset</em>, <em class="sig-param">test_frac</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/training.html#NNTrainer.split_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.NNTrainer.split_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split dataset into test and train.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepfield.metamodelling.NNTrainer.train_model">
+<code class="sig-name descname">train_model</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">dataset</em>, <em class="sig-param">n_epoch=1</em>, <em class="sig-param">lr=0.001</em>, <em class="sig-param">parameters_to_optimize=None</em>, <em class="sig-param">loss_pattern=None</em>, <em class="sig-param">log_every=None</em>, <em class="sig-param">evaluate_every=None</em>, <em class="sig-param">test_frac=0</em>, <em class="sig-param">dump_best_parameters=None</em>, <em class="sig-param">optimizer=&lt;class 'torch.optim.adam.Adam'&gt;</em>, <em class="sig-param">scheduler=functools.partial(&lt;class 'torch.optim.lr_scheduler.LambdaLR'&gt;</em>, <em class="sig-param">lr_lambda=&lt;function lr_lambda&gt;)</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/training.html#NNTrainer.train_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.NNTrainer.train_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train model on the given dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>BaseModel</em>) – Model to train.</p></li>
+<li><p><strong>dataset</strong> (<a class="reference internal" href="datasets.html#deepfield.datasets.FieldDataset" title="deepfield.datasets.FieldDataset"><em>FieldDataset</em></a>) – Dataset to use.</p></li>
+<li><p><strong>n_epoch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of iterations through the dataset.</p></li>
+<li><p><strong>lr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Learning rate.</p></li>
+<li><p><strong>parameters_to_optimize</strong> (<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em> or </em><em>tuple of model's parameters</em>) – Will optimize loss over this set of parameters.
+If None, will over optimize all parameters.</p></li>
+<li><p><strong>loss_pattern</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em> or </em><em>Any</em>) – For more info see losses.standardize_loss_pattern.</p></li>
+<li><p><strong>log_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – Print logs at each log_every iteration.
+If None, do not print logs.</p></li>
+<li><p><strong>evaluate_every</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – Evaluate model on test dataset each evaluate_every iteration.
+If None, evaluations are not used.</p></li>
+<li><p><strong>test_frac</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Fraction of scenarios put into the test dataset.</p></li>
+<li><p><strong>dump_best_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – Path to dump best model (on test set). Dumps can be made at each evaluation iteration.
+If None, do not dump model automatically.</p></li>
+<li><p><strong>optimizer</strong> (<em>torch.optim.Optimizer</em>) – Optimizer to use. Default: torch.optim.Adam</p></li>
+<li><p><strong>scheduler</strong> (<em>torch.optim.lr_scheduler._LRScheduler</em>) – Scheduler to use. Default: torch.optim.lr_scheduler.LambdaLR</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – Any additional named arguments for model’s forward pass.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>model</em> – Trained model.</p></li>
+<li><p><strong>train_loss_legend</strong> (<em>list</em>) – Training loss legend.</p></li>
+<li><p><strong>test_loss_legend</strong> (<em>list</em>) – Evaluation loss legend.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="l2loss">
+<h2>L2Loss<a class="headerlink" href="#l2loss" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepfield.metamodelling.L2Loss">
+<em class="property">class </em><code class="sig-name descname">L2Loss</code><a class="reference internal" href="../_modules/deepfield/metamodelling/losses.html#L2Loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.L2Loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for L2 loss calculation.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-deepfield.metamodelling.factories">
+<span id="factories"></span><h2>Factories<a class="headerlink" href="#module-deepfield.metamodelling.factories" title="Permalink to this headline">¶</a></h2>
+<p>Tools for fast custom module creation.</p>
+<dl class="function">
+<dt id="deepfield.metamodelling.factories.sequential_factory">
+<code class="sig-name descname">sequential_factory</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">conv_module</em>, <em class="sig-param">in_ch</em>, <em class="sig-param">ch</em>, <em class="sig-param">*args</em>, <em class="sig-param">use_norm=True</em>, <em class="sig-param">use_nonlin=True</em>, <em class="sig-param">residual_connections=()</em>, <em class="sig-param">wrappers=(&lt;class 'deepfield.metamodelling.custom_blocks.wrappers.MultiInputSequential'&gt;</em>, <em class="sig-param">&lt;class 'deepfield.metamodelling.custom_blocks.wrappers.TimeInvariantWrapper'&gt;)</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/factories.html#sequential_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.factories.sequential_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for creation of sequential modules. Module is constructed based on the chosen <cite>conv_module</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of conv_modules to stack.</p></li>
+<li><p><strong>conv_module</strong> (<em>nn.Module</em>) – Base module from which sequential is constructed.</p></li>
+<li><p><strong>in_ch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of input channels in the resulting sequential.</p></li>
+<li><p><strong>ch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – Number of output channels in each of <cite>conv_module`s.
+If `int</cite> is passed, will use similar number of output channels across the modules.
+If <cite>list</cite> is passed, use it’s entries. List should have length n.</p></li>
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Any additional args passed to the constructor of <a href="#id1"><span class="problematic" id="id2">`</span></a>conv_module’
+Each arg should be either list or any. If arg is not a list, use similar values across modules.</p></li>
+<li><p><strong>use_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>nn.Module</em>) – If bool, marks the need of using normalization between modules (before the nonlin).
+If nn.Module, uses this module as a normalization.
+Default: True</p></li>
+<li><p><strong>use_nonlin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>nn.Module</em>) – If bool, marks the need of using nonlinearity between modules.
+If nn.Module, uses this module as a nonlinearity.
+Default: True</p></li>
+<li><p><strong>residual_connections</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Tuple of pairs. Each pair marks which layers should be connected.
+If pair (i, j) is given, connects the input of i-th layer and the output of j-th layer.
+Pairs should not cross each other.
+Default: ()</p></li>
+<li><p><strong>wrappers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – List of wrappers, which will be used after constructing the composing modules. Order matters.
+Default: (MultiInputSequential, TimeInvariantWrapper)</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – Any additional named args passed to the constructor of <a href="#id3"><span class="problematic" id="id4">`</span></a>conv_module’
+Each kwarg value should be either list or any. If value is not a list, use similar values across modules.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Composed modules, possibly with applied norm, nonlin, wrappers.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>, nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-deepfield.metamodelling.utils">
+<span id="utils"></span><h2>Utils<a class="headerlink" href="#module-deepfield.metamodelling.utils" title="Permalink to this headline">¶</a></h2>
+<p>Miscellaneous utils.</p>
+<dl class="class">
+<dt id="deepfield.metamodelling.utils.LinearInterpolator">
+<em class="property">class </em><code class="sig-name descname">LinearInterpolator</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">values</em>, <em class="sig-param">at_bounds='linear'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/utils.html#LinearInterpolator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.utils.LinearInterpolator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Piecewise linear interpolator.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="deepfield.metamodelling.utils.find_best_match_indices">
+<code class="sig-name descname">find_best_match_indices</code><span class="sig-paren">(</span><em class="sig-param">search_for</em>, <em class="sig-param">search_in</em>, <em class="sig-param">less_or_equal=False</em>, <em class="sig-param">greater_or_equal=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/utils.html#find_best_match_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.utils.find_best_match_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each element of <cite>search_for</cite>, find the index of closest element in <cite>search_in</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>search_for</strong> (<em>torch.tensor</em>) – </p></li>
+<li><p><strong>search_in</strong> (<em>torch.tensor</em>) – </p></li>
+<li><p><strong>less_or_equal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, searches for an element which is less or equal than the reference from <cite>search_for</cite></p></li>
+<li><p><strong>greater_or_equal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, searches for an element which is greater or equal than the reference from <cite>search_for</cite></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>indices</strong> – Shape: <cite>search_for.shape</cite>
+If the required neighbour was not found, -1 value is used instead of true indices.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="deepfield.metamodelling.utils.get_model_device">
+<code class="sig-name descname">get_model_device</code><span class="sig-paren">(</span><em class="sig-param">model</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/utils.html#get_model_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.utils.get_model_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get device on which model in situated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>nn.Module</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>device</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.device</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="deepfield.metamodelling.utils.get_number_of_params">
+<code class="sig-name descname">get_number_of_params</code><span class="sig-paren">(</span><em class="sig-param">module</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/utils.html#get_number_of_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.utils.get_number_of_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate number of trainable parameters in the module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>module</strong> (<em>nn.Module</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>n</strong> – Number of parameters</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="deepfield.metamodelling.utils.lr_lambda">
+<code class="sig-name descname">lr_lambda</code><span class="sig-paren">(</span><em class="sig-param">epoch</em>, <em class="sig-param">base=0.99</em>, <em class="sig-param">exponent=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/metamodelling/utils.html#lr_lambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.metamodelling.utils.lr_lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplier used for learning rate scheduling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epoch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – </p></li>
+<li><p><strong>base</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – </p></li>
+<li><p><strong>exponent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>multiplier</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Skoltech-CHR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

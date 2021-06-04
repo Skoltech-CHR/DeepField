@@ -1,0 +1,102 @@
+RUNSPEC
+
+TITLE
+TEST_MODEL
+
+MULTOUT
+MULTOUTS
+
+START
+1 JUL 2000
+/
+
+METRIC
+OIL
+GAS
+WATER
+DISGAS
+
+DIMENS
+2 1 6 /
+
+RUNCTRL
+WELLEQUATIONS 1 /
+WATERZONE 1 /
+/
+TNAVCTRL
+LONGNAMES 1 /
+/
+
+GRID
+
+INCLUDE
+'INCLUDE\zcorn.inc' /
+/
+
+INCLUDE
+'INCLUDE\coord.inc' /
+/
+
+INCLUDE
+'INCLUDE\actnum.inc' /
+
+INCLUDE
+'INCLUDE\poro.inc'
+
+
+
+EDIT
+
+PROPS
+
+--ROCK
+
+
+
+SOLUTION
+
+INCLUDE
+'INCLUDE\pressure.inc'
+
+
+
+SUMMARY
+
+SEPARATE
+TCPU
+
+WBHP
+	"*"
+/
+WOPR
+	"*"
+/
+WWPR
+	"*"
+/
+WGPR
+	"*"
+/
+WWIR
+	"*"
+/
+
+RECU
+
+RATE 1 MONTH WELL EXAC END FIEL GROU CRAT LRAT /
+
+FREQ 0 0 1
+/
+
+-------------------------------welltracks------------------------------------
+TFIL
+'INCLUDE\welltrack.inc' /
+--------------------------------events---------------------------------------
+INCLUDE
+'INCLUDE\perf.inc' /
+
+INCLUDE
+'INCLUDE\events.inc' /
+
+INCLUDE
+'INCLUDE\group.inc' /

@@ -1,0 +1,143 @@
+RUNSPEC
+
+TITLE
+Untitled
+
+MULTOUT
+MULTOUTS
+
+START
+06  'NOV' 1997
+/
+
+METRIC
+OIL
+GAS
+WATER
+DISGAS
+
+DIMENS
+46 112 22 /
+
+RUNCTRL
+WELLEQUATIONS 1 /
+WATERZONE 1 /
+/
+TNAVCTRL
+LONGNAMES 1 /
+/
+
+GRID
+
+INCLUDE
+'INCLUDE/zcorn.inc' /
+/
+
+INCLUDE
+'INCLUDE/coord.inc' /
+/
+
+INCLUDE
+'INCLUDE/actnum.inc' /
+
+INCLUDE
+'INCLUDE/aquifers.inc '/
+/
+
+
+
+INCLUDE
+'INCLUDE/poro.inc'
+
+INCLUDE
+'INCLUDE/permx.inc'
+
+INCLUDE
+'INCLUDE/permy.inc'
+
+INCLUDE
+'INCLUDE/permz.inc'
+
+
+
+EDIT
+
+PROPS
+
+--ROCK
+
+INCLUDE
+'INCLUDE/pvto.inc'
+
+INCLUDE
+'INCLUDE/rock.inc'
+
+INCLUDE
+'INCLUDE/pvtw.inc'
+
+INCLUDE
+'INCLUDE/density.inc'
+
+INCLUDE
+'INCLUDE/swof.inc'
+
+INCLUDE
+'INCLUDE/sgof.inc'
+
+INCLUDE
+'INCLUDE/pvdg.inc'
+
+
+
+SOLUTION
+
+INCLUDE
+'INCLUDE/pressure.inc'
+
+INCLUDE
+'INCLUDE/rs.inc'
+
+INCLUDE
+'INCLUDE/sgas.inc'
+
+INCLUDE
+'INCLUDE/soil.inc'
+
+INCLUDE
+'INCLUDE/swat.inc'
+
+
+
+SUMMARY
+
+SEPARATE
+TCPU
+
+WBHP
+	"*"
+/
+WOPR
+	"*"
+/
+WWPR
+	"*"
+/
+WGPR
+	"*"
+/
+WWIR
+	"*"
+/
+
+SCHEDULE
+
+INCLUDE
+'INCLUDE/gruptree.inc' /
+
+INCLUDE
+'INCLUDE/welspecs.inc' /
+
+INCLUDE
+'INCLUDE/schedule.inc' /
+
+END

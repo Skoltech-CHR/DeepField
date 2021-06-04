@@ -1,0 +1,7 @@
+*.pyc
+_build/
+.cache/
+__pycache__/
+.ipynb_checkpoints/
+credentials.py
+*.log

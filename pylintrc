@@ -1,0 +1,25 @@
+[MASTER]
+extension-pkg-whitelist=numpy
+init-hook='import sys; sys.path.append(".")'
+
+[FORMAT]
+max-line-length=120
+max-attributes=8
+max-args=10
+max-locals=25
+
+good-names=a,ax,b,c,d,e,h,ch,cv,ex,ey,dx,dy,dz,d0,d1,d2,df,i,i0,ik,im,f,fn,j,j0,jk,k,k0,kw,lr,m,n,nx,ny,nz,p,P,q,r,rs,s,s0,s1,s2,t,v,v1,v2,v3,v4,x,x0,y,y0,z,z0,u,l1,l2,l3,k1,k2,l,p1,p2,xn,yn,zn,xs,ys,zs,w,si,mx,mn,rv,cf,g,mu,kr,dp,to,i1,x1,y1
+
+[MESSAGE CONTROL]
+disable=no-value-for-parameter,no-self-use,too-few-public-methods,unsubscriptable-object,no-method-argument,no-member,arguments-differ,len-as-condition,keyword-arg-before-vararg,too-many-locals,comparison-with-callable,not-an-iterable,unnecessary-lambda,too-many-public-methods,too-many-branches,abstract-method,too-many-instance-attributes,too-many-statements,too-many-arguments,too-many-return-statements
+
+[TYPECHECK]
+ignored-modules=numpy
+
+[SIMILARITIES]
+
+# Minimum lines number of a similarity.
+min-similarity-lines=10
+
+[MISCELLANEOUS]
+notes=

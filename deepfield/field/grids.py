@@ -423,35 +423,14 @@ class OrthogonalUniformGrid(Grid):
         _ = kwargs
         self._vtk_grid_params = {'use_only_active': False, 'cell_size': cell_size, 'scaling': scaling}
 
-        dimensions = self.dimens
-        xn, yn, zn = dimensions[0]+1, dimensions[1]+1, dimensions[2]+1
-
-        indexes = np.moveaxis(np.indices(self.dimens), 0, -1)
-        indexes = indexes[np.ones(dimensions, dtype=bool)]
+        indexes = np.moveaxis(np.indices(self.dimens), 0, -1).reshape(-1, 3)
         self._cell_id_d = dict(enumerate(indexes))
 
         self._vtk_grid = vtk.vtkImageData()
-        self._vtk_grid.SetDimensions(xn, yn, zn)
+        self._vtk_grid.SetDimensions(*(self.dimens + 1))
 
-        if isinstance(scaling, (tuple, list)):
-            if cell_size is not None:
-                if tuple(scaling) != tuple(cell_size):
-                    print('\t WARNING: scaling != cell_size') # TO DO: turn into logger
-            else:
-                cell_size = scaling
-                self._vtk_grid_scales = np.array([cell_size[i] / self.cell_size[i] for i in
-                                                  range(len(cell_size))])
-
-        if cell_size is None:
-            cell_size = self.cell_size
-            self._vtk_grid_scales = np.array([max(cell_size) / cell_size[i]
-                                              for i in range(len(cell_size))])
-
-        if isinstance(cell_size, int):
-            xs, ys, zs = cell_size, cell_size, cell_size  # These are the cell sizes along each axis
-        else:
-            xs, ys, zs = cell_size[0], cell_size[1], cell_size[2]
-        self._vtk_grid.SetSpacing(xs, ys, zs)
+        self._vtk_grid.SetSpacing(*self.cell_size)
+        self._vtk_grid_scales = np.ones(3)
 
 
 class CornerPointGrid(Grid):
@@ -696,13 +675,6 @@ class CornerPointGrid(Grid):
 
         n_cells = cells.shape[0]
         cells = cells.reshape(-1, cells.shape[-1], order='C')
-
-        if scaling:
-            ranges = [cells[:, i].max()-cells[:, i].min() for i in range(3)]
-            self._vtk_grid_scales = np.array([max(ranges)/ranges[i] for i in range(3)])
-            if isinstance(scaling, (tuple, list)):
-                self._vtk_grid_scales *= np.asarray(scaling)
-            cells = cells * self._vtk_grid_scales
 
         cells = numpy_support.numpy_to_vtk(cells, deep=True)
 

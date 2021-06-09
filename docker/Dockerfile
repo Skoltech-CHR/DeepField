@@ -30,12 +30,10 @@ RUN pip3 --no-cache-dir install jupyter
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
 RUN git clone https://github.com/Skoltech-CHR/DeepField.git /home/DeepField
-RUN chmod -R o+w /home/DeepField
 
 WORKDIR "/home/DeepField"
 
-RUN pip3 --no-cache-dir install -r /home/DeepField/requirements.txt
-RUN python setup.py install
+RUN pip3 --no-cache-dir install . 
 
 EXPOSE 8888
 

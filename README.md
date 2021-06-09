@@ -33,6 +33,12 @@ Clone the repository:
 Working with a remote server, it is recommended to install
 VNC for remote rendering of 3D graphics (follow this [instruction](./vnc/README.md))
 
+Another option is to build the docker image with DeepField inside.
+Instructions and dockerfile are provided in the [docker](./docker) directory.
+
+```
+Note: the project is in developement. We welcome contributions and collaborations.
+```
 
 ## Quick start
 

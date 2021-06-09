@@ -940,6 +940,54 @@ class Field:
                              self._logger)
         return self
 
+    def calculate_rates(self, timesteps=None, wellnames=None, cf_aggregation='sum', multiprocessing=True, verbose=True):
+        """Calculate oil/water/gas rates for each well segment.
+
+        Parameters
+        ----------
+        timesteps : list of pd.Timestamps
+            Dates to calculate rates for.
+        wellnames : list of str
+            Wellnames for rates calculation. If None, all wells are included. Default to None.
+        cf_aggregation: str, 'sum' or 'eucl'
+            The way of aggregating cf projection ('sum' - sum, 'eucl' - Euclid norm).
+        Returns
+        -------
+        rates : pd.DataFrame
+            pd.Dataframe filled with production rates for each phase.
+        block_rates : pd.DataFrame of ndarrays
+            pd.Dataframe filled with arrays of production rates in each grid block.
+        """
+        if timesteps is None:
+            timesteps = self.result_dates
+        if wellnames is None:
+            wellnames = self.wells.names
+        if multiprocessing:
+            calc_rates_multiprocess(self, timesteps, wellnames, cf_aggregation, verbose)
+        else:
+            calc_rates(self, timesteps, wellnames, cf_aggregation, verbose)
+        return self
+
+    def history_to_results(self):
+        """Convert history to results."""
+        for node in self.wells:
+            if node.is_main_branch and not hasattr(node, 'history'):
+                self.wells.drop(node.name)
+
+        for node in self.wells:
+            if hasattr(node, 'results'):
+                delattr(node, 'results')
+
+        rename = {'QOIL': 'WOPR', 'QGAS': 'WGPR', 'QWAT': 'WWPR', 'QWIN': 'WWIR', 'BHP': 'WBHP'}
+        for node in self.wells:
+            if node.is_main_branch:
+                new_results = node.history.rename(columns=rename)[['DATE'] + list(rename.values())]
+                node.results = new_results.drop_duplicates(subset='DATE')
+                node.results = node.results.reset_index(drop=True)
+        self.meta['DATES'] = self.result_dates
+        self.meta['START'] = self.meta['DATES'][0].strftime('%-d %b %Y').upper()
+        return self
+
     # pylint: disable=protected-access
     def _create_pyvista_grid(self):
         """Creates pyvista grid object with attributes."""
@@ -950,63 +998,26 @@ class Field:
             self._pyvista_grid = pv.UnstructuredGrid(self.grid._vtk_grid)
 
         attributes = {}
+        active_cells = self.grid.actnum if 'ACTNUM' in self.grid else np.full(self.grid.dimens, True)
+
+        def make_data(data):
+            if self.grid._vtk_grid_params['use_only_active']:
+                return data[active_cells].astype(float)
+            new_data = data.copy()
+            new_data[~active_cells] = np.nan
+            return new_data.ravel().astype(float)
+
+        attributes.update({'ACTNUM': make_data(active_cells)})
+
         if 'rock' in self.components:
-            attributes.update({'%s' % attr: getattr(self.rock, attr).copy() for
-                               attr in self.rock.attributes})
+            attributes.update({attr: make_data(data) for attr, data in self.rock.items()})
 
         if 'states' in self.components:
-            for attr in self.states.attributes:
-                sequence = getattr(self.states, attr).copy()
-                attributes.update({'%s_%d' % (attr, i): snapshot for i, snapshot in enumerate(sequence)})
-
-        active_cells = self.grid.actnum if 'ACTNUM' in self.grid else np.full(self.grid.dimens, True)
-
-        attributes['ACTNUM'] = active_cells.astype(float)
-
-        if self.grid._vtk_grid_params['use_only_active']:
-            for key, value in attributes.items():
-                new_value = value[active_cells]
-                attributes[key] = new_value.astype(float)
-        else:
-            if isinstance(self.grid, OrthogonalUniformGrid):
-                for key, value in attributes.items():
-                    new_value = value.copy()
-                    new_value[~active_cells] = np.nan
-                    attributes[key] = np.ravel(new_value, order='F').astype(float)
-            elif isinstance(self.grid, CornerPointGrid):
-                for key, value in attributes.items():
-                    new_value = value.copy()
-                    new_value[~active_cells] = np.nan
-                    attributes[key] = new_value[np.ones(active_cells.shape, dtype=bool)].astype(float)
+            for attr, sequence in self.states.items():
+                attributes.update({'%s_%d' % (attr, i): make_data(snapshot)
+                                   for i, snapshot in enumerate(sequence)})
 
         self._pyvista_grid.cell_arrays.update(attributes)
-
-    def _add_state_to_grid(self, state_attr):
-        time_steps = {}
-
-        for t in range(getattr(self.states, state_attr).shape[1]):
-            time_steps.update({state_attr+f'_{t}': getattr(self.states, state_attr)[0, t].copy()})
-
-        active_cells = self.grid.actnum if 'ACTNUM' in self.grid else np.full(self.grid.dimens, True)
-
-        if self._pyvista_grid.n_cells < np.prod(self.grid.dimens):
-            for key, value in time_steps.items():
-                new_value = value[active_cells]
-                time_steps[key] = new_value
-        else:
-            active_cells = np.ravel(active_cells, order='F')
-            non_active_idxs = np.where(~active_cells)[0]
-
-            for key, value in time_steps.items():
-                new_value = np.ravel(value, order='F')
-                new_value[non_active_idxs] = np.nan
-                time_steps[key] = new_value
-
-        self._pyvista_grid.cell_arrays.update(time_steps)
-
-    def _delete_state_from_grid(self, state_attr):
-        for t in range(getattr(self.states, state_attr).shape[1]):
-            del self._pyvista_grid.cell_arrays[state_attr + f'_{t}']
 
     def _add_welltracks(self, plotter, add_mesh_kwargs=None):
         """Adds all welltracks to the plot."""
@@ -1025,21 +1036,17 @@ class Field:
             z_min = self._pyvista_grid.bounds[4]
 
         for well_name, value in well_tracks.items():
-            new_value = value * self.grid._vtk_grid_scales  # pylint: disable=protected-access
-
             wtrack_idx, first_intersection = self.wells[well_name]._first_entering_point # pylint: disable=protected-access
             if first_intersection is not None:
                 if isinstance(self.grid, OrthogonalUniformGrid):
                     first_intersection -= self.grid.origin
-                first_intersection *= self.grid._vtk_grid_scales
-                new_value = np.concatenate([np.array([[first_intersection[0], first_intersection[1], z_min]]),
-                                            np.asarray(first_intersection).reshape(1, -1),
-                                            new_value[wtrack_idx + 1:]])
+                value = np.concatenate([np.array([[first_intersection[0], first_intersection[1], z_min]]),
+                                        np.asarray(first_intersection).reshape(1, -1),
+                                        value[wtrack_idx + 1:]])
             else:
-                new_value = np.concatenate([np.array([[new_value[0, 0], new_value[0, 1], z_min]]),
-                                            new_value])
+                value = np.concatenate([np.array([[value[0, 0], value[0, 1], z_min]]), value])
 
-            pv_line = lines_from_points(new_value)
+            pv_line = lines_from_points(value)
             add_mesh_kwargs_ = {'line_width': 2, 'color': 'k'}
             if isinstance(add_mesh_kwargs, dict):
                 add_mesh_kwargs_.update(add_mesh_kwargs)
@@ -1128,6 +1135,7 @@ class Field:
                                  range(self.states.n_timesteps)])
             else:
                 threshold = np.nanmin(grid.cell_arrays[attribute])
+            threshold = np.asscalar(threshold)
         else:
             threshold = 0
 
@@ -1235,63 +1243,24 @@ class Field:
                 plotter.add_checkbox_button_widget(show_well_name, value=False)
                 plotter.add_text("      Wells' names", position=(10.0, 10.0), font_size=16)
 
+        scaling = np.asarray(scaling).ravel()
+        if len(scaling) == 1 and scaling[0]:
+            scales = np.diff(self.grid.bounding_box, axis=0).ravel()
+            plotter.set_scale(*(scales.max() / scales))
+        elif len(scaling) == 3:
+            plotter.set_scale(*scaling)
+
         plotter.show_grid(show_xlabels=show_labels, show_ylabels=show_labels, show_zlabels=show_labels)
-        plotter.view_isometric()
         plotter.show()
-
-    def calculate_rates(self, timesteps=None, wellnames=None, cf_aggregation='sum', multiprocessing=True, verbose=True):
-        """Calculate oil/water/gas rates for each well segment.
-
-        Parameters
-        ----------
-        timesteps : list of pd.Timestamps
-            Dates to calculate rates for.
-        wellnames : list of str
-            Wellnames for rates calculation. If None, all wells are included. Default to None.
-        cf_aggregation: str, 'sum' or 'eucl'
-            The way of aggregating cf projection ('sum' - sum, 'eucl' - Euclid norm).
-        Returns
-        -------
-        rates : pd.DataFrame
-            pd.Dataframe filled with production rates for each phase.
-        block_rates : pd.DataFrame of ndarrays
-            pd.Dataframe filled with arrays of production rates in each grid block.
-        """
-        if timesteps is None:
-            timesteps = self.result_dates
-        if wellnames is None:
-            wellnames = self.wells.names
-        if multiprocessing:
-            calc_rates_multiprocess(self, timesteps, wellnames, cf_aggregation, verbose)
-        else:
-            calc_rates(self, timesteps, wellnames, cf_aggregation, verbose)
-        return self
-
-    def history_to_results(self):
-        """Convert history to results."""
-        for node in self.wells:
-            if node.is_main_branch and not hasattr(node, 'history'):
-                self.wells.drop(node.name)
-
-        for node in self.wells:
-            if hasattr(node, 'results'):
-                delattr(node, 'results')
-
-        rename = {'QOIL': 'WOPR', 'QGAS': 'WGPR', 'QWAT': 'WWPR', 'QWIN': 'WWIR', 'BHP': 'WBHP'}
-        for node in self.wells:
-            if node.is_main_branch:
-                new_results = node.history.rename(columns=rename)[['DATE'] + list(rename.values())]
-                node.results = new_results.drop_duplicates(subset='DATE')
-                node.results = node.results.reset_index(drop=True)
-        self.meta['DATES'] = self.result_dates
-        self.meta['START'] = self.meta['DATES'][0].strftime('%-d %b %Y').upper()
-        return self
 
 
 def create_mesh(plotter, grid, attribute, opacity, threshold, slice_xyz, timestamp, plot_params):
     """Create mesh for pyvista visualisation."""
     plotter.remove_actor('actor')
-    plotter.remove_scalar_bar()
+    try:
+        plotter.remove_scalar_bar()
+    except IndexError:
+        pass
 
     if timestamp is None:
         grid.set_active_scalars(attribute)
@@ -1304,8 +1273,8 @@ def create_mesh(plotter, grid, attribute, opacity, threshold, slice_xyz, timesta
     if slice_xyz is not None:
         grid = grid.slice_orthogonal(x=slice_xyz[0], y=slice_xyz[1], z=slice_xyz[2])
 
-    plot_params['scalar_bar_args'] = dict(label_font_size=12, position_y=0.03, position_x=0.95)
-    plotter.add_mesh(grid, name='actor', stitle='', opacity=opacity, **plot_params)
+    plot_params['scalar_bar_args'] = dict(label_font_size=12, width=0.5, position_y=0.03, position_x=0.45)
+    plotter.add_mesh(grid, name='actor', opacity=opacity, stitle='', **plot_params)
 
     if timestamp is None:
         plotter.add_text(attribute, position='upper_edge', name='title', font_size=14)

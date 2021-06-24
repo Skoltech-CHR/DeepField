@@ -87,6 +87,8 @@ def load_group(wells, buffer, **kwargs):
     _ = kwargs
     group = next(iter(buffer)).upper().split('FRAC')[0].split()
     group_name = group[1]
+    if group_name == '1*':
+        group_name = DEFAULTS['GROUP']
     try:
         group_node = wells[group_name]
     except KeyError:
@@ -106,6 +108,8 @@ def load_grouptree(wells, buffer, **kwargs):
         if line.strip() == '/':
             return wells
         node, grp = re.sub("[\"\']", "", line).split('/')[0].strip().split()
+        if grp == '1*':
+            grp = DEFAULTS['GROUP']
         try:
             node = wells[node]
         except KeyError:
@@ -151,9 +155,10 @@ def load_welspecs(wells, buffer, **kwargs):
         wells.update(welldata, mode='a', ignore_index=True)
     return wells
 
-def load_wconprod(wells, buffer, **kwargs):
+def load_wconprod(wells, buffer, meta, **kwargs):
     """Partial load WCONPROD table."""
     _ = kwargs
+    dates = meta['DATES']
     columns = ['DATE', 'WELL', 'MODE', 'CONTROL',
                'OPT', 'WPT', 'GPT', 'SLPT', 'LPT', 'BHPT']
     df = pd.DataFrame(columns=columns)
@@ -165,8 +170,7 @@ def load_wconprod(wells, buffer, **kwargs):
             break
         vals = line.split()[:len(columns)]
         full = [None] * len(columns)
-        full[0] = (wells._cache['DATES'][-1] if 'DATES' in wells._cache#pylint: disable=protected-access
-                   else pd.to_datetime(''))
+        full[0] = dates[-1] if not dates.empty else pd.to_datetime('')
         shift = 1
         for i, v in enumerate(vals):
             if i + shift >= len(columns):
@@ -187,9 +191,10 @@ def load_wconprod(wells, buffer, **kwargs):
         wells.update(welldata, mode='a', ignore_index=True)
     return wells
 
-def load_wconinje(wells, buffer, **kwargs):
+def load_wconinje(wells, buffer, meta, **kwargs):
     """Partial load WCONINJE table."""
     _ = kwargs
+    dates = meta['DATES']
     columns = ['DATE', 'WELL', 'PHASE', 'MODE', 'CONTROL', 'SPIT', 'PIT', 'BHPT']
     df = pd.DataFrame(columns=columns)
     for line in buffer:
@@ -200,8 +205,7 @@ def load_wconinje(wells, buffer, **kwargs):
             break
         vals = line.split()[:len(columns)]
         full = [None] * len(columns)
-        full[0] = (wells._cache['DATES'][-1] if 'DATES' in wells._cache#pylint: disable=protected-access
-                   else pd.to_datetime(''))
+        full[0] = dates[-1] if not dates.empty else pd.to_datetime('')
         shift = 1
         for i, v in enumerate(vals):
             if i + shift >= len(columns):
@@ -222,9 +226,10 @@ def load_wconinje(wells, buffer, **kwargs):
         wells.update(welldata, mode='a', ignore_index=True)
     return wells
 
-def load_compdat(wells, buffer, **kwargs):
+def load_compdat(wells, buffer, meta, **kwargs):
     """Load COMPDAT table."""
     _ = kwargs
+    dates = meta['DATES']
     columns = ['DATE', 'WELL', 'I', 'J', 'K1', 'K2', 'MODE', 'Sat',
                'CF', 'DIAM', 'KH', 'SKIN', 'ND', 'DIR', 'Ro']
     df = pd.DataFrame(columns=columns)
@@ -236,8 +241,7 @@ def load_compdat(wells, buffer, **kwargs):
             break
         vals = line.split()
         full = [None] * len(columns)
-        full[0] = (wells._cache['DATES'][-1] if 'DATES' in wells._cache#pylint: disable=protected-access
-                   else pd.to_datetime(''))
+        full[0] = dates[-1] if not dates.empty else pd.to_datetime('')
         shift = 1
         for i, v in enumerate(vals):
             if '*' in v:

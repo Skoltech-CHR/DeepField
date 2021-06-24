@@ -24,7 +24,8 @@ from .tables import Tables
 from .rates import calc_rates, calc_rates_multiprocess
 
 from .decorators import state_check, cached_property
-from .parse_utils import tnav_ascii_parser, preprocess_path, read_dates_from_buffer, dates_to_str
+from .parse_utils import (tnav_ascii_parser, preprocess_path,
+                          dates_to_str, read_dates_from_buffer)
 from .plot_utils import lines_from_points
 
 from .template_models import (ORTHOGONAL_GRID, CORNERPOINT_GRID,
@@ -98,6 +99,7 @@ class Field:
         self._components = {}
         self._config = None
         self._meta = {'UNITS': 'METRIC',
+                      'DATES': pd.to_datetime([]),
                       'FLUIDS': [],
                       'HUNITS': DEFAULT_HUNITS['METRIC']}
         self._state = FieldState(self)
@@ -181,9 +183,7 @@ class Field:
     @property
     def start(self):
         """Model start time in a datetime format."""
-        if 'START' in self.meta:
-            return pd.to_datetime(self.meta['START'])
-        raise ValueError("Model start time is not set.")
+        return pd.to_datetime(self.meta['START'])
 
     @property
     def path(self):
@@ -273,13 +273,13 @@ class Field:
         self._components['tables'] = x
         return self
 
-    def get_spatial_connection_factors_and_perforation_ratio(self, subset=None, mode=None):
+    def get_spatial_connection_factors_and_perforation_ratio(self, date_range=None, mode=None):
         """Get model's connection factors and perforation ratios in a spatial form.
 
         Parameters
         ----------
-        subset: array-like or None
-            Subset of timesteps to pick. If None, picks all timesteps available.
+        date_range: tuple
+            Minimal and maximal dates for events.
         mode: str, None
             If not None, pick the blocks only with specified mode.
 
@@ -288,21 +288,23 @@ class Field:
         connection_factors: np.array
         perf_ratio: np.array
         """
-        return get_spatial_cf_and_perf(self, subset, mode=mode)
+        return get_spatial_cf_and_perf(self, date_range=date_range, mode=mode)
 
     @property
     def result_dates(self):
         """Result dates, actual if present, target otherwise."""
-        if 'wells' in self.components:
-            if np.any(['RESULTS' in node for node in self.wells]):
-                return self.wells.result_dates
-        if 'DATES' in self.meta:
-            return self.meta['DATES']
-        if 'wells' in self.components:
-            return self.wells.event_dates
-        return pd.to_datetime([])
+        dates = self.wells.result_dates
+        if not dates.empty:
+            return dates
+        if not self.meta['DATES'].empty:
+            dates = pd.DatetimeIndex([self.start]).append(self.meta['DATES'])
+        else:
+            dates = pd.DatetimeIndex([self.start]).append(self.wells.event_dates)
+        return pd.DatetimeIndex(dates.unique().date)
 
-    @cached_property
+    @cached_property(
+        lambda self, x: x.reshape(-1, order='F')[self.grid.actnum] if not self.state.spatial and x.ndim == 3 else x
+    )
     def well_mask(self):
         """Get the model's well mask in a spatial form.
 
@@ -387,11 +389,19 @@ class Field:
         for k in self._components.values():
             if isinstance(k, SpatialComponent):
                 k.set_state(spatial=False)
-        if 'wells' in self.components and 'grid' in self.components:
-            self.wells.add_welltrack(self.grid)
+
         loaded = self._check_loaded_attrs()
         if 'WELLS' in loaded and 'COMPDAT' in loaded['WELLS']:
             self.meta['MODEL_TYPE'] = 'ECL'
+            for node in self.wells:
+                for attr in ['COMPDAT', 'WCONPROD', 'WCONINJE']:
+                    if attr in node:
+                        df = getattr(node, attr)
+                        df['DATE'] = df['DATE'].fillna(self.start)
+                        df.sort_values(by='DATE', inplace=True)
+                        df.reset_index(drop=True, inplace=True)
+            if 'GRID' in loaded:
+                self.wells.add_welltrack(self.grid)
         else:
             self.meta['MODEL_TYPE'] = 'TN'
 
@@ -402,14 +412,6 @@ class Field:
                 self._logger.info(
                     ''.join(('Grid pillars (`COORD`) are mapped to new axis ',
                              'with respect to `MAPAXES`.')))
-
-        if 'wells' in self.components:
-            for node in self.wells:
-                if 'COMPDAT' in node.attributes:
-                    node.compdat['DATE'] = node.compdat['DATE'].fillna(
-                        pd.to_datetime(self.meta['START'])
-                    )
-                    node.compdat = node.compdat.sort_values(by='DATE').reset_index(drop=True)
 
         return self
 
@@ -475,16 +477,17 @@ class Field:
     def _load_hdf5(self, raise_errors):
         """Load model in HDF5 format."""
         with h5py.File(self.path, 'r') as f:
-            if 'FLUIDS' not in list(f.attrs.keys()):
-                self.meta['FLUIDS'] = ['OIL', 'GAS', 'WATER', 'DISGAS']
-                self._logger.warning("FLUIDS are not found, set default ['OIL', 'GAS', 'WATER', 'DISGAS'].")
             for k, v in f.attrs.items():
                 if k == 'DATES':
-                    v = pd.DatetimeIndex(v)
-                self.meta[k] = v
+                    self.meta['DATES'] = pd.to_datetime(v)
+                else:
+                    self.meta[k] = v
         for comp, config in self._config.items():
-            getattr(self, comp).load(self.path, attrs=config['attrs'], raise_errors=raise_errors,
-                                     logger=self._logger, **config['kwargs'])
+            getattr(self, comp).load(self.path,
+                                     attrs=config['attrs'],
+                                     raise_errors=raise_errors,
+                                     logger=self._logger,
+                                     **config['kwargs'])
         return self
 
     def _load_binary(self, raise_errors):
@@ -506,8 +509,8 @@ class Field:
     def _load_data(self, raise_errors=False, include_binary=True):
         """Load model in DATA format."""
         loaders = {}
-        for k in ['TITLE', 'START', 'METRIC', 'FIELD', 'HUNI', 'HUNITS',
-                  'OIL', 'GAS', 'WATER', 'DISGAS', 'VAPOIL', 'ARRA', 'ARRAY']:
+        for k in ['ARRA', 'ARRAY', 'DATES', 'TITLE', 'START', 'METRIC', 'FIELD',
+                  'HUNI', 'HUNITS', 'OIL', 'GAS', 'WATER', 'DISGAS', 'VAPOIL']:
             loaders[k] = partial(self._read_buffer, attr=k, logger=self._logger)
 
         if include_binary:
@@ -527,8 +530,6 @@ class Field:
                 for k in attrs:
                     if k in ['PERF', 'EVENTS']:
                         extented_list.extend(['EFIL', 'EFILE', 'ETAB'])
-                    elif k == 'COMPDAT':
-                        extented_list.extend(['DATES', 'COMPDAT', 'WELSPECS'])
                     elif k == 'HISTORY':
                         extented_list.extend(['HFIL', 'HFILE'])
                     elif k == 'WELLTRACK':
@@ -541,7 +542,8 @@ class Field:
                     extented_list.extend(['GROU', 'GROUP', 'GRUPTREE'])
 
                 for k in set(extented_list):
-                    loaders[k] = partial(self.wells.load, attr=k, logger=self._logger, **kwargs)
+                    loaders[k] = partial(self.wells.load, attr=k, logger=self._logger,
+                                         meta=self.meta, **kwargs)
 
                 if 'RESULTS' in attrs:
                     path_to_results = os.path.join(os.path.dirname(self.path), 'RESULTS')
@@ -575,16 +577,18 @@ class Field:
         """Load model meta attributes."""
         if attr in ['TITLE', 'START']:
             self.meta[attr] = next(buffer).split('/')[0].strip(' \t\n\'\""')
+        elif attr == 'DATES':
+            date = pd.to_datetime(next(buffer).split('/')[:1])
+            self.meta['DATES'] = self.meta['DATES'].append(date)
+        elif attr in ['ARRA', 'ARRAY']:
+            dates = read_dates_from_buffer(buffer, attr, logger)
+            self.meta['DATES'] = self.meta['DATES'].extend(dates)
         elif attr in ['METRIC', 'FIELD']:
             self.meta['UNITS'] = attr
         elif attr in ['HUNI', 'HUNITS']:
             self._read_hunits(next(buffer))
         elif attr in ['OIL', 'GAS', 'WATER', 'DISGAS', 'VAPOIL']:
             self.meta['FLUIDS'].append(attr)
-        elif attr in ['ARRA', 'ARRAY']:
-            dates = read_dates_from_buffer(buffer, attr, logger)
-            if dates is not None:
-                self.meta['DATES'] = dates
         else:
             raise NotImplementedError("Keyword {} is not supported.".format(attr))
         return self
@@ -605,9 +609,19 @@ class Field:
         return self
 
     def _check_loaded_attrs(self):
-        """Collect loaded attributes."""
+        """Collect loaded attributes and fill defaults for missing ones."""
         out = {}
         self._logger.info("===== Field summary =====")
+        if 'START' not in self.meta:
+            self._meta['START'] = '1 JAN 1973' #default ECLIPSE/tNavigator start date
+            self._logger.warning("Missed start date, set default 1 JAN 1973.")
+        if 'FLUIDS' not in self.meta:
+            self._meta['FLUIDS'] = ['OIL', 'GAS', 'WATER', 'DISGAS']
+            self._logger.warning("FLUIDS are not found, set default ['OIL', 'GAS', 'WATER', 'DISGAS'].")
+        if not self.meta['DATES'].empty:
+            dates = pd.DatetimeIndex([self.start]).append(self.meta['DATES'])
+            if not ((dates[1:] - dates[:-1]) > pd.Timedelta(0)).all():
+                self._logger.error('Start date and DATES are not monotone.')
         for comp in self.components:
             if comp == 'wells':
                 attrs = []
@@ -670,7 +684,7 @@ class Field:
                 os.mkdir(dir_path)
             if data:
                 self._dump_ascii(dir_path, title=title, **kwargs)
-            if results and len(self.wells.result_dates):
+            if results and not self.wells.result_dates.empty:
                 self._dump_binary_results(dir_path, mode, title=title)
         else:
             raise NotImplementedError('Format {} is not supported.'.format(fmt))
@@ -709,9 +723,10 @@ class Field:
         }
         with h5py.File(path, mode) as f:
             for k, v in self.meta.items():
-                if isinstance(v, pd.DatetimeIndex):
-                    v = [str(i) for i in v]
-                f.attrs[k] = v
+                if k == 'DATES':
+                    f.attrs['DATES'] = [str(d) for d in v]
+                else:
+                    f.attrs[k] = v
         for k, comp in self.items():
             if k == 'states':
                 comp.dump(path=path, mode='a', float_dtype=float_precision.get(k, None),
@@ -807,7 +822,8 @@ class Field:
 
         for attr in attrs:
             inc = os.path.join('INCLUDE', attr + '.inc')
-            self.wells.dump(os.path.join(dir_path, inc), attr=attr, grid=self.grid)
+            self.wells.dump(os.path.join(dir_path, inc), attr=attr, grid=self.grid,
+                            dates=self.result_dates, start_date=self.start)
             fill_values[attr] = inc
 
         tmp = ''
@@ -860,8 +876,8 @@ class Field:
         if not os.path.exists(dir_res):
             os.mkdir(dir_res)
 
-        grid_dim = self.states.soil.shape[1:]
-        time_size = self.states.soil.shape[0]
+        grid_dim = self.grid.dimens
+        time_size = self.states.n_timesteps
 
         dir_name = os.path.join(dir_res, title)
 
@@ -888,15 +904,8 @@ class Field:
 
         egrid.save_egrid(self.grid.as_corner_point, dir_name, grid_dim, grid_format, mode)
 
-        init.save_init(self.rock,
-                       dir_name,
-                       grid_dim,
-                       self.grid.actnum.sum(),
-                       units_type,
-                       grid_type,
-                       self.start,
-                       i_phase,
-                       mode)
+        init.save_init(self.rock, dir_name, grid_dim, self.grid.actnum.sum(),
+                       units_type, grid_type, self.start, i_phase, mode)
 
         is_unified = True
 
@@ -931,22 +940,15 @@ class Field:
             rates[well]['wopr'] = curr_rates['WOPR'].values.astype('float64')
             rates[well]['wgpr'] = curr_rates['WGPR'].values.astype('float64')
 
-        summary.save_summary(is_unified,
-                             dir_name,
-                             rates,
-                             self.result_dates,
-                             grid_dim,
-                             mode,
-                             self._logger)
+        summary.save_summary(is_unified, dir_name, rates, self.result_dates,
+                             grid_dim, mode, self._logger)
         return self
 
-    def calculate_rates(self, timesteps=None, wellnames=None, cf_aggregation='sum', multiprocessing=True, verbose=True):
+    def calculate_rates(self, wellnames=None, cf_aggregation='sum', multiprocessing=True, verbose=True):
         """Calculate oil/water/gas rates for each well segment.
 
         Parameters
         ----------
-        timesteps : list of pd.Timestamps
-            Dates to calculate rates for.
         wellnames : list of str
             Wellnames for rates calculation. If None, all wells are included. Default to None.
         cf_aggregation: str, 'sum' or 'eucl'
@@ -958,8 +960,7 @@ class Field:
         block_rates : pd.DataFrame of ndarrays
             pd.Dataframe filled with arrays of production rates in each grid block.
         """
-        if timesteps is None:
-            timesteps = self.result_dates
+        timesteps = self.result_dates
         if wellnames is None:
             wellnames = self.wells.names
         if multiprocessing:
@@ -984,8 +985,6 @@ class Field:
                 new_results = node.history.rename(columns=rename)[['DATE'] + list(rename.values())]
                 node.results = new_results.drop_duplicates(subset='DATE')
                 node.results = node.results.reset_index(drop=True)
-        self.meta['DATES'] = self.result_dates
-        self.meta['START'] = self.meta['DATES'][0].strftime('%-d %b %Y').upper()
         return self
 
     # pylint: disable=protected-access

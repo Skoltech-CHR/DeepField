@@ -1,5 +1,4 @@
 """Dump tools."""
-import numpy as np
 import pandas as pd
 
 PERF_VALUE_COLUMNS = ['RAD', 'DIAM', 'SKIN', 'MULT']
@@ -18,9 +17,6 @@ def write_perf(f, wells, defaults):
         df = pd.concat(dfs, sort=False)
     else:
         return
-
-    if 'COVERED' in df: #TODO: this should not happen at all
-        df.drop('COVERED', axis=1, inplace=True)
 
     f.write('EFORm WELL \'DD.MM.YYYY\' MDL MDU ' +
             ' '.join([c for c in df if c in PERF_VALUE_COLUMNS]) + '\n')
@@ -92,8 +88,9 @@ def write_events(f, wells, value_control_kw):
         f.write(df_mode.to_string(header=False, index=False, index_names=False) + '\n')
     f.write('ENDE\n')
 
-def write_schedule(f, wells):
+def write_schedule(f, wells, dates, start_date, **kwargs):
     """Write SCHEDULE file."""
+    _ = kwargs
     dfc = []
     dfp = []
     dfi = []
@@ -104,62 +101,31 @@ def write_schedule(f, wells):
             dfp.append(node.wconprod)
         if 'WCONINJE' in node.attributes:
             dfi.append(node.wconinje)
-    if not dfc:
-        return
 
-    dfc = pd.concat(dfc, sort=False)
+    dfc = pd.concat(dfc, sort=False) if dfc else pd.DataFrame(columns=['DATE'])
     dfp = pd.concat(dfp, sort=False) if dfp else pd.DataFrame(columns=['DATE'])
     dfi = pd.concat(dfi, sort=False) if dfi else pd.DataFrame(columns=['DATE'])
 
     for df in [dfc, dfp, dfi]:
         df['END_LINE'] = '/'
 
-    def write_group(group):
+    def write_group(df, date, attr):
+        group = df.loc[df['DATE'] == date]
+        if group.empty:
+            return
+        f.write('{}\n'.format(attr))
         group = group.drop('DATE', axis=1).fillna('1*')
         f.write(group.to_string(header=False, index=False, index_names=False) + '\n')
         f.write('/\n\n')
 
-    group = dfc.loc[dfc['DATE'].isna()]
-    if not group.empty:
-        f.write('COMPDAT\n')
-        write_group(group)
+    for i, date in enumerate(dates):
+        str_date = date.strftime('%d %b %Y').upper()
+        if not (i == 0 and start_date.date() == date.date()):
+            f.write('DATES\n{} /\n/\n\n'.format(str_date))
 
-    group = dfp.loc[dfp['DATE'].isna()]
-    if not group.empty:
-        f.write('WCONPROD\n')
-        write_group(group)
-
-    group = dfi.loc[dfi['DATE'].isna()]
-    if not group.empty:
-        f.write('WCONINJE\n')
-        write_group(group)
-
-    dates = (list(dfc['DATE'].dropna()) +
-             list(dfp['DATE'].dropna()) +
-             list(dfi['DATE'].dropna()))
-    dates = np.unique(dates)
-    dates.sort()
-
-    for date in dates:
-        if date == dates[0]:
-            f.write('DATES\n{} 00:00:00.001 /\n/\n\n'
-                    .format(date.strftime('%d %b %Y')).upper())
-        else:
-            f.write('DATES\n{} /\n/\n\n'.format(date.strftime('%d %b %Y')).upper())
-        group = dfc.loc[dfc['DATE'].values == date]
-        if not group.empty:
-            f.write('COMPDAT\n')
-            write_group(group)
-
-        group = dfp.loc[dfp['DATE'].values == date]
-        if not group.empty:
-            f.write('WCONPROD\n')
-            write_group(group)
-
-        group = dfi.loc[dfi['DATE'].values == date]
-        if not group.empty:
-            f.write('WCONINJE\n')
-            write_group(group)
+        write_group(dfc, date, 'COMPDAT')
+        write_group(dfp, date, 'WCONPROD')
+        write_group(dfi, date, 'WCONINJE')
 
 def write_welspecs(f, wells):
     """Write WELSPECS to file."""

@@ -46,7 +46,7 @@ class ToTensor(Transform):
         out = sample if inplace else sample.empty_like()
         for comp, value in sample.items():
             if isinstance(value, (dict, BaseComponent)):
-                out[comp] = self(value)
+                out[comp] = self(value, inplace=inplace)
             else:
                 out[comp] = torch.from_numpy(value).float()
         return out

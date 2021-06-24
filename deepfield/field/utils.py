@@ -361,15 +361,14 @@ def get_spatial_perf(field, subset=None, mode=None):
         field.wells.apply_perforations()
     return perf
 
-# pylint: disable=too-many-nested-blocks
-def get_spatial_cf_and_perf(field, subset=None, mode=None):
+def get_spatial_cf_and_perf(field, date_range=None, mode=None):
     """Get model's connection factors and perforation ratios in a spatial form.
 
     Parameters
     ----------
     field: Field
-    subset: array-like or None
-        Subset of timesteps to pick. If None, picks all timesteps available.
+    date_range: tuple
+        Minimal and maximal dates for events.
     mode: str, None
         If not None, pick the blocks only with specified mode.
 
@@ -380,27 +379,23 @@ def get_spatial_cf_and_perf(field, subset=None, mode=None):
     """
     spatial = field.state.spatial
     full_perforation = field.wells.state.full_perforation
-    if subset is None:
-        n_ts = len(field.wells.event_dates)
-    else:
-        n_ts = len(subset) - 1
+
+    prehistory, dates = get_control_interval_dates(field, date_range)
 
     spatial_dims = tuple(field.grid.dimens) if spatial else (np.sum(field.grid.actnum),)
 
-    cf = np.zeros((n_ts, 1) + spatial_dims)
-    perf = np.zeros((n_ts, 1) + spatial_dims)
+    cf = np.zeros((len(prehistory) + len(dates), 1) + spatial_dims)
+    perf = np.zeros((len(prehistory) + len(dates), 1) + spatial_dims)
 
-    event_dates = field.wells.event_dates
-
-    for t in range(n_ts):
-        field.wells.apply_perforations(event_dates[t])
+    for i, date in enumerate(dates):
+        field.wells.apply_perforations(date)
         field.wells.calculate_cf(field.rock, field.grid, units=field.meta.get('UNITS', 'METRIC'))
         for well in field.wells:
             if well.is_main_branch:
                 if mode is not None:
                     if not hasattr(well, 'events'):
                         continue
-                    mode_at_ts = well.events[well.events['DATE'] == event_dates[t]]['MODE']
+                    mode_at_ts = well.events[well.events['DATE'] == date]['MODE']
                     if len(mode_at_ts) == 0 or not (mode_at_ts == mode.upper()).all():
                         continue
                 for branch in PreOrderIter(well):
@@ -414,12 +409,14 @@ def get_spatial_cf_and_perf(field, subset=None, mode=None):
                     cf_ind, connection_factors = _remove_repeating_blocks(cf_ind, connection_factors)
 
                     if perf_ind.shape[0]:
+                        cf_mask = np.stack([(ind.reshape(1, -1) == perf_ind).all(axis=1).any() for ind in cf_ind])
                         if spatial:
-                            perf[t, 0, perf_ind[:, 0], perf_ind[:, 1], perf_ind[:, 2]] = perf_ratio
-                            cf[t, 0, cf_ind[:, 0], cf_ind[:, 1], cf_ind[:, 2]] = connection_factors
+                            perf[i + len(prehistory), 0, perf_ind[:, 0], perf_ind[:, 1], perf_ind[:, 2]] = perf_ratio
+                            cf[i + len(prehistory), 0, perf_ind[:, 0], perf_ind[:, 1], perf_ind[:, 2]] = \
+                                connection_factors[cf_mask]
                         else:
-                            perf[t, perf_ind] = perf_ratio
-                            cf[t, perf_ind] = connection_factors
+                            perf[i + len(prehistory), perf_ind] = perf_ratio
+                            cf[i + len(prehistory), perf_ind] = connection_factors[cf_mask]
     if full_perforation:
         field.wells.apply_perforations()
     return cf, perf

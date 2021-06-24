@@ -234,11 +234,11 @@ class LatentSpaceDynamics(BaseModel):
             rs_i = buffer[-1][1].detach()
             rs_i.requires_grad = True
 
-            t_i = time[:, i:i+2].to(device)
-
+            t_i = time[:, i:i+2]
             c_i, ct_i = self.get_control_subset(control, control_t, (t_i[0, 0], t_i[0, -1]))
             c_i, ct_i = c_i.to(device), ct_i.to(device)
             rc_i = self.control_enc(c_i, *args, **ae_kwargs)
+            t_i = t_i.to(device)
 
             # TODO it is possible to do graph savings in a better way
             # https://stackoverflow.com/questions/50741344/pytorch-when-using-backward-how-can-i-retain-only-part-of-the-graph
@@ -266,7 +266,7 @@ class LatentSpaceDynamics(BaseModel):
 
             _adjust_args_length(
                 targets, outputs, ae_outputs, latent_targets, latent_outputs,
-                max_len=(tbptt_step if not tbptt_loss_between_steps else 1)
+                max_len=(tbptt_step if tbptt_loss_between_steps else 1)
             )
 
             buffer.append((rs_i, next_rs))

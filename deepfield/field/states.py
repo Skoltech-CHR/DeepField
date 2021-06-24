@@ -269,7 +269,7 @@ class States(SpatialComponent):
             state = read_ecl_bin(path, attrs, logger=logger)
             for attr, x in state.items():
                 if attr not in states:
-                    states[attr] = []
+                    states[attr] = [x]
                 else:
                     states[attr].append(x)
         logger.info('Finish reading X files.')

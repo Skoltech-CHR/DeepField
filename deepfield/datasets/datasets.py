@@ -37,17 +37,17 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
                 'GRID': [],
                 'ROCK': ['PORO', 'PERMX', 'PERMY', 'PERMZ'],
                 'STATES': ['PRESSURE', 'RS', 'SGAS', 'SOIL', 'SWAT'],
-                'CONTROL': ['BHPT', 'WWIR'],
+                'CONTROL': ['BHPT'],
     }
 
     _attrs_sampled_as_dict = ('MASKS', 'GRID', 'TABLES')
 
     def __init__(self, src, sample_attrs=None, fmt=('dat', 'data', 'hdf5'), subset_generator=None,
-                 unravel_model=None, from_samples=False):
+                 unravel_model=None, from_samples=False, allow_change_preloaded=False):
         """
         Parameters
         ----------
-        src: str, Field or list of Fields
+        src: str, Field, FieldSample or list of Fields or FieldSamples
             Path to a directory containing fields for the dataset or preloaded Fields
         sample_attrs: dict
             Attributes to be represented in samples
@@ -84,6 +84,7 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
         self._sample_attrs = None
         self.sample_attrs = sample_attrs if sample_attrs is not None else self.default_sample_attrs
         self.from_samples = from_samples
+        self.allow_change_preloaded = allow_change_preloaded
 
         self.config = get_config()
         # TODO make config dependent on the sample attrs
@@ -174,6 +175,8 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
         if self.preloaded is None:
             model = self._load_model(idx, config)
         else:
+            if isinstance(self.preloaded[idx], FieldSample):
+                return self.preloaded[idx]
             model = self._get_preloaded(idx)
 
         sample = {}
@@ -214,12 +217,28 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
     def _get_preloaded(self, idx):
         """Get a field from preloaded."""
         model = self.preloaded[idx]
-        assert model.state.spatial == self.unravel_model
-        if 'CONTROL' in self.sample_attrs:
-            assert model.wells.state.all_tracks_complete
-            assert model.wells.state.has_blocks
-            assert model.wells.state.full_perforation
-            assert model.wells.state.all_tracks_inside
+        if self.allow_change_preloaded:
+            if model.state.spatial != self.unravel_model:
+                if self.unravel_model:
+                    model.to_spatial()
+                else:
+                    model.ravel()
+            if 'CONTROL' in self.sample_attrs:
+                if not model.wells.state.all_tracks_complete:
+                    model.wells.drop_incomplete()
+                if not model.wells.state.has_blocks:
+                    model.wells.get_wellblocks(model.grid)
+                if not model.wells.state.full_perforation:
+                    model.wells.apply_perforations()
+                if not model.wells.state.all_tracks_inside:
+                    model.wells.drop_outside()
+        else:
+            assert model.state.spatial == self.unravel_model
+            if 'CONTROL' in self.sample_attrs:
+                assert model.wells.state.all_tracks_complete
+                assert model.wells.state.has_blocks
+                assert model.wells.state.full_perforation
+                assert model.wells.state.all_tracks_inside
         return model
 
     def _load_model(self, idx, config=None, force_wells_calculations=False):
@@ -342,15 +361,29 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
     def _get_connection_factors(self, model, sequence_subset=None, **kwargs):
         # FIXME calls the field's method twice
         _ = kwargs
+        if sequence_subset is not None:
+            res_dates = model.result_dates
+            if res_dates.size:
+                res_dates = res_dates[sequence_subset]
+            date_range = (res_dates[0], res_dates[-1])
+        else:
+            date_range = None
         if hasnested(self.sample_attrs, 'MASKS', 'CF_MASK'):
-            return model.get_spatial_connection_factors_and_perforation_ratio(sequence_subset)[0]
+            return model.get_spatial_connection_factors_and_perforation_ratio(date_range=date_range)[0]
         return None
 
     def _get_perforation_mask(self, model, sequence_subset=None, **kwargs):
         # FIXME calls the field's method twice
         _ = kwargs
+        if sequence_subset is not None:
+            res_dates = model.result_dates
+            if res_dates.size:
+                res_dates = res_dates[sequence_subset]
+            date_range = (res_dates[0], res_dates[-1])
+        else:
+            date_range = None
         if hasnested(self.sample_attrs, 'MASKS', 'PERF_MASK'):
-            return model.get_spatial_connection_factors_and_perforation_ratio(sequence_subset)[1]
+            return model.get_spatial_connection_factors_and_perforation_ratio(date_range=date_range)[1]
         return None
 
     @staticmethod

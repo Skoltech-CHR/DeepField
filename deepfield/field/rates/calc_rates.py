@@ -29,7 +29,7 @@ def find_control(model, curr_date, wname):
     p_bh = 0
     well_mode = ''
     status = 'CLOSED'
-    if not 'EVENTS' in well:
+    if (not 'EVENTS' in well) or well.events.empty:
         return p_bh, well_mode, status
     mask = well.events['DATE'] < curr_date
     if not mask.any():
@@ -141,7 +141,7 @@ def launch_calculus(model, timesteps, wellname, cf_aggregation='sum', queue=None
         if len(well.perf) == 0:
             return
     well.blocks_info['PERF_RATIO'] = 0.
-    if set(('OIL', 'WATER', 'GAS', 'DISGAS')) == fluids:
+    if fluids == set(('OIL', 'WATER', 'GAS', 'DISGAS')):
         for t, curr_date in enumerate(timesteps):
             rates_oil_disgas(model, t, curr_date, wellname, units, g_const, cf_aggregation)
 
@@ -154,11 +154,11 @@ def launch_calculus(model, timesteps, wellname, cf_aggregation='sum', queue=None
 def calc_rates_multiprocess(model, timesteps, wellnames, cf_aggregation='sum', verbose=True):
     """Run multiprocessed calculation of rates."""
     readers = []
-
     for name in wellnames:
         r, w = multiprocessing.Pipe(duplex=False)
         readers.append(r)
-        p = multiprocessing.Process(target=launch_calculus, args=(model, timesteps, name, cf_aggregation, w))
+        p = multiprocessing.Process(target=launch_calculus,
+                                    args=(model, timesteps, name, cf_aggregation, w))
         p.start()
         w.close()
     reader_counter = 0

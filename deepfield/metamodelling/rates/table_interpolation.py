@@ -155,7 +155,11 @@ def _relative_perm_table_interpolator(table):
 
 
 def _split_pvto(table):
-    rs_set = torch.unique(table[:, 0], sorted=True)
+    rs_set = []
+    for rs in table[:, 0]:
+        if rs not in rs_set:
+            rs_set.append(rs)
+    rs_set = torch.stack(rs_set)
     branches = []
     saturated = []
     for rs in rs_set:

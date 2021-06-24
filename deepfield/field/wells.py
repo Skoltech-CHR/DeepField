@@ -51,7 +51,6 @@ class Wells(BaseComponent):
         super().__init__(**kwargs)
         self._root = WellSegment(name='FIELD', is_group=True) if node is None else node
         self._resolver = Resolver()
-        self._cache = {}
         self.init_state(has_blocks=False,
                         has_cf=False,
                         spatial=True,
@@ -435,9 +434,6 @@ class Wells(BaseComponent):
                                              logger=logger, **kwargs)
             xyz_block, h_well, welltr_block_md, inters = output
 
-
-
-
             if len(h_well) > 0:
                 if np.isclose(h_well[-1], 0).all():
                     if logger is not None:
@@ -462,8 +458,7 @@ class Wells(BaseComponent):
                 SKIN=np.nan if len(segment.blocks_info) == 0 else DEFAULTS['SKIN'],
                 MULT=np.nan if len(segment.blocks_info) == 0 else DEFAULTS['MULT'],
             )
-            if 'PERF' in segment.attributes:
-                segment.perf = segment.perf.assign(COVERED=np.nan if len(segment.perf) == 0 else 0)
+
         self.set_state(has_blocks=True,
                        has_cf=False,
                        all_tracks_inside=False,
@@ -495,7 +490,7 @@ class Wells(BaseComponent):
     @state_check(lambda state: state.full_perforation)
     @apply_to_each_segment
     def compute_events(self, segment, grid, attr='EVENTS'):
-        """Make events from WCONPROD.
+        """Make events from WCONPROD and WCONINJE if present.
 
         Parameters
         ----------
@@ -509,21 +504,37 @@ class Wells(BaseComponent):
         wells : Wells
             Wells with an event attribute added.
         """
-        if 'WCONPROD' not in segment:
+        if 'wconprod' not in segment and 'wconinje' not in segment:
             return self
-        df = pd.DataFrame(columns=['DATE', 'MODE', 'DREF', 'WIT', 'BHPT', 'LPT'])
+        df = pd.DataFrame(columns=['DATE', 'MODE', 'DREF', 'GIT', 'WIT', 'BHPT', 'LPT'])
         if segment.perforated_blocks().size == 0:
             setattr(segment, attr, df)
             return self
-        wconprod = segment.wconprod.sort_values('DATE')
-        df['DATE'] = wconprod['DATE']
+        wconprod = segment.wconprod if 'wconprod' in segment else pd.DataFrame()
+        wconinje = segment.wconinje if 'wconinje' in segment else pd.DataFrame()
+        wcon = pd.concat([wconprod, wconinje])
+        if wcon.empty:
+            setattr(segment, attr, df)
+            return self
+        wcon = wcon.sort_values('DATE').reset_index(drop=True)
+        df['DATE'] = wcon['DATE']
         dref_index = np.argmin(segment.perforated_blocks()[:, 2])
         dref_index = segment.perforated_blocks()[:, :3][dref_index]
         df['DREF'] = grid.cell_centroids[dref_index[0], dref_index[1], dref_index[2]][2]
 
-        df['MODE'] = wconprod['MODE'].replace('OPEN', 'PROD')
-        df['LPT'] = wconprod['LPT']
-        df['BHPT'] = wconprod['BHPT']
+        df['MODE'] = wcon['MODE']
+        mask = wcon['CONTROL'] == 'RATE'
+        df.loc[mask, 'MODE'] = df.loc[mask, 'MODE'].replace('OPEN', 'INJE')
+        df.loc[~mask, 'MODE'] = df.loc[~mask, 'MODE'].replace('OPEN', 'PROD')
+        df['BHPT'] = wcon['BHPT']
+        if 'LPT' in wcon:
+            df['LPT'] = wcon['LPT']
+        if 'PHASE' in wcon:
+            mask = wcon['PHASE'] == 'WATER'
+            df.loc[mask, 'WIT'] = wcon.loc[mask, 'SPIT']
+            mask = wcon['PHASE'] == 'GAS'
+            df.loc[mask, 'GIT'] = wcon.loc[mask, 'SPIT']
+
         setattr(segment, attr, df)
         return self
 
@@ -551,41 +562,53 @@ class Wells(BaseComponent):
         """
         if 'RESULTS' not in segment.attributes:
             return self
-        df = pd.DataFrame(columns=['DATE', 'MODE', 'DREF', 'WIT', 'BHPT', 'LPT'])
-        if ((segment.perforated_blocks().size == 0) or 'WWIR' not in segment.results or
-                len(segment.results['DATE']) < 2):
+        df = pd.DataFrame(columns=['DATE', 'MODE', 'DREF', 'WIT', 'BHPT', 'LPT', 'GIT'])
+        if segment.perforated_blocks().size == 0 or segment.results.empty:
             setattr(segment, attr, df)
             return self
-        df['DATE'] = segment.results['DATE'][:-1]
-        results_tmp = segment.results[1:].reset_index()
+
+        results = segment.results.sort_values('DATE')
+        results['DATE'] = results['DATE'].dt.date
+        results = results.drop_duplicates(subset='DATE', keep='last', ignore_index=True)
+        df['DATE'] = results['DATE'][:-1]
+        results = results[1:].reset_index(drop=True)
         dref_index = np.argmin(segment.perforated_blocks()[:, 2])
         dref_index = segment.perforated_blocks()[:, :3][dref_index]
         df['DREF'] = grid.cell_centroids[dref_index[0], dref_index[1], dref_index[2]][2]
 
-        mask_inje = (results_tmp['WWIR'] > 0).values
-        df.loc[mask_inje, 'WIT'] = results_tmp.loc[mask_inje, 'WWIR']
-        df.loc[mask_inje, 'MODE'] = 'INJE'
+        if 'WWIR' in results:
+            mask_inje_water = (results['WWIR'] > 0).values
+            df.loc[mask_inje_water, 'WIT'] = results.loc[mask_inje_water, 'WWIR']
+            df.loc[mask_inje_water, 'MODE'] = 'INJE'
+        else:
+            mask_inje_water = np.zeros(df['DATE'].shape, bool)
 
-        if 'WBHP' in results_tmp and production_mode == 'BHPT':
-            mask_prod = (results_tmp['WBHP'] > 0).values & ~mask_inje & (
-                (results_tmp['WOPR'] > 0) |
-                (results_tmp['WWPR'] > 0) |
-                (results_tmp['WGPR'] > 0)).values
-            df.loc[mask_prod, 'BHPT'] = results_tmp.loc[mask_prod, 'WBHP']
+        if 'WGIR' in results:
+            mask_inje_gas = (results['WGIR'] > 0).values
+            df.loc[mask_inje_gas, 'GIT'] = results.loc[mask_inje_gas, 'WGIR']
+            df.loc[mask_inje_gas, 'MODE'] = 'INJE'
+        else:
+            mask_inje_gas = np.zeros(df['DATE'].shape, bool)
+
+        if 'WBHP' in results and production_mode == 'BHPT':
+            mask_prod = (results['WBHP'] > 0).values & ~mask_inje_water & ~mask_inje_gas & (
+                (results['WOPR'] > 0) |
+                (results['WWPR'] > 0) |
+                (results['WGPR'] > 0)).values
+            df.loc[mask_prod, 'BHPT'] = results.loc[mask_prod, 'WBHP']
             df.loc[mask_prod, 'MODE'] = 'PROD'
-        elif set(('WBHP', 'WOPR', 'WWPR')).issubset(set(results_tmp)) and production_mode == 'LPT':
-            mask_prod = (results_tmp['WBHP'] > 0).values & ~mask_inje & (
-                (results_tmp['WOPR'] > 0) |
-                (results_tmp['WWPR'] > 0) |
-                (results_tmp['WGPR'] > 0)).values
-            df.loc[mask_prod, 'LPT'] = results_tmp.loc[mask_prod, 'WOPR'] + results_tmp.loc[mask_prod, 'WWPR']
+        elif set(('WBHP', 'WOPR', 'WWPR')).issubset(set(results)) and production_mode == 'LPT':
+            mask_prod = (results['WBHP'] > 0).values & ~mask_inje_water & (
+                (results['WOPR'] > 0) |
+                (results['WWPR'] > 0) |
+                (results['WGPR'] > 0)).values
+            df.loc[mask_prod, 'LPT'] = results.loc[mask_prod, ['WOPR', 'WWPR']].sum(axis=1)
             df.loc[mask_prod, 'MODE'] = 'PROD'
         else:
             mask_prod = False
-        mask_stop = ~mask_prod & ~mask_inje
+        mask_stop = ~mask_prod & ~mask_inje_water & ~mask_inje_gas
         df.loc[mask_stop, 'MODE'] = 'STOP'
 
-        df = df.sort_values('DATE').reset_index(drop=True)
         if drop_duplicates:
             arr = df.values.astype('str')
             ind_to_drop = np.where((arr[:-1, 1:] == arr[1:, 1:]).all(axis=1))[0] + 1
@@ -597,6 +620,7 @@ class Wells(BaseComponent):
 
         columns = ['DATE', 'WELL', 'MODE', 'CONTROL',
                    'OPT', 'WPT', 'GPT', 'SLPT', 'LPT', 'BHPT']
+
         wconprod = pd.DataFrame(columns=columns)
 
         mask_prod = (df['MODE'] != 'INJE').values
@@ -615,10 +639,25 @@ class Wells(BaseComponent):
         else:
             raise ValueError('Unknown production mode {}'.format(production_mode))
 
+        columns = ['DATE', 'WELL', 'PHASE', 'MODE', 'CONTROL', 'SPIT', 'PIT', 'BHPT']
+        wconinje = pd.DataFrame(columns=columns)
+        mask_inje = (df['MODE'] == 'INJE').values
+        inje = df[mask_inje]
+        wconinje['DATE'] = inje['DATE']
+        wconinje['WELL'] = segment.name
+        wconinje['MODE'] = 'OPEN'
+        wconinje['CONTROL'] = 'RATE'
+        wconinje.loc[inje['GIT'] > 0, 'PHASE'] = 'GAS'
+        wconinje.loc[inje['WIT'] > 0, 'PHASE'] = 'WATER'
+        wconinje.loc[wconinje['PHASE'] == 'GAS', 'SPIT'] = inje['GIT']
+        wconinje.loc[wconinje['PHASE'] == 'WATER', 'SPIT'] = inje['WIT']
+
         first_date = segment.compdat['DATE'].dropna().min()
-        wconprod = wconprod.loc[wconprod['DATE'] >= first_date]
+        wconprod = wconprod.loc[wconprod['DATE'] >= first_date].reset_index(drop=True)
+        wconinje = wconinje.loc[wconinje['DATE'] >= first_date].reset_index(drop=True)
 
         setattr(segment, 'WCONPROD', wconprod)
+        setattr(segment, 'WCONINJE', wconinje)
         return self
 
     @apply_to_each_segment
@@ -942,10 +981,6 @@ class Wells(BaseComponent):
         """
         if attr == 'WELSPECS':
             return load_welspecs(self, buffer, **kwargs)
-        if attr == 'DATES':
-            date = pd.to_datetime(next(buffer).split('/')[:1])
-            self._cache['DATES'] = self._cache.get('DATES', pd.DatetimeIndex([])).append(date)
-            return self
         if attr == 'COMPDAT':
             return load_compdat(self, buffer, **kwargs)
         if attr == 'WCONPROD':
@@ -1081,7 +1116,7 @@ class Wells(BaseComponent):
             elif attr.upper() == 'EVENTS':
                 write_events(f, self, VALUE_CONTROL)
             elif attr.upper() == 'SCHEDULE':
-                write_schedule(f, self)
+                write_schedule(f, self, **kwargs)
             elif attr.upper() == 'WELSPECS':
                 write_welspecs(f, self)
             else:

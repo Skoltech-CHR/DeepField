@@ -19,11 +19,13 @@ def init_metamodel(autoenc_path=None, lsd_path=None, device=None, use_norm_state
                    use_norm_params=True, use_norm_control=False,
                    s_ch=5, params_ch=4, control_ch=1, z_ch=32,
                    max_integration_timestep=1000, use_checkpointing=True,
-                   use_inner_checkpointing=True, max_in_batch=1, max_seq_len=15, atol=1e-3):
+                   use_inner_checkpointing=None, max_in_batch=1, max_seq_len=15, atol=1e-3):
     """Build and load metamodel."""
     n_layers = 4
     if device is None:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    if use_inner_checkpointing is None:
+        use_inner_checkpointing = use_checkpointing
 
     state_enc = sequential_factory(
         n_layers, nn.Conv3d, s_ch, [8, 16, 32, 32], kernel_size=[3, 2, 3, 2],

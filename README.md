@@ -81,7 +81,7 @@ with conventional software.
 
 Plain
 ```
-Illarionov, E., et al. "End-to-end neural network approach to 3D reservoir simulation and adaptation." arXiv preprint arXiv:2102.10304 (2021).
+Illarionov E., et al. "End-to-end neural network approach to 3D reservoir simulation and adaptation." arXiv preprint arXiv:2102.10304 (2021).
 ```
 
 BibTex

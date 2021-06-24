@@ -34,7 +34,9 @@
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Grids" href="grids.html" />
+    <link rel="prev" title="Aquifer" href="aquifer.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -78,11 +80,28 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Field</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="deepfield.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="field_components.html">Field components</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="base_classes.html">Base classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aquifer.html">Aquifer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Field</a><ul class="simple">
 </ul>
-</div>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="grids.html">Grids</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock.html">Rock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="states.html">States</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tables.html">Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="wells.html">Wells</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dataset.html">Dataset tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamodelling.html">Metamodelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Preprocessing utils</a></li>
+</ul>
+</li>
+</ul>
+
             
           
         </div>
@@ -125,6 +144,10 @@
   <ul class="wy-breadcrumbs">
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="deepfield.html">API</a> &raquo;</li>
+        
+          <li><a href="field_components.html">Field components</a> &raquo;</li>
         
       <li>Field</li>
     
@@ -187,12 +210,11 @@ read first 3000 bytes to infer encoding.</p></li>
 
 <dl class="method">
 <dt id="deepfield.field.Field.calculate_rates">
-<code class="sig-name descname">calculate_rates</code><span class="sig-paren">(</span><em class="sig-param">timesteps=None</em>, <em class="sig-param">wellnames=None</em>, <em class="sig-param">cf_aggregation='sum'</em>, <em class="sig-param">multiprocessing=True</em>, <em class="sig-param">verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.calculate_rates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.calculate_rates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">calculate_rates</code><span class="sig-paren">(</span><em class="sig-param">wellnames=None</em>, <em class="sig-param">cf_aggregation='sum'</em>, <em class="sig-param">multiprocessing=True</em>, <em class="sig-param">verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.calculate_rates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.calculate_rates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate oil/water/gas rates for each well segment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>timesteps</strong> (<em>list of pd.Timestamps</em>) – Dates to calculate rates for.</p></li>
 <li><p><strong>wellnames</strong> (<em>list of str</em>) – Wellnames for rates calculation. If None, all wells are included. Default to None.</p></li>
 <li><p><strong>cf_aggregation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>'sum'</em><em> or </em><em>'eucl'</em>) – The way of aggregating cf projection (‘sum’ - sum, ‘eucl’ - Euclid norm).</p></li>
 </ul>
@@ -250,12 +272,12 @@ Default to ‘a’.</p></li>
 
 <dl class="method">
 <dt id="deepfield.field.Field.get_spatial_connection_factors_and_perforation_ratio">
-<code class="sig-name descname">get_spatial_connection_factors_and_perforation_ratio</code><span class="sig-paren">(</span><em class="sig-param">subset=None</em>, <em class="sig-param">mode=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.get_spatial_connection_factors_and_perforation_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.get_spatial_connection_factors_and_perforation_ratio" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_spatial_connection_factors_and_perforation_ratio</code><span class="sig-paren">(</span><em class="sig-param">date_range=None</em>, <em class="sig-param">mode=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/field/field.html#Field.get_spatial_connection_factors_and_perforation_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.field.Field.get_spatial_connection_factors_and_perforation_ratio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get model’s connection factors and perforation ratios in a spatial form.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>subset</strong> (<em>array-like</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – Subset of timesteps to pick. If None, picks all timesteps available.</p></li>
+<li><p><strong>date_range</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Minimal and maximal dates for events.</p></li>
 <li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – If not None, pick the blocks only with specified mode.</p></li>
 </ul>
 </dd>
@@ -488,6 +510,15 @@ See <a class="reference external" href="https://docs.pyvista.org/examples/02-plo
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="grids.html" class="btn btn-neutral float-right" title="Grids" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="aquifer.html" class="btn btn-neutral float-left" title="Aquifer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

@@ -182,17 +182,17 @@
                 <span class="s1">&#39;GRID&#39;</span><span class="p">:</span> <span class="p">[],</span>
                 <span class="s1">&#39;ROCK&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;PORO&#39;</span><span class="p">,</span> <span class="s1">&#39;PERMX&#39;</span><span class="p">,</span> <span class="s1">&#39;PERMY&#39;</span><span class="p">,</span> <span class="s1">&#39;PERMZ&#39;</span><span class="p">],</span>
                 <span class="s1">&#39;STATES&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;PRESSURE&#39;</span><span class="p">,</span> <span class="s1">&#39;RS&#39;</span><span class="p">,</span> <span class="s1">&#39;SGAS&#39;</span><span class="p">,</span> <span class="s1">&#39;SOIL&#39;</span><span class="p">,</span> <span class="s1">&#39;SWAT&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;CONTROL&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BHPT&#39;</span><span class="p">,</span> <span class="s1">&#39;WWIR&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;CONTROL&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BHPT&#39;</span><span class="p">],</span>
     <span class="p">}</span>
 
     <span class="n">_attrs_sampled_as_dict</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;MASKS&#39;</span><span class="p">,</span> <span class="s1">&#39;GRID&#39;</span><span class="p">,</span> <span class="s1">&#39;TABLES&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">sample_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;dat&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;hdf5&#39;</span><span class="p">),</span> <span class="n">subset_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">unravel_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_samples</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                 <span class="n">unravel_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_samples</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_change_preloaded</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        src: str, Field or list of Fields</span>
+<span class="sd">        src: str, Field, FieldSample or list of Fields or FieldSamples</span>
 <span class="sd">            Path to a directory containing fields for the dataset or preloaded Fields</span>
 <span class="sd">        sample_attrs: dict</span>
 <span class="sd">            Attributes to be represented in samples</span>
@@ -229,6 +229,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_sample_attrs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sample_attrs</span> <span class="o">=</span> <span class="n">sample_attrs</span> <span class="k">if</span> <span class="n">sample_attrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_sample_attrs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">from_samples</span> <span class="o">=</span> <span class="n">from_samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allow_change_preloaded</span> <span class="o">=</span> <span class="n">allow_change_preloaded</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">get_config</span><span class="p">()</span>
         <span class="c1"># TODO make config dependent on the sample attrs</span>
@@ -319,6 +320,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">preloaded</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_model</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">preloaded</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">FieldSample</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">preloaded</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
             <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_preloaded</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
 
         <span class="n">sample</span> <span class="o">=</span> <span class="p">{}</span>
@@ -359,12 +362,28 @@
     <span class="k">def</span> <span class="nf">_get_preloaded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a field from preloaded.&quot;&quot;&quot;</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preloaded</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-        <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">spatial</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">unravel_model</span>
-        <span class="k">if</span> <span class="s1">&#39;CONTROL&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_attrs</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">all_tracks_complete</span>
-            <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">has_blocks</span>
-            <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">full_perforation</span>
-            <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">all_tracks_inside</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_change_preloaded</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">spatial</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unravel_model</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unravel_model</span><span class="p">:</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">to_spatial</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;CONTROL&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_attrs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">all_tracks_complete</span><span class="p">:</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">drop_incomplete</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">has_blocks</span><span class="p">:</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">get_wellblocks</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">full_perforation</span><span class="p">:</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">apply_perforations</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">all_tracks_inside</span><span class="p">:</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">drop_outside</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">spatial</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">unravel_model</span>
+            <span class="k">if</span> <span class="s1">&#39;CONTROL&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_attrs</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">all_tracks_complete</span>
+                <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">has_blocks</span>
+                <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">full_perforation</span>
+                <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">wells</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">all_tracks_inside</span>
         <span class="k">return</span> <span class="n">model</span>
 
     <span class="k">def</span> <span class="nf">_load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_wells_calculations</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -487,15 +506,29 @@
     <span class="k">def</span> <span class="nf">_get_connection_factors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">sequence_subset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># FIXME calls the field&#39;s method twice</span>
         <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="k">if</span> <span class="n">sequence_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">res_dates</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">result_dates</span>
+            <span class="k">if</span> <span class="n">res_dates</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                <span class="n">res_dates</span> <span class="o">=</span> <span class="n">res_dates</span><span class="p">[</span><span class="n">sequence_subset</span><span class="p">]</span>
+            <span class="n">date_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">res_dates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res_dates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">date_range</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">hasnested</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_attrs</span><span class="p">,</span> <span class="s1">&#39;MASKS&#39;</span><span class="p">,</span> <span class="s1">&#39;CF_MASK&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">get_spatial_connection_factors_and_perforation_ratio</span><span class="p">(</span><span class="n">sequence_subset</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">get_spatial_connection_factors_and_perforation_ratio</span><span class="p">(</span><span class="n">date_range</span><span class="o">=</span><span class="n">date_range</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_get_perforation_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">sequence_subset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># FIXME calls the field&#39;s method twice</span>
         <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="k">if</span> <span class="n">sequence_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">res_dates</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">result_dates</span>
+            <span class="k">if</span> <span class="n">res_dates</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                <span class="n">res_dates</span> <span class="o">=</span> <span class="n">res_dates</span><span class="p">[</span><span class="n">sequence_subset</span><span class="p">]</span>
+            <span class="n">date_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">res_dates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res_dates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">date_range</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">hasnested</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_attrs</span><span class="p">,</span> <span class="s1">&#39;MASKS&#39;</span><span class="p">,</span> <span class="s1">&#39;PERF_MASK&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">get_spatial_connection_factors_and_perforation_ratio</span><span class="p">(</span><span class="n">sequence_subset</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">get_spatial_connection_factors_and_perforation_ratio</span><span class="p">(</span><span class="n">date_range</span><span class="o">=</span><span class="n">date_range</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="FieldDataset.to_dates"><a class="viewcode-back" href="../../../api/datasets.html#deepfield.datasets.FieldDataset.to_dates">[docs]</a>    <span class="nd">@staticmethod</span>

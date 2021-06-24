@@ -34,7 +34,9 @@
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Randomizers" href="randomizers.html" />
+    <link rel="prev" title="Dataset tools" href="dataset.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -78,17 +80,21 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Loaders and samplers</a><ul>
-<li><a class="reference internal" href="#fielddataset">FieldDataset</a></li>
-<li><a class="reference internal" href="#fieldsample">FieldSample</a></li>
-<li><a class="reference internal" href="#uniformsequencesubset">UniformSequenceSubset</a></li>
-<li><a class="reference internal" href="#randomsubsequence">RandomSubsequence</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="deepfield.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="field_components.html">Field components</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="dataset.html">Dataset tools</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Loaders and samplers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="randomizers.html">Randomizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transforms.html">Transforms</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="metamodelling.html">Metamodelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Preprocessing utils</a></li>
 </ul>
 </li>
 </ul>
-</div>
+
             
           
         </div>
@@ -132,6 +138,10 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
+          <li><a href="deepfield.html">API</a> &raquo;</li>
+        
+          <li><a href="dataset.html">Dataset tools</a> &raquo;</li>
+        
       <li>Loaders and samplers</li>
     
     
@@ -157,7 +167,7 @@
 <h2>FieldDataset<a class="headerlink" href="#fielddataset" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="deepfield.datasets.FieldDataset">
-<em class="property">class </em><code class="sig-name descname">FieldDataset</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">sample_attrs=None</em>, <em class="sig-param">fmt=('dat'</em>, <em class="sig-param">'data'</em>, <em class="sig-param">'hdf5')</em>, <em class="sig-param">subset_generator=None</em>, <em class="sig-param">unravel_model=None</em>, <em class="sig-param">from_samples=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldDataset" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">FieldDataset</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">sample_attrs=None</em>, <em class="sig-param">fmt=('dat'</em>, <em class="sig-param">'data'</em>, <em class="sig-param">'hdf5')</em>, <em class="sig-param">subset_generator=None</em>, <em class="sig-param">unravel_model=None</em>, <em class="sig-param">from_samples=False</em>, <em class="sig-param">allow_change_preloaded=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepfield/datasets/datasets.html#FieldDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepfield.datasets.FieldDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Baseclass for dataset of fields loaded with similar configs.</p>
 <dl class="method">
 <dt id="deepfield.datasets.FieldDataset.calculate_statistics">
@@ -188,7 +198,7 @@
 
 <dl class="attribute">
 <dt id="deepfield.datasets.FieldDataset.default_sample_attrs">
-<code class="sig-name descname">default_sample_attrs</code><em class="property"> = {'CONTROL': ['BHPT', 'WWIR'], 'GRID': [], 'MASKS': ['ACTNUM', 'TIME'], 'ROCK': ['PORO', 'PERMX', 'PERMY', 'PERMZ'], 'STATES': ['PRESSURE', 'RS', 'SGAS', 'SOIL', 'SWAT']}</em><a class="headerlink" href="#deepfield.datasets.FieldDataset.default_sample_attrs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">default_sample_attrs</code><em class="property"> = {'CONTROL': ['BHPT'], 'GRID': [], 'MASKS': ['ACTNUM', 'TIME'], 'ROCK': ['PORO', 'PERMX', 'PERMY', 'PERMZ'], 'STATES': ['PRESSURE', 'RS', 'SGAS', 'SOIL', 'SWAT']}</em><a class="headerlink" href="#deepfield.datasets.FieldDataset.default_sample_attrs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -590,6 +600,15 @@ Else, return reshaped attribute.</p></li>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="randomizers.html" class="btn btn-neutral float-right" title="Randomizers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dataset.html" class="btn btn-neutral float-left" title="Dataset tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

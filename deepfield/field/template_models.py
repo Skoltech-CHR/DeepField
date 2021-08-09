@@ -39,11 +39,9 @@ START
 $start
 /
 
-METRIC
-OIL
-GAS
-WATER
-DISGAS
+$units
+
+$phases
 
 DIMENS
 $dimens /
@@ -139,11 +137,9 @@ START
 $start
 /
 
-METRIC
-OIL
-GAS
-WATER
-DISGAS
+$units
+
+$phases
 
 DIMENS
 $dimens /

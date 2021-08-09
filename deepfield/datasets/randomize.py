@@ -71,7 +71,7 @@ class AttrRandomizer:
             raise ValueError('Can randomize instances of %s class. Found: %s' % (self.associated_class, attr.__class__))
         return self._randomize_attr(attr, **kwargs)
 
-    def _randomize_attr(self, attr, **kwargs):
+    def _randomize_attr(self, *args, **kwargs):
         raise NotImplementedError('Abstract method.')
 
 
@@ -96,11 +96,11 @@ class ControlRandomizer(AttrRandomizer):
         """
         Parameters
         ----------
-        wells: geology.Wells
+        wells: deepfield.field.Wells
 
         Returns
         -------
-        out: geology.Wells
+        out: deepfield.field.Wells
             Wells with randomized events.
         """
         _ = kwargs
@@ -153,11 +153,11 @@ class StatesRandomizer(AttrRandomizer):
         """
         Parameters
         ----------
-        states: geology.States
+        states: deepfield.field.States
 
         Returns
         -------
-        out: geology.States
+        out: deepfield.field.States
             Randomized states.
         """
         actnum = kwargs['actnum']
@@ -227,11 +227,11 @@ class RockRandomizer(AttrRandomizer):
         """
         Parameters
         ----------
-        rock: geology.Rock
+        rock: deepfield.field.Rock
 
         Returns
         -------
-        out: geology.Rock
+        out: deepfield.field.Rock
             Randomized rock.
         """
         actnum = kwargs['actnum']
@@ -336,19 +336,16 @@ class FieldRandomizer:
 
         Returns
         -------
-        out: geology.Field
+        out: deepfield.field.Field
             Field with randomized initial state, rock and control.
         """
         field = self._load_model(self.base_path)
         kwargs = {'actnum': field.grid.actnum.astype(np.float)}
-        for key in self.randomizer:
+        for key, rnd in self.randomizer.items():
             attr = key if key != 'control' else 'wells'
             if hasattr(field, attr):
                 value = getattr(field, attr)
-                if isinstance(self.randomizer[key], tuple):
-                    randomizers = self.randomizer[key]
-                else:
-                    randomizers = (self.randomizer[key], )
+                randomizers = rnd if isinstance(rnd, tuple) else (rnd, )
                 for randomizer in randomizers:
                     value = randomizer(value, **kwargs)
                 setattr(field, attr, value)

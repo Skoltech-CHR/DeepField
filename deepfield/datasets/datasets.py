@@ -232,6 +232,8 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
                     model.wells.apply_perforations()
                 if not model.wells.state.all_tracks_inside:
                     model.wells.drop_outside()
+                if model.meta['MODEL_TYPE'] == 'ECL':
+                    model.wells.compute_events(grid=model.grid)
         else:
             assert model.state.spatial == self.unravel_model
             if 'CONTROL' in self.sample_attrs:
@@ -281,6 +283,8 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
                 model.wells.apply_perforations()
             if not safe_check(model.wells, 'all_tracks_inside', True) or force_wells_calculations:
                 model.wells.drop_outside()
+            if model.meta['MODEL_TYPE'] == 'ECL':
+                model.wells.compute_events(grid=model.grid)
         if not self.unravel_model:
             model.ravel()
         return model
@@ -336,8 +340,8 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
             return neighbours
         return None
 
-    def _get_invalid_neighbours_mask(self, model, fill_invalid_neighbours=INVALID_VALUE_FILLER, neighbouring_radius=-1,
-                                     **kwargs):
+    def _get_invalid_neighbours_mask(self, model, fill_invalid_neighbours=INVALID_VALUE_FILLER,
+                                     neighbouring_radius=-1, **kwargs):
         """Get mask of invalid neighbours (non-active or out of geometric bounds)."""
         _ = kwargs
         if hasnested(self.sample_attrs, 'GRID', 'DISTANCES'):
@@ -604,18 +608,18 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
 
         for i in range(len(self)):
             m, m_sq, mn, mx = self._get_model_statistics(i)
-            for comp in m:
+            for comp in m:#pylint:disable=consider-using-dict-items
                 for attr in m[comp]:
                     mean[comp][attr].append(m[comp][attr])
                     mean_of_squares[comp][attr].append(m_sq[comp][attr])
                     minim[comp][attr].append(mn[comp][attr])
                     maxim[comp][attr].append(mx[comp][attr])
 
-        for comp in mean:
+        for comp in mean:#pylint:disable=consider-using-dict-items
             for attr in mean[comp]:
                 mean[comp][attr] = np.mean(mean[comp][attr], axis=0)
                 mean_of_squares[comp][attr] = np.mean(mean_of_squares[comp][attr], axis=0)
-                std[comp][attr] = np.sqrt(np.abs(mean_of_squares[comp][attr] - np.power(mean[comp][attr], 2)))
+                std[comp][attr] = np.sqrt(np.abs(mean_of_squares[comp][attr] - mean[comp][attr]**2))
                 minim[comp][attr] = np.min(minim[comp][attr], axis=0)
                 maxim[comp][attr] = np.max(maxim[comp][attr], axis=0)
 
@@ -931,7 +935,7 @@ class FieldSample(BaseComponent):
         """
         out = self if inplace else self.empty_like()
         if self.state.spatial:
-            for comp in self.keys():
+            for comp in self.keys():#pylint:disable=consider-using-dict-items
                 if comp.upper() == 'TABLES':
                     out[comp] = self[comp]
                     continue

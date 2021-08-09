@@ -81,7 +81,7 @@ def get_restart_file(is_unified, name, time, unified_file, mode):
             unified_file = open(name + UNIFIED_RESTART_EXT, f'{mode}+b') #pylint: disable=consider-using-with
         return unified_file, unified_file
 
-    return open(name + RESTART_EXT.format(time=time), f'{mode}+b'), unified_file
+    return open(name + RESTART_EXT.format(time=time), f'{mode}+b'), unified_file#pylint: disable=consider-using-with
 
 
 class PointerStruct:

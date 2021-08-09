@@ -103,18 +103,18 @@ exit
 export DISPLAY=:2
 ```
 
-### After this step our server is set up. Let's connect to it remotely. Connect to server by ssh with username/password (testuser/testpass for our example)
+### After this step our server is set up. Let's connect to it remotely. Server creates display accessible by 5900 + {n} port, where n - is the number of display, selected by vncserver. In our example DISPLAY=2 so the port will be 5902. Connect to server by ssh with username/password (testuser/testpass for our example).
 ```
-ssh testuser@145.15.42.45 -L 5901:localhost:5901
+ssh testuser@145.15.42.45 -L 5902:localhost:5902
 ```
 > Reminder: IP 145.15.42.45 is an example IP. User you server IP or hostname.
-> Note: this command will forward server port 5901 to your PC local port 5901
+> Note: this command will forward server port 5902 to your PC local port 5902
 
 ### Install Turbo VNC Viewer on your machine (https://sourceforge.net/projects/turbovnc/files/2.2.6/)
 
 ### Run Turbo VNC Viewer and set as "VNC server" the following:
 ```
-"VNC server": localhost:5901
+"VNC server": localhost:5902
 Password:     vncpass
 ```
 

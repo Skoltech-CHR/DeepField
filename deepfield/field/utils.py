@@ -60,7 +60,7 @@ def execute_tnav_models(base_script_path, models, license_url=TNAV_LICENSE_URL, 
     base_args = ['bash', base_script_path, license_url]
     signal.signal(signal.SIGALRM, signal_handler)
     signal.alarm(-1 if global_timeout is None else global_timeout)
-    with (open(logfile, 'w') if logfile is not None else _dummy_with()) as f:
+    with (open(logfile, 'w') if logfile is not None else _dummy_with()) as f:#pylint:disable=consider-using-with
         for model in tqdm(models):
             try:
                 p = subprocess.Popen(base_args + [model], stdout=f, stderr=f)#pylint:disable=consider-using-with

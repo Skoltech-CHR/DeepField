@@ -224,7 +224,7 @@ class Wells(BaseComponent):
             node.parent = group
         return self
 
-    def drop(self, names):
+    def drop(self, names):#pylint:disable=arguments-renamed
         """Detach nodes by names.
 
         Parameters
@@ -592,16 +592,16 @@ class Wells(BaseComponent):
 
         if 'WBHP' in results and production_mode == 'BHPT':
             mask_prod = (results['WBHP'] > 0).values & ~mask_inje_water & ~mask_inje_gas & (
-                (results['WOPR'] > 0) |
-                (results['WWPR'] > 0) |
-                (results['WGPR'] > 0)).values
+                (results.get('WOPR', 0) > 0) |
+                (results.get('WWPR', 0) > 0) |
+                (results.get('WGPR', 0) > 0)).values
             df.loc[mask_prod, 'BHPT'] = results.loc[mask_prod, 'WBHP']
             df.loc[mask_prod, 'MODE'] = 'PROD'
         elif set(('WBHP', 'WOPR', 'WWPR')).issubset(set(results)) and production_mode == 'LPT':
             mask_prod = (results['WBHP'] > 0).values & ~mask_inje_water & (
-                (results['WOPR'] > 0) |
-                (results['WWPR'] > 0) |
-                (results['WGPR'] > 0)).values
+                (results.get('WOPR', 0) > 0) |
+                (results.get('WWPR', 0) > 0) |
+                (results.get('WGPR', 0) > 0)).values
             df.loc[mask_prod, 'LPT'] = results.loc[mask_prod, ['WOPR', 'WWPR']].sum(axis=1)
             df.loc[mask_prod, 'MODE'] = 'PROD'
         else:

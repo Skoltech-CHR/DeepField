@@ -582,7 +582,7 @@ class Field:
             self.meta['DATES'] = self.meta['DATES'].append(date)
         elif attr in ['ARRA', 'ARRAY']:
             dates = read_dates_from_buffer(buffer, attr, logger)
-            self.meta['DATES'] = self.meta['DATES'].extend(dates)
+            self.meta['DATES'] = self.meta['DATES'].append(dates)
         elif attr in ['METRIC', 'FIELD']:
             self.meta['UNITS'] = attr
         elif attr in ['HUNI', 'HUNITS']:
@@ -765,7 +765,8 @@ class Field:
         else:
             raise ValueError('Unknown model type {}'.format(model_type))
 
-        fill_values = {'title': title}
+        fill_values = {'title': title, 'units': self.meta['UNITS']}
+        fill_values['phases'] = '\n'.join(self.meta['FLUIDS'])
 
         if 'START' in self.meta:
             fill_values['start'] = self.meta['START']
@@ -936,9 +937,9 @@ class Field:
         for well in self.wells.main_branches:
             curr_rates = self.wells[well].total_rates
             rates[well] = {}
-            rates[well]['wwpr'] = curr_rates['WWPR'].values.astype('float64')
-            rates[well]['wopr'] = curr_rates['WOPR'].values.astype('float64')
-            rates[well]['wgpr'] = curr_rates['WGPR'].values.astype('float64')
+            for k in ['WWPR', 'WOPR', 'WGPR']:
+                if k in curr_rates:
+                    rates[well][k.lower()] = curr_rates[k].values.astype('float64')
 
         summary.save_summary(is_unified, dir_name, rates, self.result_dates,
                              grid_dim, mode, self._logger)

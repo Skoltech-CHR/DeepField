@@ -121,7 +121,7 @@ def get_summary_file(is_unified, name, time, unified_file, mode):
             return unified_file, unified_file
         unified_file = open(name + UNIFIED_SUMMARY_EXT, f'{mode}+b') #pylint: disable=consider-using-with
         return unified_file, unified_file
-    return open(name + SUMMARY_EXT.format(time=time), f'{mode}+b'), unified_file
+    return open(name + SUMMARY_EXT.format(time=time), f'{mode}+b'), unified_file#pylint: disable=consider-using-with
 
 
 def get_startdat_section_data(date):

@@ -216,7 +216,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Can randomize instances of </span><span class="si">%s</span><span class="s1"> class. Found: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">associated_class</span><span class="p">,</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__class__</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_randomize_attr</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_randomize_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_randomize_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Abstract method.&#39;</span><span class="p">)</span>
 
 
@@ -241,11 +241,11 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        wells: geology.Wells</span>
+<span class="sd">        wells: deepfield.field.Wells</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        out: geology.Wells</span>
+<span class="sd">        out: deepfield.field.Wells</span>
 <span class="sd">            Wells with randomized events.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_</span> <span class="o">=</span> <span class="n">kwargs</span>
@@ -298,11 +298,11 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        states: geology.States</span>
+<span class="sd">        states: deepfield.field.States</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        out: geology.States</span>
+<span class="sd">        out: deepfield.field.States</span>
 <span class="sd">            Randomized states.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">actnum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;actnum&#39;</span><span class="p">]</span>
@@ -372,11 +372,11 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        rock: geology.Rock</span>
+<span class="sd">        rock: deepfield.field.Rock</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        out: geology.Rock</span>
+<span class="sd">        out: deepfield.field.Rock</span>
 <span class="sd">            Randomized rock.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">actnum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;actnum&#39;</span><span class="p">]</span>
@@ -481,19 +481,16 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        out: geology.Field</span>
+<span class="sd">        out: deepfield.field.Field</span>
 <span class="sd">            Field with randomized initial state, rock and control.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_path</span><span class="p">)</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;actnum&#39;</span><span class="p">:</span> <span class="n">field</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">actnum</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)}</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">rnd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">attr</span> <span class="o">=</span> <span class="n">key</span> <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s1">&#39;control&#39;</span> <span class="k">else</span> <span class="s1">&#39;wells&#39;</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
-                    <span class="n">randomizers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">randomizers</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="p">)</span>
+                <span class="n">randomizers</span> <span class="o">=</span> <span class="n">rnd</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rnd</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="n">rnd</span><span class="p">,</span> <span class="p">)</span>
                 <span class="k">for</span> <span class="n">randomizer</span> <span class="ow">in</span> <span class="n">randomizers</span><span class="p">:</span>
                     <span class="n">value</span> <span class="o">=</span> <span class="n">randomizer</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>

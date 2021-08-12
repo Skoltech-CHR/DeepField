@@ -79,24 +79,22 @@ with conventional software.
 
 ## Citing
 
-Plain
+Plain text
 ```
-Illarionov E., et al. "End-to-end neural network approach to 3D reservoir simulation and adaptation." arXiv preprint arXiv:2102.10304 (2021).
+E. Illarionov, P. Temirchev, D. Voloskov, R. Kostoev, M. Simonov, D. Pissarenko, D. Orlov, D. Koroteev, 2022. End-to-end neural network approach to 3D reservoir simulation and adaptation. J. Pet. Sci. Eng. 208, 109332. https://doi.org/10.1016/j.petrol.2021.109332
 ```
 
 BibTex
 ```
-@ARTICLE{2021arXiv210210304I,
-       author = {{Illarionov}, E. and {Temirchev}, P. and {Voloskov}, D. and {Kostoev}, R. and {Simonov}, M. and {Pissarenko}, D. and {Orlov}, D. and {Koroteev}, D.},
-        title = "{End-to-end neural network approach to 3D reservoir simulation and adaptation}",
-      journal = {arXiv e-prints},
-     keywords = {Computer Science - Machine Learning, Physics - Geophysics},
-         year = 2021,
-        month = feb,
-          eid = {arXiv:2102.10304},
-        pages = {arXiv:2102.10304},
-archivePrefix = {arXiv},
-       eprint = {2102.10304},
- primaryClass = {cs.LG}
+@article{ILLARIONOV2022109332,
+author = {E. Illarionov and P. Temirchev and D. Voloskov and R. Kostoev and M. Simonov and D. Pissarenko and D. Orlov and D. Koroteev},
+title = {End-to-end neural network approach to 3D reservoir simulation and adaptation},
+journal = {Journal of Petroleum Science and Engineering},
+volume = {208},
+pages = {109332},
+year = {2022},
+issn = {0920-4105},
+doi = {https://doi.org/10.1016/j.petrol.2021.109332},
+url = {https://www.sciencedirect.com/science/article/pii/S0920410521009827}
 }
 ```

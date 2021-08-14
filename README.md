@@ -17,7 +17,7 @@ Machine learning framework for reservoir simulation.
 * working with arbitrary large datasets of field simulations
 * constructor of neural network models
 * generative models for field augmentation
-* various model training scenarious for arbitrary long simulation periods
+* various model training scenarios for arbitrary long simulation periods
 * detailed [documentation](https://Skoltech-CHR.github.io/DeepField) and step-by-step [tutorials](/tutorials)
 * complete [pipelines](/pipelines) of the reservoir simulation steps
 

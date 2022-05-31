@@ -595,7 +595,6 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
         """Calculate mean and std values for the attributes of the dataset."""
         # Change sampling behavior for statistics' calculation.
         subset_generator, self.subset_generator = self.subset_generator, None
-        unravel_model, self.unravel_model = self.unravel_model, False
 
         mean, mean_of_squares, std, minim, maxim = {}, {}, {}, {}, {}
         for comp in self.sample_attrs:
@@ -625,7 +624,6 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
 
         # Recover old sampling behavior
         self.subset_generator = subset_generator
-        self.unravel_model = unravel_model
 
         self.mean, self.std, self.min, self.max = mean, std, minim, maxim
         return self
@@ -637,7 +635,7 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
         for comp in sample.keys():
             if comp.upper() in NON_NORMALIZED_ATTRS:
                 continue
-            mask = sample.masks.well_mask if comp.upper() == 'CONTROL' else None
+            mask = sample.masks.well_mask if comp.upper() == 'CONTROL' else sample.masks.actnum
 
             mean[comp] = dict()
             mean_of_squares[comp] = dict()

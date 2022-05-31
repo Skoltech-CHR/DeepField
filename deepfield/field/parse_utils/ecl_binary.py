@@ -140,7 +140,7 @@ def _read_sections(path, attrs=None, decode=True, sequential=False, subset=None,
                         sections[section_name] = section
     if attrs is not None:
         for attr in attrs:
-            if attr not in sections.keys():
+            if attr not in sections:
                 logger_print('{} was not found in file.'.format(attr), level='warning')
     logger_print("Finish reading {}".format(path))
     return header, sections

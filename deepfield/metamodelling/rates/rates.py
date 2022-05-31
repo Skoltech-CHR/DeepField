@@ -153,6 +153,7 @@ class RatesModule(nn.Module):
             rates['BGPR'] += states['RS'] * rates['BOPR']
 
         rates = torch.stack([rates[attr] for attr in sample_attrs['RATES']], dim=1)
+        rates = torch.clip(rates, min=0)
         if batch_dimension:
             rates = rates.unsqueeze(0)
         if inplace:

@@ -323,7 +323,7 @@ class FieldRandomizer:
         model = Field(path=path, config=self.config, encoding='auto:10000', loglevel='ERROR')
         model.load(raise_errors=False)
         model.to_spatial()
-        if 'wells' in map(lambda s: s.lower(), self.config.keys()):
+        if 'wells' in map(lambda s: s.lower(), self.config.keys()):#pylint:disable=consider-iterating-dictionary
             model.wells.drop_incomplete()
             model.wells.get_wellblocks(grid=model.grid)
             model.wells.apply_perforations()

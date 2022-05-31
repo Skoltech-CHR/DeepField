@@ -220,10 +220,8 @@ class FieldDataset(Dataset):  # pylint: disable=too-many-instance-attributes
         if self.allow_change_preloaded:
             if model.state.spatial != self.unravel_model:
                 if self.unravel_model:
-                    print('to_spatial')
                     model.to_spatial()
                 else:
-                    print('ravel')
                     model.ravel()
             if 'CONTROL' in self.sample_attrs:
                 if not model.wells.state.all_tracks_complete:
